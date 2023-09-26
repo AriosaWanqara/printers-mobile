@@ -43,6 +43,7 @@ dependencies {
     val lifecycle_version = "2.6.2"
     val activity_version = "1.6.1"
     val fragment_version = "1.5.5"
+    val retrofit_version = "2.9.0"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -60,6 +61,13 @@ dependencies {
     // Activity
     implementation("androidx.activity:activity-ktx:$activity_version")
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit_version")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
 
 }
