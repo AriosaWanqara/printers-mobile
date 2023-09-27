@@ -5,7 +5,11 @@ import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.printermobile.core.Print.EscposCoffee
+import com.example.printermobile.core.Print.MessageBuilder.BodyBuilder
 import com.example.printermobile.databinding.ActivityMainBinding
+import com.github.anastaciocintra.escpos.Style
+import com.github.anastaciocintra.output.TcpIpOutputStream
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import java.io.OutputStream
@@ -22,19 +26,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.button.setOnClickListener {
             Toast.makeText(this,"test",Toast.LENGTH_SHORT).show()
+            printWifi("192.168.100.70",9100)
         }
     }
 
-//    private fun printWifi(host: String, port: Int) {
-//        try {
-//            TcpIpOutputStream(host, port).use { outputStream ->
-//                val escpos = EscPos(outputStream)
-//                escpos.info()
-//            }
-//        } catch (ex: IOException) {
-//            println("mal" + ex)
-//        }
-//    }
+    private fun printWifi(host: String, port: Int) {
+        try {
+            TcpIpOutputStream(host, port).use { outputStream ->
+                var body:BodyBuilder = BodyBuilder(listOf("buenas","criaturitas del señor"))
+                var style = Style()
+                style.setFontName(Style.FontName.Font_B)
+                var escposCoffee = EscposCoffee(style,outputStream)
+                escposCoffee.printBody(body)
+                escposCoffee.cut()
+            }
+        } catch (ex: IOException) {
+            println("mal" + ex)
+        }
+    }
 
 
 //    @SuppressLint("MissingPermission")

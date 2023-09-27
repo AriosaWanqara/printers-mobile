@@ -62,11 +62,11 @@ class EscposCoffee : PrinterLibraryRepository {
         val escPos: EscPos = EscPos(this.outputStream)
         try {
             bodyBuilder.getBodyMessage().forEach { message ->
-                escPos.write(style, message)
+                escPos.write(this.style, message)
             }
             escPos.close()
         } catch (e: Exception) {
-
+            println(e)
         }
     }
 
