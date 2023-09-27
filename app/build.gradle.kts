@@ -74,6 +74,10 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+    // Print libraries
+    implementation("com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.3.0")
+    implementation("com.github.anastaciocintra:escpos-coffee:4.1.0")
 }
 kapt {
     correctErrorTypes = true
