@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp") version "1.6.10-1.0.4"
 }
 
 android {
@@ -46,6 +47,8 @@ dependencies {
     val activity_version = "1.6.1"
     val fragment_version = "1.5.5"
     val retrofit_version = "2.9.0"
+    val room_version = "2.5.0"
+    val hilt_version = "2.44"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -72,8 +75,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
 
     // Print libraries
     implementation("com.github.DantSu:ESCPOS-ThermalPrinter-Android:3.3.0")
@@ -81,6 +84,18 @@ dependencies {
 
     // Picasso
     implementation("com.squareup.picasso:picasso:2.8")
+
+    // Room
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-rxjava2:$room_version")
+    implementation("androidx.room:room-rxjava3:$room_version")
+    implementation("androidx.room:room-guava:$room_version")
+    testImplementation("androidx.room:room-testing:$room_version")
+    implementation("androidx.room:room-paging:$room_version")
 }
 kapt {
     correctErrorTypes = true
