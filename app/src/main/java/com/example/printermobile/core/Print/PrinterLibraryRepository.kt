@@ -7,13 +7,13 @@ import com.example.printermobile.core.Print.MessageBuilder.TitleBuilder
 
 interface PrinterLibraryRepository {
 
-    fun print(messageBuilder: MessageBuilder)
+    suspend fun print(messageBuilder: MessageBuilder)
 
     fun printTitle(titleBuilder: TitleBuilder)
 
     fun printBody(bodyBuilder: BodyBuilder)
 
-    fun printMedia(mediaBuilder: MediaBuilder)
+    suspend fun printMedia(mediaBuilder: MediaBuilder)
 
     fun cut()
 

@@ -25,90 +25,85 @@ class EscposCoffee : PrinterLibraryRepository {
 
     private var style: Style
     private val outputStream: OutputStream
+    private val escPos: EscPos
 
     constructor(style: Style, outputStream: OutputStream) {
         this.style = style
         this.outputStream = outputStream
+        this.escPos = EscPos(outputStream)
     }
 
     fun setStyle(style: Style) {
         this.style = style
     }
 
-    override fun print(messageBuilder: MessageBuilder) {
+    override suspend fun print(messageBuilder: MessageBuilder) {
         try {
             this.printTitle(messageBuilder.getTitleMessage())
             this.printBody(messageBuilder.getBodyMessage())
             this.printMedia(messageBuilder.getMediaMessage())
             this.cut()
         } catch (e: Exception) {
-
+            println(e)
         }
     }
 
     override fun printTitle(titleBuilder: TitleBuilder) {
-        val escPos: EscPos = EscPos(this.outputStream)
         try {
             titleBuilder.getTitleMessage().forEach { message ->
-                escPos.write(style, message)
+                this.escPos.write(style, message)
             }
-            escPos.close()
-        } catch (e: Exception) {
-
-        }
-    }
-
-    override fun printBody(bodyBuilder: BodyBuilder) {
-        val escPos: EscPos = EscPos(this.outputStream)
-        try {
-            bodyBuilder.getBodyMessage().forEach { message ->
-                escPos.write(this.style, message)
-            }
-            escPos.close()
         } catch (e: Exception) {
             println(e)
         }
     }
 
-    override fun printMedia(mediaBuilder: MediaBuilder) {
-        val escPos: EscPos = EscPos(this.outputStream)
+    override fun printBody(bodyBuilder: BodyBuilder) {
+        try {
+            bodyBuilder.getBodyMessage().forEach { message ->
+                this.escPos.write(this.style, message)
+            }
+        } catch (e: Exception) {
+            println(e)
+        }
+    }
+
+    override suspend fun printMedia(mediaBuilder: MediaBuilder) {
         try {
             mediaBuilder.getMediaMessage().forEach { (key, message) ->
                 if (key == "imgU") {
                     message.forEach { image ->
-                        printImageFromUrl(escPos, image)
+                        printImageFromUrl(this.escPos, image)
                     }
                 }
                 if (key == "BC") {
                     message.forEach { barCode ->
-                        printBarCode(escPos, barCode)
+                        printBarCode(this.escPos, barCode)
                     }
                 }
                 if (key == "QR") {
                     message.forEach { qr ->
-                        printQRCode(escPos, qr)
+                        printQRCode(this.escPos, qr)
                     }
                 }
             }
-            escPos.close()
         } catch (e: Exception) {
-
+            println(e)
         }
     }
 
     override fun cut() {
         try {
-            val escpos = EscPos(this.outputStream)
-            escpos.feed(4)
-            escpos.cut(EscPos.CutMode.FULL)
-            escpos.close()
+            this.escPos.feed(5)
+            this.escPos.cut(EscPos.CutMode.FULL)
+            this.escPos.close()
         } catch (ex: IOException) {
             println(ex.message)
         }
     }
 
     override fun printTest() {
-         try {
+        try {
 //            val escpos = EscPos(this.outputStream)
 //            val title = Style()
 //                .setFontSize(Style.FontSize._2, Style.FontSize._2)
@@ -139,32 +134,35 @@ class EscposCoffee : PrinterLibraryRepository {
 //            escpos.feed(5)
 //            escpos.cut(EscPos.CutMode.FULL)
 //            escpos.close()
-        } catch (ex: IOException) {
+        } catch (e: Exception) {
+            println(e)
         }
     }
 
     override fun openCashDrawer() {
         try {
-            val escpos = EscPos(this.outputStream)
-            escpos.write(27).write(112).write(0).write(25).write(250)
-            escpos.close()
+            this.escPos.write(27).write(112).write(0).write(25).write(250)
         } catch (e: java.lang.Exception) {
             println(e.message)
         }
     }
 
-    private fun printImageFromUrl(escpos: EscPos, imageUrl: String) {
+    fun closeStream() {
+        this.escPos.close()
+    }
+
+    private suspend fun printImageFromUrl(escpos: EscPos, imageUrl: String) {
         try {
-            val url = URL(imageUrl)
-            val image:Bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+            val inputStream = URL(imageUrl).openStream()
+            val image: Bitmap = BitmapFactory.decodeStream(inputStream)
             val algorithm: Bitonal = BitonalOrderedDither()
             val imageWrapper = RasterBitImageWrapper()
             imageWrapper.setJustification(EscPosConst.Justification.Center)
             val escposImage = EscPosImage(BitmapCoffeeImage(image), algorithm)
             escpos.write(imageWrapper, escposImage)
             escpos.feed(2)
-        } catch (e: java.lang.Exception) {
-            println(e.message)
+        } catch (e: Exception) {
+            println(e)
         }
     }
 
@@ -175,8 +173,8 @@ class EscposCoffee : PrinterLibraryRepository {
             escpos.feed(1)
             escpos.write(qrcode, qrCodeMessage)
             escpos.feed(1)
-        } catch (e: java.lang.Exception) {
-            println(e.message)
+        } catch (e: Exception) {
+            println(e)
         }
     }
 
@@ -186,8 +184,8 @@ class EscposCoffee : PrinterLibraryRepository {
             escpos.feed(1)
             escpos.write(barcode, barCodeMessage)
             escpos.feed(1)
-        } catch (e: java.lang.Exception) {
-            println(e.message)
+        } catch (e: Exception) {
+            println(e)
         }
     }
 
