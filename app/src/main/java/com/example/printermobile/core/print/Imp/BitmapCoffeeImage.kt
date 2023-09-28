@@ -5,7 +5,7 @@ import android.graphics.Color
 import com.github.anastaciocintra.escpos.image.CoffeeImage
 
 
-class BitmapCoffeeImage(val image:Bitmap): CoffeeImage {
+class BitmapCoffeeImage(private val image:Bitmap): CoffeeImage {
     override fun getHeight(): Int = image.height
     override fun getWidth(): Int = image.width
 

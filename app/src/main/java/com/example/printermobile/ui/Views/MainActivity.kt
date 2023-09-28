@@ -1,8 +1,13 @@
 package com.example.printermobile.ui.Views
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AnticipateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.printermobile.core.print.EscposCoffee
 import com.example.printermobile.core.print.messageBuilder.BodyBuilder
 import com.example.printermobile.core.print.messageBuilder.MediaBuilder
@@ -21,9 +26,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val screenSplash = installSplashScreen()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        screenSplash.setOnExitAnimationListener { splashScreenView ->
+            val slideUp = ObjectAnimator.ofFloat(
+                splashScreenView.view,
+                View.TRANSLATION_Y,
+                0f,
+                -splashScreenView.view.height.toFloat()
+            )
+            slideUp.interpolator = AnticipateInterpolator()
+            slideUp.duration = 200L
+            slideUp.doOnEnd { splashScreenView.remove() }
+            slideUp.start()
+        }
+
+        screenSplash.setKeepOnScreenCondition { false }
+
         binding.button.setOnClickListener {
             Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
             CoroutineScope(Dispatchers.IO).launch {
