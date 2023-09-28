@@ -1,13 +1,11 @@
 package com.example.printermobile.ui.Views
 
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.printermobile.core.Print.EscposCoffee
-import com.example.printermobile.core.Print.MessageBuilder.BodyBuilder
-import com.example.printermobile.core.Print.MessageBuilder.MediaBuilder
+import com.example.printermobile.core.print.EscposCoffee
+import com.example.printermobile.core.print.messageBuilder.BodyBuilder
+import com.example.printermobile.core.print.messageBuilder.MediaBuilder
 import com.example.printermobile.databinding.ActivityMainBinding
 import com.github.anastaciocintra.escpos.Style
 import com.github.anastaciocintra.output.TcpIpOutputStream
@@ -16,8 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
-import java.io.OutputStream
-import java.util.UUID
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

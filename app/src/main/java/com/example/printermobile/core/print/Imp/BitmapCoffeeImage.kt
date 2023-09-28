@@ -1,4 +1,4 @@
-package com.example.printermobile.core.Print.Imp
+package com.example.printermobile.core.print.Imp
 
 import android.graphics.Bitmap
 import android.graphics.Color

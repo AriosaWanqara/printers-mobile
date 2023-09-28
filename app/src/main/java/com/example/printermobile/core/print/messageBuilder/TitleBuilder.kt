@@ -1,4 +1,4 @@
-package com.example.printermobile.core.Print.MessageBuilder
+package com.example.printermobile.core.print.messageBuilder
 
 class TitleBuilder {
 
