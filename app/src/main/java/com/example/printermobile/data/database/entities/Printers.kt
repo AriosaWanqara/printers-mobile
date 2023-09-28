@@ -1,4 +1,4 @@
-package com.example.printermobile.di.entities
+package com.example.printermobile.data.database.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

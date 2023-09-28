@@ -1,4 +1,4 @@
-package com.example.printermobile.core
+package com.example.printermobile.di
 
 import dagger.Module
 import dagger.Provides
@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitHelper {
+object RetrofitModule {
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {

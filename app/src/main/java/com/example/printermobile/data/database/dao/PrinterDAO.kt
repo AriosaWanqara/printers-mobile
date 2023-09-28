@@ -1,10 +1,11 @@
-package com.example.printermobile.di.dao
+package com.example.printermobile.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.printermobile.di.entities.Printers
+import com.example.printermobile.data.database.entities.Printers
 
 @Dao
 interface PrinterDAO {
@@ -15,7 +16,7 @@ interface PrinterDAO {
     @Query("SELECT * FROM Printers WHERE id IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<Printers>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg users: Printers)
 
     @Delete
