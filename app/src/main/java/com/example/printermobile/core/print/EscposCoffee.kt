@@ -9,6 +9,7 @@ import com.example.printermobile.core.print.messageBuilder.MessageBuilder
 import com.example.printermobile.core.print.messageBuilder.TitleBuilder
 import com.github.anastaciocintra.escpos.EscPos
 import com.github.anastaciocintra.escpos.EscPosConst
+import com.github.anastaciocintra.escpos.PrintModeStyle
 import com.github.anastaciocintra.escpos.Style
 import com.github.anastaciocintra.escpos.barcode.BarCode
 import com.github.anastaciocintra.escpos.barcode.QRCode
@@ -19,6 +20,7 @@ import com.github.anastaciocintra.escpos.image.RasterBitImageWrapper
 import java.io.IOException
 import java.io.OutputStream
 import java.net.URL
+import java.util.Arrays
 
 
 class EscposCoffee : PrinterLibraryRepository {
@@ -37,6 +39,9 @@ class EscposCoffee : PrinterLibraryRepository {
         this.style = style
     }
 
+    fun feed(line:Int){
+        this.escPos.feed(line)
+    }
     override suspend fun print(messageBuilder: MessageBuilder) {
         try {
             this.printTitle(messageBuilder.getTitleMessage())
@@ -102,38 +107,86 @@ class EscposCoffee : PrinterLibraryRepository {
         }
     }
 
-    override fun printTest() {
+    override fun printWifiTest(host: String, port: Int, fontType: String) {
         try {
-//            val escpos = EscPos(this.outputStream)
-//            val title = Style()
-//                .setFontSize(Style.FontSize._2, Style.FontSize._2)
-//                .setJustification(EscPosConst.Justification.Center)
-//            val title1 = Style()
-//                .setLineSpacing(8)
-//                .setFontName(Style.FontName.Font_B)
-//            val characters = arrayOfNulls<String>(11)
-//            Arrays.fill(characters, "000000000-")
-//            val zeros = java.lang.String.join("", *characters)
-//            escpos.writeLF(title, "Test")
-//            val pms = PrintModeStyle().setFontSize(false, false).setFontName(config.getFontName())
-//            escpos.feed(1)
-//            escpos.writeLF(pms, zeros)
-//            escpos.feed(1)
-//            escpos.writeLF(
-//                title1,
-//                "Cuente los caracteres que entran en la primera linea de texto y coloque el valor en Cantidad de caracteres 👌"
-//            )
-//            escpos.feed(1)
-//            escpos.writeLF(
-//                Style().setJustification(EscPosConst.Justification.Center),
-//                "Configuracion Actual"
-//            )
-//            escpos.writeLF("Nombre de impresora: " + config.getPrinterName())
-//            escpos.writeLF("Tipo de fuente: " + config.getFontName().name())
-//            escpos.feed(2)
-//            escpos.feed(5)
-//            escpos.cut(EscPos.CutMode.FULL)
-//            escpos.close()
+            val escpos = EscPos(this.outputStream)
+            val title = Style()
+                .setFontSize(Style.FontSize._2, Style.FontSize._2)
+                .setJustification(EscPosConst.Justification.Center)
+            val title1 = Style()
+                .setLineSpacing(8)
+                .setFontName(Style.FontName.Font_B)
+            val characters = arrayOfNulls<String>(11)
+            Arrays.fill(characters, "000000000-")
+            val zeros = java.lang.String.join("", *characters)
+            escpos.writeLF(title, "Test")
+            val pms = PrintModeStyle().setFontSize(false, false)
+            if (fontType == "A") {
+                pms.setFontName(PrintModeStyle.FontName.Font_A_Default)
+            } else {
+                pms.setFontName(PrintModeStyle.FontName.Font_B)
+            }
+            escpos.feed(1)
+            escpos.writeLF(pms, zeros)
+            escpos.feed(1)
+            escpos.writeLF(
+                title1,
+                "Cuente los caracteres que entran en la primera linea de texto y coloque el valor en Cantidad de caracteres"
+            )
+            escpos.feed(1)
+            escpos.writeLF(
+                Style().setJustification(EscPosConst.Justification.Center),
+                "Configuracion Actual"
+            )
+            escpos.writeLF("IP de la impresora: " + host)
+            escpos.writeLF("Puerto de la impresora: " + port)
+            escpos.writeLF("Tipo de fuente: " + fontType)
+            escpos.feed(2)
+            escpos.feed(5)
+            escpos.cut(EscPos.CutMode.FULL)
+            escpos.close()
+        } catch (e: Exception) {
+            println(e)
+        }
+    }
+
+    override fun printBluetoothTest(fontType: String) {
+        try {
+            val escpos = EscPos(this.outputStream)
+            val title = Style()
+                .setFontSize(Style.FontSize._2, Style.FontSize._2)
+                .setJustification(EscPosConst.Justification.Center)
+            val title1 = Style()
+                .setLineSpacing(8)
+                .setFontName(Style.FontName.Font_B)
+            val characters = arrayOfNulls<String>(11)
+            Arrays.fill(characters, "000000000-")
+            val zeros = java.lang.String.join("", *characters)
+            escpos.writeLF(title, "Test")
+            val pms = PrintModeStyle().setFontSize(false, false)
+            if (fontType == "A") {
+                pms.setFontName(PrintModeStyle.FontName.Font_A_Default)
+            } else {
+                pms.setFontName(PrintModeStyle.FontName.Font_B)
+            }
+            escpos.feed(1)
+            escpos.writeLF(pms, zeros)
+            escpos.feed(1)
+            escpos.writeLF(
+                title1,
+                "Cuente los caracteres que entran en la primera linea de texto y coloque el valor en Cantidad de caracteres"
+            )
+            escpos.feed(1)
+            escpos.writeLF(
+                Style().setJustification(EscPosConst.Justification.Center),
+                "Configuracion Actual"
+            )
+            escpos.writeLF("Tipo de Impresora: bluetooth")
+            escpos.writeLF("Tipo de fuente: " + fontType)
+            escpos.feed(2)
+            escpos.feed(5)
+            escpos.cut(EscPos.CutMode.FULL)
+            escpos.close()
         } catch (e: Exception) {
             println(e)
         }

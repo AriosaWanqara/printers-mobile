@@ -4,6 +4,7 @@ import com.example.printermobile.core.print.messageBuilder.BodyBuilder
 import com.example.printermobile.core.print.messageBuilder.MediaBuilder
 import com.example.printermobile.core.print.messageBuilder.MessageBuilder
 import com.example.printermobile.core.print.messageBuilder.TitleBuilder
+import java.io.OutputStream
 
 interface PrinterLibraryRepository {
 
@@ -17,7 +18,8 @@ interface PrinterLibraryRepository {
 
     fun cut()
 
-    fun printTest()
+    fun printWifiTest(host: String, port: Int, fontType: String)
+    fun printBluetoothTest(fontType: String)
 
     fun openCashDrawer()
 }

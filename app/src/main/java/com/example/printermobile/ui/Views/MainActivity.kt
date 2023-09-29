@@ -1,17 +1,32 @@
 package com.example.printermobile.ui.Views
 
 import android.animation.ObjectAnimator
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.view.animation.AnticipateInterpolator
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.drawerlayout.R
+import androidx.lifecycle.whenStarted
+import androidx.lifecycle.withStarted
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.printermobile.core.document.documentType
 import com.example.printermobile.core.print.EscposCoffee
 import com.example.printermobile.core.print.messageBuilder.BodyBuilder
 import com.example.printermobile.core.print.messageBuilder.MediaBuilder
+import com.example.printermobile.core.print.test.PrintWifiTest
 import com.example.printermobile.databinding.ActivityMainBinding
+import com.example.printermobile.domain.models.Printers
+import com.example.printermobile.domain.services.GetAllPrinters
+import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
 import com.github.anastaciocintra.escpos.Style
 import com.github.anastaciocintra.output.TcpIpOutputStream
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         screenSplash.setOnExitAnimationListener { splashScreenView ->
             val slideUp = ObjectAnimator.ofFloat(
                 splashScreenView.view,
@@ -45,45 +59,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         screenSplash.setKeepOnScreenCondition { false }
-
-        binding.button.setOnClickListener {
-            Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
-            CoroutineScope(Dispatchers.IO).launch {
-                printWifi("192.168.100.70", 9100)
-            }
-        }
+        initUI()
     }
 
-    private suspend fun printWifi(host: String, port: Int) {
-        try {
-            TcpIpOutputStream(host, port).use { outputStream ->
-                var body: BodyBuilder = BodyBuilder(
-                    listOf(
-                        "buenas", "criaturitas del señor",
-                        "buenas", "criaturitas del señor",
-                        "buenas", "criaturitas del señor",
-                        "buenas", "criaturitas del señor",
-                        "buenas", "criaturitas del señor",
-                        "buenas", "criaturitas del señor",
-                        "buenas", "criaturitas del señor",
-                        "buenas", "criaturitas del señor"
-                    )
-                )
-
-                var media: MediaBuilder =
-                    MediaBuilder(mapOf("imgU" to listOf("https://s-media-cache-ak0.pinimg.com/236x/ac/bb/d4/acbbd49b22b8c556979418f6618a35fd.jpg")))
-                var style = Style()
-                style.setFontName(Style.FontName.Font_B)
-                var escposCoffee = EscposCoffee(style, outputStream)
-//                escposCoffee.printBody(body)
-                escposCoffee.printMedia(media)
-//                escposCoffee.cut()
-                escposCoffee.closeStream()
-            }
-        } catch (ex: IOException) {
-            println("mal" + ex)
-        }
+    private fun initUI(){
+        var printers:MutableList<Printers> = GetAllPrinters().getAll()
+        binding.rvPrinterList.layoutManager = LinearLayoutManager(this)
+        binding.rvPrinterList.adapter = ListPrinterAdapter(printers)
     }
+
+//    private fun printWifi(host: String, port: Int) {
+//        val printWifiTest = PrintWifiTest(host, port, "B")
+//        printWifiTest.invoke()
+//    }
 
 
 //    @SuppressLint("MissingPermission")
@@ -109,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 //        return null
 //    }
 
-//    private fun printBTC() {
+    //    private fun printBTC() {
 //        if (checkBTPermissions()) {
 //            val outputStream = getOutputStreamFromBluetoothDevice()
 //            if (outputStream != null) {
@@ -123,6 +111,8 @@ class MainActivity : AppCompatActivity() {
 //    }
 //
 //    private fun checkBTPermissions(): Boolean {
-//        return true;
+//        return (packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH) || packageManager.hasSystemFeature(
+//            PackageManager.FEATURE_BLUETOOTH_LE
+//        ))
 //    }
 }
