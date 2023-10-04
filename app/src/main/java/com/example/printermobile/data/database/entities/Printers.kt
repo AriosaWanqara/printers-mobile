@@ -3,6 +3,8 @@ package com.example.printermobile.data.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.printermobile.data.model.Printer
+import com.example.printermobile.domain.models.Printers
 
 @Entity
 data class Printers(
@@ -26,4 +28,6 @@ data class Printers(
 
     @ColumnInfo(name = "address")
     val address: String?,
+    @ColumnInfo(name = "address")
+    val port: Int?,
 )

@@ -6,7 +6,7 @@ import com.github.anastaciocintra.output.TcpIpOutputStream
 
 
 class PrintWifiTest(private var host: String, private var port: Int, private var fontType: String) {
-    fun invoke() {
+    operator fun invoke() {
         TcpIpOutputStream(host, port).use { outputStream ->
             val style = Style()
             if (this.fontType == "A") {

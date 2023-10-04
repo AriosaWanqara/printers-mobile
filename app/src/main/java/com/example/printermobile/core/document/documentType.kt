@@ -24,4 +24,7 @@ class documentType(){
     fun findDocumentByKey(key:String): String? {
         return this.documentMap[key]
     }
+    fun findKeyByDocument(document:String): String? {
+        return this.documentMap.filterValues { it == document }.keys.toString()
+    }
 }
