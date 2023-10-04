@@ -17,4 +17,6 @@ class GetAllPrinters {
             Printers(10, "B", "Cierre de gaveta", 1, 32, true, "192.168.100.70"),
         )
     }
+
+
 }

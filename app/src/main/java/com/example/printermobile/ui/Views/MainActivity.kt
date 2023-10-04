@@ -1,39 +1,19 @@
 package com.example.printermobile.ui.Views
 
 import android.animation.ObjectAnimator
-import android.content.pm.PackageManager
-import android.os.Build
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.view.animation.AnticipateInterpolator
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
-import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.drawerlayout.R
-import androidx.lifecycle.whenStarted
-import androidx.lifecycle.withStarted
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.printermobile.core.document.documentType
-import com.example.printermobile.core.print.EscposCoffee
-import com.example.printermobile.core.print.messageBuilder.BodyBuilder
-import com.example.printermobile.core.print.messageBuilder.MediaBuilder
-import com.example.printermobile.core.print.test.PrintWifiTest
 import com.example.printermobile.databinding.ActivityMainBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.domain.services.GetAllPrinters
 import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
-import com.github.anastaciocintra.escpos.Style
-import com.github.anastaciocintra.output.TcpIpOutputStream
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.IOException
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -60,12 +40,20 @@ class MainActivity : AppCompatActivity() {
 
         screenSplash.setKeepOnScreenCondition { false }
         initUI()
+        initListeners()
     }
 
     private fun initUI(){
-        var printers:MutableList<Printers> = GetAllPrinters().getAll()
+        val printers:MutableList<Printers> = GetAllPrinters().getAll()
         binding.rvPrinterList.layoutManager = LinearLayoutManager(this)
         binding.rvPrinterList.adapter = ListPrinterAdapter(printers)
+    }
+
+    private fun initListeners(){
+        binding.fabAddPrinter.setOnClickListener {
+            val intent = Intent(this,AddPrinterActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 //    private fun printWifi(host: String, port: Int) {

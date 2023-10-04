@@ -16,6 +16,7 @@
         android:theme="@style/Theme.App.Started"
         tools:targetApi="31">
         <activity
+            android:theme="@style/Theme.PrinterMobile"
             android:name=".ui.Views.AddPrinterActivity"
             android:exported="false" />
         <activity
