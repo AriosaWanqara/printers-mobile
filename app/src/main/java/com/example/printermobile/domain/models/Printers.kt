@@ -1,5 +1,6 @@
 package com.example.printermobile.domain.models
 
+import com.example.printermobile.core.document.documentType
 import com.example.printermobile.data.database.entities.Printers
 
 class Printers {
@@ -10,7 +11,7 @@ class Printers {
     val charactersNumber: Int
     val isWifi: Boolean
     val address: String?
-    val port: Int?
+    var port: Int?
 
     constructor(
         id: Int?,
@@ -33,10 +34,11 @@ class Printers {
     }
 
     fun createPrinterEntityFromPrinterModel(): Printers {
+        val documentType:documentType = documentType()
         return Printers(
             0,
             this.fontSize,
-            this.documentType,
+            documentType.findKeyByDocument(this.documentType) ?: this.documentType,
             this.copyNumber,
             this.charactersNumber,
             this.isWifi,

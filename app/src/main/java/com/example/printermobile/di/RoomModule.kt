@@ -17,7 +17,7 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideRoom(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, DBConnection::class.java, "printer_database")
+        Room.databaseBuilder(context, DBConnection::class.java, "printer_database").build()
 
     @Singleton
     @Provides

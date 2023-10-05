@@ -9,25 +9,39 @@ import com.example.printermobile.domain.models.Printers
 @Entity
 data class Printers(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    var id: Int = 0,
 
     @ColumnInfo(name = "font_size")
-    val fontSize: String,
+    var fontSize: String,
 
     @ColumnInfo(name = "document_type")
-    val documentType: String,
+    var documentType: String,
 
     @ColumnInfo(name = "copy_number")
-    val copyNumber: Int,
+    var copyNumber: Int,
 
     @ColumnInfo(name = "characters_number")
-    val charactersNumber: Int,
+    var charactersNumber: Int,
 
     @ColumnInfo(name = "is_usb")
-    val isUsb: Boolean,
+    var isUsb: Boolean,
 
     @ColumnInfo(name = "address")
-    val address: String?,
-    @ColumnInfo(name = "address")
-    val port: Int?,
-)
+    var address: String?,
+
+    @ColumnInfo(name = "port")
+    var port: Int?,
+) {
+    fun getPrinterModelFromPrinterEntity(): Printers {
+        return Printers(
+            this.id,
+            this.fontSize,
+            this.documentType,
+            this.copyNumber,
+            this.charactersNumber,
+            this.isUsb,
+            this.address,
+            this.port
+        )
+    }
+}

@@ -2,24 +2,29 @@ package com.example.printermobile.ui.Views
 
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnticipateInterpolator
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.printermobile.databinding.ActivityMainBinding
 import com.example.printermobile.domain.models.Printers
-import com.example.printermobile.domain.services.GetAllPrinters
+import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
 import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
+    private val mainViewModel: ListPrintersViewModel by viewModels()
+    private var printers: MutableList<Printers> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         val screenSplash = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -38,20 +43,28 @@ class MainActivity : AppCompatActivity() {
             slideUp.start()
         }
 
-        screenSplash.setKeepOnScreenCondition { false }
+        hideSystemUI()
         initUI()
         initListeners()
+        mainViewModel.onCreate()
+
+        mainViewModel.printers.observe(this, Observer {
+            it.map { printer ->
+                printers.add(printer)
+                binding.rvPrinterList.adapter!!.notifyItemInserted(printers.indexOf(printer))
+            }
+        })
+        screenSplash.setKeepOnScreenCondition { false }
     }
 
-    private fun initUI(){
-        val printers:MutableList<Printers> = GetAllPrinters().getAll()
+    private fun initUI() {
         binding.rvPrinterList.layoutManager = LinearLayoutManager(this)
         binding.rvPrinterList.adapter = ListPrinterAdapter(printers)
     }
 
-    private fun initListeners(){
+    private fun initListeners() {
         binding.fabAddPrinter.setOnClickListener {
-            val intent = Intent(this,AddPrinterActivity::class.java)
+            val intent = Intent(this, AddPrinterActivity::class.java)
             startActivity(intent)
         }
     }
@@ -103,4 +116,12 @@ class MainActivity : AppCompatActivity() {
 //            PackageManager.FEATURE_BLUETOOTH_LE
 //        ))
 //    }
+
+    private fun hideSystemUI() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setDecorFitsSystemWindows(false)
+        } else {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+    }
 }

@@ -21,10 +21,10 @@ class documentType(){
         }
         return list
     }
-    fun findDocumentByKey(key:String): String? {
-        return this.documentMap[key]
+    fun findDocumentByKey(key: String): String? {
+        return documentMap[key]
     }
     fun findKeyByDocument(document:String): String? {
-        return this.documentMap.filterValues { it == document }.keys.toString()
+        return this.documentMap.filterValues { it == document }.keys.first().toString()
     }
 }
