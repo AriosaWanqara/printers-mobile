@@ -6,6 +6,7 @@ import com.example.printermobile.data.database.entities.Printers
 class Printers {
     val id: Int?
     val fontSize: String
+    val name: String
     val documentType: String
     val copyNumber: Int
     val charactersNumber: Int
@@ -16,6 +17,7 @@ class Printers {
     constructor(
         id: Int?,
         fontSize: String,
+        name: String,
         documentType: String,
         copyNumber: Int,
         charactersNumber: Int,
@@ -24,6 +26,7 @@ class Printers {
         port: Int?
     ) {
         this.id = id
+        this.name = name
         this.fontSize = fontSize
         this.documentType = documentType
         this.copyNumber = copyNumber
@@ -36,7 +39,8 @@ class Printers {
     fun createPrinterEntityFromPrinterModel(): Printers {
         val documentType:documentType = documentType()
         return Printers(
-            0,
+            this.id,
+            this.name,
             this.fontSize,
             documentType.findKeyByDocument(this.documentType) ?: this.documentType,
             this.copyNumber,

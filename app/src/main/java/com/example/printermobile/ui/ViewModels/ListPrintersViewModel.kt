@@ -3,6 +3,7 @@ package com.example.printermobile.ui.ViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.printermobile.domain.models.Printers
+import com.example.printermobile.domain.services.DeletePrinter
 import com.example.printermobile.domain.services.GetAllPrinters
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListPrintersViewModel @Inject constructor(
-    private val getAllPrinters: GetAllPrinters
+    private val getAllPrinters: GetAllPrinters,
+    private val deletePrinter: DeletePrinter
 ) : ViewModel() {
 
     var printers = MutableLiveData<List<Printers>>()
@@ -32,6 +34,17 @@ class ListPrintersViewModel @Inject constructor(
             } catch (e: Exception) {
                 println(e)
             }
+        }
+    }
+
+    suspend fun onDeletePrinter(id: Int) {
+        try {
+            deletePrinter(id)
+            withContext(Dispatchers.Main) {
+                printers.value = printers.value!!.filter { it.id != id }
+            }
+        } catch (e: Exception) {
+            println(e)
         }
     }
 }

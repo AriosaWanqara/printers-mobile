@@ -9,7 +9,10 @@ import com.example.printermobile.domain.models.Printers
 @Entity
 data class Printers(
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    var id: Int? = 0,
+
+    @ColumnInfo(name = "name")
+    var name: String,
 
     @ColumnInfo(name = "font_size")
     var fontSize: String,
@@ -35,6 +38,7 @@ data class Printers(
     fun getPrinterModelFromPrinterEntity(): Printers {
         return Printers(
             this.id,
+            this.name,
             this.fontSize,
             this.documentType,
             this.copyNumber,

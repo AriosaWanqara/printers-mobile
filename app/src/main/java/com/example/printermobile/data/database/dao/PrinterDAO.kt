@@ -17,10 +17,12 @@ interface PrinterDAO {
 
     @Query("SELECT * FROM Printers WHERE id IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<Printers>
+    @Query("SELECT * FROM Printers WHERE id = :printerId")
+    fun findById(printerId:Int): Printers
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg users: Printers)
 
-    @Delete
-    fun delete(user: Printers)
+    @Query("DELETE FROM Printers WHERE id = (:printer)")
+    fun delete(printer: Int)
 }

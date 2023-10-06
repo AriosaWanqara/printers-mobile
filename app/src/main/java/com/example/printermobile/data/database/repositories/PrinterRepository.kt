@@ -23,4 +23,11 @@ class PrinterRepository @Inject constructor(
     suspend fun getAll(): List<Printers> {
         return printerDAO.getAll()
     }
+    suspend fun delete(printer: Int) {
+        return printerDAO.delete(printer)
+    }
+
+    suspend fun findPrinterById(id:Int): Printers {
+        return printerDAO.findById(id)
+    }
 }

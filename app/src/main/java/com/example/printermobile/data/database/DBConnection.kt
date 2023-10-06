@@ -7,7 +7,7 @@ import com.example.printermobile.data.database.entities.Printers
 import dagger.Provides
 
 
-@Database(entities = [Printers::class], version = 1)
+@Database(entities = [Printers::class], version = 2)
 abstract class DBConnection : RoomDatabase() {
     abstract fun printersDAO(): PrinterDAO
 }

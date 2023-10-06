@@ -8,10 +8,13 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-
+        <item name="android:windowTranslucentNavigation">false</item>
     </style>
 
-    <style name="Theme.PrinterMobile" parent="Base.Theme.PrinterMobile" />
+    <style name="Theme.PrinterMobile" parent="Base.Theme.PrinterMobile" >
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+    </style>
 
     <style name="Theme.Transparent" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
