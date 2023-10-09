@@ -15,9 +15,9 @@ class PrinterBuilder(private val tipo: String?) {
     private val df = DecimalFormat("0.00", symbols)
 
 
-    fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int) {
+    fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             var detalles: JSONArray
@@ -25,7 +25,7 @@ class PrinterBuilder(private val tipo: String?) {
             var jo: JSONObject
 
             // imprimir
-            val prn = Helper(caracteres, copias)
+            val prn = PrinterHelpers(caracteres, copias)
             prn.iniciar()
             prn.setFontB()
             prn.agregarSalto()
@@ -102,6 +102,7 @@ class PrinterBuilder(private val tipo: String?) {
             prn.escribirTextoSinSalto("P.U. Total")
             prn.agregarSalto()
             prn.LineasIgual()
+            val x:String? = "cantidadDet"
             detalles = js.getJSONArray("listaDetalleOrdenVenta")
             for (j in 0 until detalles.length()) {
                 jo = detalles.getJSONObject(j)
@@ -159,15 +160,16 @@ class PrinterBuilder(private val tipo: String?) {
             prn.feedFinal()
             prn.alineadoIzquierda()
             prn.cortar()
-            enviarImprimir(prn.getTrabajo())
+            return prn.getTrabajo()
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
-    fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String) {
+    fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             var detalles: JSONArray
@@ -175,7 +177,7 @@ class PrinterBuilder(private val tipo: String?) {
             var jo: JSONObject
 
             // imprimir
-            val prn = Helper(caracteres, copias)
+            val prn = PrinterHelpers(caracteres, copias)
             prn.iniciar()
             prn.setFontB()
             prn.lineHeight2()
@@ -320,16 +322,17 @@ class PrinterBuilder(private val tipo: String?) {
             }
             prn.feedFinal()
             prn.cortar()
-            enviarImprimir(prn.getTrabajo())
+            return prn.getTrabajo()
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
 
-    fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?) {
+    fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             val detalles: JSONArray
@@ -337,7 +340,7 @@ class PrinterBuilder(private val tipo: String?) {
             var jo: JSONObject
 
             // imprimir
-            val prn = Helper(caracteres, copias)
+            val prn = PrinterHelpers(caracteres, copias)
             prn.iniciar()
             prn.setFontB()
             prn.lineHeight2()
@@ -388,10 +391,11 @@ class PrinterBuilder(private val tipo: String?) {
             prn.negritaOff()
             prn.feedFinal()
             prn.cortar()
-            enviarImprimir(prn.getTrabajo())
+            return prn.getTrabajo()
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
     fun imprimirFacturaElectronica(
@@ -399,9 +403,9 @@ class PrinterBuilder(private val tipo: String?) {
         copias: Int,
         caracteres: Int,
         programa: String
-    ) {
+    ): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             var detalles: JSONArray
@@ -409,7 +413,7 @@ class PrinterBuilder(private val tipo: String?) {
             var jo: JSONObject
 
             // imprimir
-            val prn = Helper(caracteres, copias)
+            val prn = PrinterHelpers(caracteres, copias)
             prn.iniciar()
             prn.lineHeight2()
             prn.alineadoCentro()
@@ -668,15 +672,16 @@ class PrinterBuilder(private val tipo: String?) {
                     prn.cortar()
                 }
             }
-            enviarImprimir(prn.getTrabajo())
+            return prn.getTrabajo()
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
-    fun imprimirFacturPreimpresa(js: JSONObject?, copias: Int, caracteres: Int, programa: String) {
+    fun imprimirFacturPreimpresa(js: JSONObject?, copias: Int, caracteres: Int, programa: String): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             var detalles: JSONArray
@@ -684,7 +689,7 @@ class PrinterBuilder(private val tipo: String?) {
             var jo: JSONObject
 
             // imprimir
-            val prn = Helper(caracteres, copias)
+            val prn = PrinterHelpers(caracteres, copias)
             prn.iniciar()
             prn.setFontB()
             prn.alineadoIzquierda()
@@ -901,15 +906,16 @@ class PrinterBuilder(private val tipo: String?) {
                 prn.feedFinal()
                 prn.cortar()
             }
-            enviarImprimir(prn.getTrabajo())
+            return prn.getTrabajo()
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
     fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             var detalles: JSONArray
@@ -1042,11 +1048,12 @@ class PrinterBuilder(private val tipo: String?) {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
     fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             var detalles: JSONArray
@@ -1179,13 +1186,14 @@ class PrinterBuilder(private val tipo: String?) {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
 
     // FUNCIONES
     fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int): String? {
         try {
-            if (js == null) return
+            if (js == null) return null
 
             // reutilizables
             var detalles: JSONArray
@@ -1352,6 +1360,7 @@ class PrinterBuilder(private val tipo: String?) {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        return ""
     }
 
     fun abrirGaveta(): String? {

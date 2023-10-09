@@ -297,7 +297,7 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
         }
     }
 
-    fun agregarTexto(texto: String) {
+    fun agregarTexto(texto: String?) {
         var textoProcesado = ""
         var cont = 1
         for (i in 0 until texto.length) {
@@ -618,13 +618,13 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
 
     @Throws(JSONException::class)
     fun lineaVentaDoble(
-        cantidad: String?,
+        cantidad: String,
         detalle: String,
         precioU: String,
         Total: String,
         impuesto: JSONArray,
         caracteresDisponibles: Int
-    ): String? {
+    ): String {
         //Cantidad
         var detalle = detalle
         var precioU = precioU
