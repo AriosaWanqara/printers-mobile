@@ -300,14 +300,16 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
     fun agregarTexto(texto: String?) {
         var textoProcesado = ""
         var cont = 1
-        for (i in 0 until texto.length) {
-            textoProcesado += texto[i]
-            if (cont >= impresoraCaracteres) {
-                escribirTexto(textoProcesado)
-                textoProcesado = ""
-                cont = 0
+        if (texto != null) {
+            for (i in 0 until texto.length) {
+                textoProcesado += texto[i]
+                if (cont >= impresoraCaracteres) {
+                    escribirTexto(textoProcesado)
+                    textoProcesado = ""
+                    cont = 0
+                }
+                cont++
             }
-            cont++
         }
         if (textoProcesado != "") {
             escribirTexto(textoProcesado)
