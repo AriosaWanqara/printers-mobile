@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/cvItemContainer"
     android:layout_height="wrap_content"
@@ -10,8 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginVertical="32dp"
+        android:layout_margin="15dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -21,27 +21,33 @@
 
             <TextView
                 android:id="@+id/tvPrinterName"
+                tools:text="Factura electronica"
+                android:fontFamily="@font/noto_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  />
 
             <TextView
                 android:id="@+id/tvAddress"
+                tools:text="192.168.100.70"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  />
             <TextView
                 android:id="@+id/tvPort"
+                tools:text="9100"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  />
             <TextView
                 android:id="@+id/tvCopy"
+                tools:text="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  />
             <TextView
                 android:id="@+id/tvCharacters"
+                tools:text="64"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  />

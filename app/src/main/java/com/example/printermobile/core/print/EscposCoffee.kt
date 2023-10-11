@@ -39,9 +39,10 @@ class EscposCoffee : PrinterLibraryRepository {
         this.style = style
     }
 
-    fun feed(line:Int){
+    fun feed(line: Int) {
         this.escPos.feed(line)
     }
+
     override suspend fun print(messageBuilder: MessageBuilder) {
         try {
             this.printTitle(messageBuilder.getTitleMessage())
@@ -68,6 +69,15 @@ class EscposCoffee : PrinterLibraryRepository {
             bodyBuilder.getBodyMessage().forEach { message ->
                 this.escPos.write(this.style, message)
             }
+        } catch (e: Exception) {
+            println(e)
+        }
+    }
+
+    fun printMessage(message: String) {
+        try {
+            this.escPos.write(message)
+            this.escPos.close()
         } catch (e: Exception) {
             println(e)
         }

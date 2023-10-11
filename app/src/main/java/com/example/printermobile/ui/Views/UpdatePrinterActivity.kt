@@ -1,5 +1,6 @@
 package com.example.printermobile.ui.Views
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class UpdatePrinterActivity : AppCompatActivity() {
@@ -31,18 +33,13 @@ class UpdatePrinterActivity : AppCompatActivity() {
         binding = ActivityUpdatePrinterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var id = intent.getStringExtra("printer")?.let {
-                updatePrinterViewModel.onCreate(it.toInt())
-            }
-        var ids = intent.getStringExtra("printers")
-        println(ids)
-
+        intent.getStringExtra("printer")?.let {
+            updatePrinterViewModel.onCreate(it.toInt())
+        }
 
         hideSystemUI()
         initUI()
         initListeners()
-
-//        id?.let { updatePrinterViewModel.onCreate(it.to) }
 
         updatePrinterViewModel.printer.observe(this, Observer {
             initData(it)
@@ -98,38 +95,43 @@ class UpdatePrinterActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
-            try {
-                var printers = Printers(
-                    updatePrinterViewModel.printer.value?.id,
-                    binding.etName.text.toString(),
-                    binding.spFontType.selectedItem.toString().trim(),
-                    binding.spDocumentType.selectedItem.toString().trim(),
-                    binding.etCopies.text.toString().toInt(),
-                    binding.etCharacters.text.toString().toInt(),
-                    binding.tbPrinterType.isChecked,
-                    binding.etIPAddress.text.toString().trim(),
-                    null
-                )
-                if (binding.etPort.text.isNotBlank()) {
-                    printers.port = binding.etPort.text.toString().toInt()
-                }
-                val printerToSave = printers.createPrinterEntityFromPrinterModel()
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        updatePrinterViewModel.onAdd(printerToSave)
-                    } catch (e: Exception) {
-                        println(e)
+            if (checkForm()) {
+                try {
+                    var printers = Printers(
+                        updatePrinterViewModel.printer.value?.id,
+                        binding.etName.text.toString(),
+                        binding.spFontType.selectedItem.toString().trim(),
+                        binding.spDocumentType.selectedItem.toString().trim(),
+                        binding.etCopies.text.toString().toInt(),
+                        binding.etCharacters.text.toString().toInt(),
+                        binding.tbPrinterType.isChecked,
+                        binding.etIPAddress.text.toString().trim(),
+                        null
+                    )
+                    if (binding.etPort.text.isNotBlank()) {
+                        printers.port = binding.etPort.text.toString().toInt()
                     }
+                    val printerToSave = printers.createPrinterEntityFromPrinterModel()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            updatePrinterViewModel.onAdd(printerToSave)
+                            withContext(Dispatchers.Main){
+                                Toast.makeText(applicationContext,"Impresora actualizada",Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: Exception) {
+                            println(e)
+                        }
+                    }
+                } catch (e: Exception) {
+                    println(e)
+                    Toast.makeText(this, "exception", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            } catch (e: Exception) {
-                println(e)
-                Toast.makeText(this, "exception", Toast.LENGTH_SHORT)
-                    .show()
             }
         }
 
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
         binding.tbPrinterType.setOnClickListener {
@@ -142,6 +144,32 @@ class UpdatePrinterActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun checkForm(): Boolean {
+        var error = true
+        if (binding.etName.text.isBlank()) {
+            binding.etName.error = "El nombre es requerido"
+            error = false
+        }
+        if (binding.etCopies.text.isBlank()) {
+            binding.etCopies.error = "El número de copias es requerido"
+            error = false
+        }
+        if (binding.etCharacters.text.isBlank()) {
+            binding.etCharacters.error = "El número de caracteres es requerido"
+            error = false
+        }
+        if (binding.etPort.text.isBlank() && binding.tbPrinterType.isChecked) {
+            binding.etPort.error = "El puerto es requerido"
+            error = false
+        }
+        if (binding.etIPAddress.text.isBlank() && binding.tbPrinterType.isChecked) {
+            binding.etIPAddress.error = "La dirección es requerida"
+            error = false
+        }
+        return error
+    }
+
 
     private fun hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

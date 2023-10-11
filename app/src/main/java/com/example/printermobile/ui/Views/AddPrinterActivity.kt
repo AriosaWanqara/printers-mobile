@@ -1,5 +1,6 @@
 package com.example.printermobile.ui.Views
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import com.example.printermobile.core.document.documentType
 import com.example.printermobile.core.print.test.PrintWifiTest
+import com.example.printermobile.core.print.utils.printer1.Discrimination
 import com.example.printermobile.databinding.ActivityAddPrinterBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
@@ -19,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class AddPrinterActivity : AppCompatActivity() {
@@ -71,26 +74,42 @@ class AddPrinterActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             try {
-                printers = Printers(
-                    null,
-                    binding.etName.text.toString(),
-                    binding.spFontType.selectedItem.toString().trim(),
-                    binding.spDocumentType.selectedItem.toString().trim(),
-                    binding.etCopies.text.toString().toInt(),
-                    binding.etCharacters.text.toString().toInt(),
-                    binding.tbPrinterType.isChecked,
-                    binding.etIPAddress.text.toString().trim(),
-                    null
-                )
-                if (binding.etPort.text.isNotBlank()) {
-                    printers.port = binding.etPort.text.toString().toInt()
-                }
-                val printerToSave = printers.createPrinterEntityFromPrinterModel()
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        addPrinterViewModel.onAdd(printerToSave)
-                    } catch (e: Exception) {
-                        println(e)
+                if (checkForm()) {
+                    printers = Printers(
+                        null,
+                        binding.etName.text.toString(),
+                        binding.spFontType.selectedItem.toString().trim(),
+                        binding.spDocumentType.selectedItem.toString().trim(),
+                        binding.etCopies.text.toString().toInt(),
+                        binding.etCharacters.text.toString().toInt(),
+                        binding.tbPrinterType.isChecked,
+                        binding.etIPAddress.text.toString().trim(),
+                        null
+                    )
+                    if (binding.etPort.text.isNotBlank()) {
+                        printers.port = binding.etPort.text.toString().toInt()
+                    }
+                    val printerToSave = printers.createPrinterEntityFromPrinterModel()
+                    val possibleSet =
+                        getSharedPreferences("asd", 0).getStringSet("Commands", setOf())
+                    val possibleCommands = possibleSet?.toTypedArray()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            addPrinterViewModel.onAdd(printerToSave)
+                            withContext(Dispatchers.Main){
+                                Toast.makeText(applicationContext,"Impresora guardada",Toast.LENGTH_SHORT).show()
+                            }
+                            if (!possibleCommands.isNullOrEmpty()) {
+                                val m_ambiente = "comercios.illarli.com";
+                                Discrimination(
+                                    addPrinterViewModel.getAll(),
+                                    m_ambiente,
+                                    applicationContext
+                                )(possibleCommands)
+                            }
+                        } catch (e: Exception) {
+                            println(e)
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -100,7 +119,7 @@ class AddPrinterActivity : AppCompatActivity() {
             }
         }
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
         binding.tbPrinterType.setOnClickListener {
@@ -117,7 +136,28 @@ class AddPrinterActivity : AppCompatActivity() {
     }
 
     private fun checkForm(): Boolean {
-        return true
+        var error = true
+        if (binding.etName.text.isBlank()) {
+            binding.etName.error = "El nombre es requerido"
+            error = false
+        }
+        if (binding.etCopies.text.isBlank()) {
+            binding.etCopies.error = "El número de copias es requerido"
+            error = false
+        }
+        if (binding.etCharacters.text.isBlank()) {
+            binding.etCharacters.error = "El número de caracteres es requerido"
+            error = false
+        }
+        if (binding.etPort.text.isBlank() && binding.tbPrinterType.isChecked) {
+            binding.etPort.error = "El puerto es requerido"
+            error = false
+        }
+        if (binding.etIPAddress.text.isBlank() && binding.tbPrinterType.isChecked) {
+            binding.etIPAddress.error = "La dirección es requerida"
+            error = false
+        }
+        return error
     }
 
     private fun hideSystemUI() {

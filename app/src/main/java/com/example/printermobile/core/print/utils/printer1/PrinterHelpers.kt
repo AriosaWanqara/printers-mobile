@@ -1,4 +1,4 @@
-package com.example.printermobile.core.print.utils
+package com.example.printermobile.core.print.utils.printer1
 
 import org.json.JSONArray
 import org.json.JSONException
@@ -9,7 +9,7 @@ import java.math.RoundingMode
 
 class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
 
-    var trabajo = ""
+    private var trabajo:String = ""
     private val det: JSONObject? = null
 
     // CONSTRUCTOR
@@ -18,7 +18,7 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
         this.impresoraCopias = impresoraCopias
     }
 
-    fun getTrabajo(): String? {
+    fun getTrabajo(): String {
         var resutado = ""
         trabajo = narmalizarString(trabajo)
         for (i in 0 until impresoraCopias) {
@@ -449,7 +449,7 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
         fPago: String,
         Total: String,
         caracteresDisponibles: Int
-    ): String? {
+    ): String {
         //Cantidad
         var fPago = fPago
         var Total = Total
@@ -491,7 +491,7 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
         Total: String,
         impuesto: JSONArray,
         caracteresDisponibles: Int
-    ): String? {
+    ): String {
         //Cantidad
         var detalle = detalle
         var precioU = precioU
@@ -624,7 +624,7 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
         Total: String,
         impuesto: JSONArray,
         caracteresDisponibles: Int
-    ): String? {
+    ): String {
         //Cantidad
         var detalle = detalle
         var precioU = precioU
@@ -707,7 +707,7 @@ class PrinterHelpers(var impresoraCaracteres: Int, var impresoraCopias: Int) {
         Total: String?,
         impuesto: JSONArray,
         caracteresDisponibles: Int
-    ): String? {
+    ): String {
         //Cantidad
         var detalle = detalle
         var _cantidad = BigDecimal(cantidad).setScale(2, RoundingMode.HALF_UP).toString()

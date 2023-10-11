@@ -1,16 +1,10 @@
 package com.example.printermobile.core.print.messageBuilder
 
-class MessageBuilder {
-
-    private val titleMessage : TitleBuilder
-    private val bodyMessage : BodyBuilder
-    private val mediaMessage : MediaBuilder
-
-    constructor(titleMessage: TitleBuilder, bodyMessage: BodyBuilder, mediaMessage: MediaBuilder) {
-        this.titleMessage = titleMessage
-        this.bodyMessage = bodyMessage
-        this.mediaMessage = mediaMessage
-    }
+class MessageBuilder(
+    private val titleMessage: TitleBuilder,
+    private val bodyMessage: BodyBuilder,
+    private val mediaMessage: MediaBuilder
+) {
 
     fun getTitleMessage():TitleBuilder{
         return this.titleMessage

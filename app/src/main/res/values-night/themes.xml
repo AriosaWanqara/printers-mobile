@@ -9,6 +9,7 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
+        <item name="fontFamily">@font/noto_regular</item>
     </style>
 
     <style name="Theme.PrinterMobile" parent="Base.Theme.PrinterMobile" >
