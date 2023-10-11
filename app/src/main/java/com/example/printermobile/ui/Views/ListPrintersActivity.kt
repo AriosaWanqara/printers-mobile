@@ -1,6 +1,5 @@
 package com.example.printermobile.ui.Views
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -25,10 +24,14 @@ class ListPrintersActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListPrintersBinding
     private val listPrintersViewModel: ListPrintersViewModel by viewModels()
     private var printers: List<Printers> = listOf()
-    private val adapter = ListPrinterAdapter(printers) { it ->
+    private val adapter = ListPrinterAdapter(printers, onItemRedirect = {
         val id = it.id
         redirect(id!!)
-    }
+    }, onItemRemove = {
+        CoroutineScope(Dispatchers.IO).launch {
+            listPrintersViewModel.onDeletePrinter(it.id!!)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

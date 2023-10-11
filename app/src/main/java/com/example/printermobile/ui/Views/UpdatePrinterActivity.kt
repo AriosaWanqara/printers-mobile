@@ -62,32 +62,33 @@ class UpdatePrinterActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             documentType.getDocuments()
         )
-        val fontTypeSpinnerAdapter = ArrayAdapter<String>(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            listOf("B", "A")
-        )
+//        val fontTypeSpinnerAdapter = ArrayAdapter<String>(
+//            this,
+//            android.R.layout.simple_spinner_dropdown_item,
+//            listOf("B", "A")
+//        )
         binding.spDocumentType.adapter = documentTypeSpinnerAdapter
-        binding.spFontType.adapter = fontTypeSpinnerAdapter
+//        binding.spFontType.adapter = fontTypeSpinnerAdapter
     }
 
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                if (!binding.etPort.equals(null) && !binding.etIPAddress.equals(null)) {
                     if (binding.tbPrinterType.isChecked) {
-                        PrintWifiTest(
-                            binding.etIPAddress.text.toString().trim(),
-                            binding.etPort.text.toString().toInt(),
-                            "B"
-                        )()
+                        if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
+                            PrintWifiTest(
+                                binding.etIPAddress.text.toString().trim(),
+                                binding.etPort.text.toString().toInt(),
+                                "B"
+                            )()
+                        } else {
+                            Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     } else {
-
+                        Toast.makeText(this,"Bluetooth Test",Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
-                        .show()
-                }
+
             } catch (e: Exception) {
                 Toast.makeText(this, "exception", Toast.LENGTH_SHORT)
                     .show()
@@ -100,7 +101,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
                     var printers = Printers(
                         updatePrinterViewModel.printer.value?.id,
                         binding.etName.text.toString(),
-                        binding.spFontType.selectedItem.toString().trim(),
+                        "B",
                         binding.spDocumentType.selectedItem.toString().trim(),
                         binding.etCopies.text.toString().toInt(),
                         binding.etCharacters.text.toString().toInt(),

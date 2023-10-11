@@ -31,10 +31,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: ListPrintersViewModel by viewModels()
     private var printers: List<Printers> = listOf()
-    private val adapter = ListPrinterAdapter(printers) { it ->
+    private val adapter = ListPrinterAdapter(printers, onItemRedirect = {
         val id = it.id
         redirect(id!!)
-    }
+    }, onItemRemove = {
+        CoroutineScope(Dispatchers.IO).launch {
+            mainViewModel.onDeletePrinter(it.id!!)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val screenSplash = installSplashScreen()
