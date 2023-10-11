@@ -1,6 +1,7 @@
 package com.example.printermobile.ui.Views
 
 import android.animation.ObjectAnimator
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -30,10 +31,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel: ListPrintersViewModel by viewModels()
     private var printers: List<Printers> = listOf()
-    private val adapter = ListPrinterAdapter(printers) {it->
+    private val adapter = ListPrinterAdapter(printers, onItemRedirect = {
         val id = it.id
         redirect(id!!)
-    }
+    }, onItemRemove = {
+        CoroutineScope(Dispatchers.IO).launch {
+            mainViewModel.onDeletePrinter(it.id!!)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val screenSplash = installSplashScreen()
@@ -49,20 +54,25 @@ class MainActivity : AppCompatActivity() {
             )
             slideUp.interpolator = AnticipateInterpolator()
             slideUp.duration = 200L
-            slideUp.doOnEnd { splashScreenView.remove() }
+            slideUp.doOnEnd {
+                splashScreenView.remove()
+                val intent = Intent(this,ListPrintersActivity::class.java)
+                startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+            }
             slideUp.start()
         }
 
         hideSystemUI()
         initUI()
         initListeners()
+
         mainViewModel.onCreate()
         mainViewModel.printers.observe(this, Observer {
             printers = listOf()
             it.map { printer ->
                 printers = printers.plus(printer)
             }
-                adapter.updateList(printers)
+            adapter.updateList(printers)
         })
         screenSplash.setKeepOnScreenCondition { false }
     }
@@ -83,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun deleteButton(position: Int) : SwipeHelper.UnderlayButton {
+    private fun deleteButton(position: Int): SwipeHelper.UnderlayButton {
         return SwipeHelper.UnderlayButton(
             this,
             "Delete",
@@ -91,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             android.R.color.holo_red_light,
             object : SwipeHelper.UnderlayButtonClickListener {
                 override fun onClick() {
-                    CoroutineScope(Dispatchers.IO).launch{
+                    CoroutineScope(Dispatchers.IO).launch {
                         mainViewModel.onDeletePrinter(printers[position].id!!)
                     }
 
@@ -104,53 +114,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-    private fun redirect(id:Int){
-        val intentN = Intent(this,UpdatePrinterActivity::class.java)
-        intentN.putExtra("printer", id.toString())
-        startActivity(intentN)
+    private fun redirect(id: Int) {
+        val updatePrinterIntent = Intent(this, UpdatePrinterActivity::class.java)
+        updatePrinterIntent.putExtra("printer", id.toString())
+        startActivity(updatePrinterIntent)
     }
-//    @SuppressLint("MissingPermission")
-//    private fun getOutputStreamFromBluetoothDevice(): OutputStream? {
-//        val printers = BluetoothPrintersConnections()
-//        val bluetoothPrinters = printers.list
-//
-//        if (!bluetoothPrinters.isNullOrEmpty()) {
-//            for (printer in bluetoothPrinters) {
-//                try {
-//                    printer.connect()
-//                    val btDevice: BluetoothDevice = printer.device
-//                    val bt =
-//                        btDevice.createRfcommSocketToServiceRecord(UUID.fromString(btDevice.uuids[0].toString()))
-//                    printer.disconnect()
-//                    bt.connect()
-//                    return bt.outputStream
-//                } catch (e: EscPosConnectionException) {
-//                    e.printStackTrace()
-//                }
-//            }
-//        }
-//        return null
-//    }
-
-    //    private fun printBTC() {
-//        if (checkBTPermissions()) {
-//            val outputStream = getOutputStreamFromBluetoothDevice()
-//            if (outputStream != null) {
-//                val escpos = EscPos(outputStream)
-//                escpos.writeLF("Hello Wold")
-//                escpos.feed(5)
-//                escpos.cut(EscPos.CutMode.FULL)
-//                escpos.close()
-//            }
-//        }
-//    }
-//
-//    private fun checkBTPermissions(): Boolean {
-//        return (packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH) || packageManager.hasSystemFeature(
-//            PackageManager.FEATURE_BLUETOOTH_LE
-//        ))
-//    }
-
     private fun hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false)

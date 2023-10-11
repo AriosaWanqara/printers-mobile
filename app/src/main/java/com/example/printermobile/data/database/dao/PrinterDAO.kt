@@ -12,11 +12,13 @@ interface PrinterDAO {
 
     @Query("SELECT * FROM Printers")
     fun getAll(): List<Printers>
+
     @Query("SELECT * FROM Printers WHERE document_type IN (:documentType)")
     fun getPrinterByDocumentType(documentType:String): Printers?
 
     @Query("SELECT * FROM Printers WHERE id IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<Printers>
+
     @Query("SELECT * FROM Printers WHERE id = :printerId")
     fun findById(printerId:Int): Printers
 

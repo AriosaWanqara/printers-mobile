@@ -30,4 +30,7 @@ class PrinterRepository @Inject constructor(
     suspend fun findPrinterById(id:Int): Printers {
         return printerDAO.findById(id)
     }
+    suspend fun findPrinterByDocumentType(document:String): Printers? {
+        return printerDAO.getPrinterByDocumentType(document)
+    }
 }

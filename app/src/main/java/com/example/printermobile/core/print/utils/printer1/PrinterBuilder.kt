@@ -1,19 +1,74 @@
-package com.example.printermobile.core.print.utils
+package com.example.printermobile.core.print.utils.printer1
 
+import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
+import com.example.printermobile.core.print.EscposCoffee
+import com.example.printermobile.core.print.messageBuilder.BodyBuilder
+import com.github.anastaciocintra.escpos.Style
+import com.github.anastaciocintra.output.TcpIpOutputStream
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
+import java.io.OutputStream
 import java.math.BigDecimal
+import java.net.InetAddress
+import java.net.Socket
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
+import java.util.UUID
 
 class PrinterBuilder(private val tipo: String?) {
+
+    private var socketBluetooth: BluetoothSocket? = null
+    private var streamBluetooth: OutputStream? = null
+    private var socketRed: Socket? = null
+    private var streamRed: OutputStream? = null
 
     private val eslocale = Locale("es", "US")
     private val symbols = DecimalFormatSymbols(eslocale)
     private val df = DecimalFormat("0.00", symbols)
+    private var port: Int? = null
+    private var address: String? = null
 
+    @SuppressLint("MissingPermission")
+    fun InicializarImpresoraBluetooth(): Boolean {
+        return try {
+            val printers = BluetoothPrintersConnections()
+            val bluetoothPrinters = printers.list
+            if (!bluetoothPrinters.isNullOrEmpty()) {
+                for (printer in bluetoothPrinters) {
+                    try {
+                        printer.connect()
+                        val btDevice: BluetoothDevice = printer.device
+                        val bt =
+                            btDevice.createRfcommSocketToServiceRecord(UUID.fromString(btDevice.uuids[0].toString()))
+                        printer.disconnect()
+                        bt.connect()
+                        this.streamBluetooth = bt.outputStream
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    fun InicializarImpresoraRed(direccion: String?, puerto: Int): Boolean {
+        this.port = puerto
+        this.address = direccion
+        return true
+    }
 
     fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int): String? {
         try {
@@ -435,7 +490,13 @@ class PrinterBuilder(private val tipo: String?) {
             }
             prn.escribirTextoSinSalto("RUC: " + js.optString("rucEm"))
             prn.agregarSalto()
-            if (js.getBoolean("obligadoLlevarContabilidadEm")) prn.agregarTexto("Obligado a llevar Contabilidad")
+            if (js.optBoolean("obligadoLlevarContabilidadEm")) prn.agregarTexto("Obligado a llevar Contabilidad")
+            if (js.optBoolean("regimenMicroEmpresa0v")) prn.agregarTexto("Contribuyente Régimen RIMPE")
+            if (js.optBoolean("agenteRetencionOv")) prn.agregarTexto(
+                "Agente de Retención " + "Nº de Resolución: " + js.optString(
+                    "numeroResolucionOv"
+                )
+            )
             prn.setFontB()
             prn.agregarTexto("Dirección: " + js.optString("direccionEm"))
             if (js.optString("direccionSucursalEm") != "S/N") prn.agregarTexto(
@@ -444,7 +505,7 @@ class PrinterBuilder(private val tipo: String?) {
                 )
             )
             if (js.optString("telefonoEm") != "null") {
-                prn.agregarTexto("Teléfonos: " + js.optString("telefonoEm"))
+                prn.agregarTexto("Teléfono: " + js.optString("telefonoEm"))
             }
             if (js.optString("correoEm") != "null") prn.agregarTexto("Correo: " + js.optString("correoEm"))
             prn.agregarSalto()
@@ -913,7 +974,7 @@ class PrinterBuilder(private val tipo: String?) {
         return ""
     }
 
-    fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int): String? {
+    fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return null
 
@@ -1044,14 +1105,14 @@ class PrinterBuilder(private val tipo: String?) {
             prn.agregarSalto()
             prn.feedFinal()
             prn.cortar()
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
         return ""
     }
 
-    fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int): String? {
+    fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return null
 
@@ -1182,7 +1243,7 @@ class PrinterBuilder(private val tipo: String?) {
             prn.agregarSalto()
             prn.feedFinal()
             prn.cortar()
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -1191,7 +1252,7 @@ class PrinterBuilder(private val tipo: String?) {
 
 
     // FUNCIONES
-    fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int): String? {
+    fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return null
 
@@ -1266,9 +1327,9 @@ class PrinterBuilder(private val tipo: String?) {
                 jo = detalles.getJSONObject(j)
                 prn.agregarTexto(
                     prn.lineaCierre(
-                        jo.optString("cantidad")!!,
-                        jo.optString("formaPago")!!,
-                        jo.optString("total")!!,
+                        jo.optString("cantidad"),
+                        jo.optString("formaPago"),
+                        jo.optString("total"),
                         caracteres
                     )
                 )
@@ -1356,21 +1417,21 @@ class PrinterBuilder(private val tipo: String?) {
             prn.feedFinal()
             prn.alineadoIzquierda()
             prn.cortar()
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
         return ""
     }
 
-    fun abrirGaveta(): String? {
+    fun abrirGaveta() {
         val prn = PrinterHelpers(50, 1)
         prn.abrirGaveta1()
         prn.abrirGaveta2()
-        return prn.getTrabajo()
+        enviarImprimir(prn.getTrabajo())
     }
 
-    fun imprimirTest(tipoTransaccion: String?): String? {
+    fun imprimirTest(tipoTransaccion: String) {
         val prn = PrinterHelpers(100, 1)
         prn.iniciar()
         prn.setFontA()
@@ -1395,6 +1456,69 @@ class PrinterBuilder(private val tipo: String?) {
         prn.agregarTexto(tipoTransaccion)
         prn.feedFinal()
         prn.cortar()
-        return prn.getTrabajo()
+        enviarImprimir(prn.getTrabajo())
+    }
+
+    fun enviarImprimir(trabajo: String) {
+        try {
+            if (tipo == "RED") {
+                TcpIpOutputStream(this.address, this.port!!).use { outputStream ->
+                    val style = Style()
+                    val escposCoffee = EscposCoffee(style, outputStream)
+                    escposCoffee.printMessage(trabajo)
+                }
+            } else {
+                val style = Style()
+                val escposCoffee = EscposCoffee(style, this.streamBluetooth!!)
+                escposCoffee.printMessage(trabajo)
+//                streamBluetooth!!.write(trabajo.toByteArray(charset("ISO-8859-1")))
+                Thread.sleep(10)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+    }
+
+
+    fun cerrarConexionBluetooth() {
+        try {
+            Thread.sleep(1500)
+            if (streamBluetooth != null) {
+                streamBluetooth!!.flush()
+                streamBluetooth!!.close()
+            }
+            streamBluetooth = null
+            socketBluetooth?.close()
+            socketBluetooth = null
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+        } catch (e: OutOfMemoryError) {
+            e.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun cerrarConexionRed() {
+        try {
+            streamRed?.close()
+            streamRed = null
+            socketRed?.close()
+            socketRed = null
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun cerrarConexion() {
+        if (tipo == "RED") {
+            cerrarConexionRed()
+        } else {
+            cerrarConexionBluetooth()
+        }
     }
 }

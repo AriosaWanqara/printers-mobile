@@ -1,5 +1,7 @@
 package com.example.printermobile.ui.Views
 
+import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -10,8 +12,11 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
+import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
+import com.example.printermobile.core.print.test.PrintBluetoothTest
 import com.example.printermobile.core.print.test.PrintWifiTest
+import com.example.printermobile.core.print.utils.printer1.Discrimination
 import com.example.printermobile.databinding.ActivityAddPrinterBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
@@ -19,11 +24,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class AddPrinterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPrinterBinding
     private lateinit var printers: Printers
+    private var printerType:Boolean = true
     private val addPrinterViewModel: AddPrinterViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,27 +48,34 @@ class AddPrinterActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             documentType.getDocuments()
         )
-        val fontTypeSpinnerAdapter = ArrayAdapter<String>(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            listOf("B", "A")
-        )
+//        val fontTypeSpinnerAdapter = ArrayAdapter<String>(
+//            this,
+//            android.R.layout.simple_spinner_dropdown_item,
+//            listOf("B", "A")
+//        )
         binding.spDocumentType.adapter = documentTypeSpinnerAdapter
-        binding.spFontType.adapter = fontTypeSpinnerAdapter
+//        binding.spFontType.adapter = fontTypeSpinnerAdapter
     }
+
 
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                if (!binding.etPort.equals(null) && !binding.etIPAddress.equals(null)) {
-                    PrintWifiTest(
-                        binding.etIPAddress.text.toString().trim(),
-                        binding.etPort.text.toString().toInt(),
-                        "B"
-                    )()
+                if (printerType) {
+                    if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
+                        PrintWifiTest(
+                            binding.etIPAddress.text.toString().trim(),
+                            binding.etPort.text.toString().toInt(),
+                            "B"
+                        )()
+                    } else {
+                        Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 } else {
-                    Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
-                        .show()
+                    if (!PrintBluetoothTest(this)()){
+                         Toast.makeText(this,"Impresora no vinculada",Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (e: Exception) {
                 Toast.makeText(this, "exception", Toast.LENGTH_SHORT)
@@ -71,26 +85,46 @@ class AddPrinterActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             try {
-                printers = Printers(
-                    null,
-                    binding.etName.text.toString(),
-                    binding.spFontType.selectedItem.toString().trim(),
-                    binding.spDocumentType.selectedItem.toString().trim(),
-                    binding.etCopies.text.toString().toInt(),
-                    binding.etCharacters.text.toString().toInt(),
-                    binding.tbPrinterType.isChecked,
-                    binding.etIPAddress.text.toString().trim(),
-                    null
-                )
-                if (binding.etPort.text.isNotBlank()) {
-                    printers.port = binding.etPort.text.toString().toInt()
-                }
-                val printerToSave = printers.createPrinterEntityFromPrinterModel()
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        addPrinterViewModel.onAdd(printerToSave)
-                    } catch (e: Exception) {
-                        println(e)
+                if (checkForm()) {
+                    printers = Printers(
+                        null,
+                        binding.etName.text.toString(),
+                        "B",
+                        binding.spDocumentType.selectedItem.toString().trim(),
+                        binding.etCopies.text.toString().toInt(),
+                        binding.etCharacters.text.toString().toInt(),
+                        printerType,
+                        binding.etIPAddress.text.toString().trim(),
+                        null
+                    )
+                    if (binding.etPort.text.isNotBlank()) {
+                        printers.port = binding.etPort.text.toString().toInt()
+                    }
+                    val printerToSave = printers.createPrinterEntityFromPrinterModel()
+                    val possibleSet =
+                        getSharedPreferences("asd", 0).getStringSet("Commands", setOf())
+                    val possibleCommands = possibleSet?.toTypedArray()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            addPrinterViewModel.onAdd(printerToSave)
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Impresora guardada",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            if (!possibleCommands.isNullOrEmpty()) {
+                                val m_ambiente = "comercios.illarli.com";
+                                Discrimination(
+                                    addPrinterViewModel.getAll(),
+                                    m_ambiente,
+                                    applicationContext
+                                )(possibleCommands)
+                            }
+                        } catch (e: Exception) {
+                            println(e)
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -100,24 +134,51 @@ class AddPrinterActivity : AppCompatActivity() {
             }
         }
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
-        binding.tbPrinterType.setOnClickListener {
-            if (binding.tbPrinterType.isChecked) {
-                binding.etIPAddress.visibility = View.VISIBLE
-                binding.etPort.visibility = View.VISIBLE
-            } else {
-                binding.etPort.visibility = View.GONE
-                binding.etIPAddress.visibility = View.GONE
-            }
+        binding.cvWifi.setOnClickListener {
+            printerType = true
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
 
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivBluetooth.setColorFilter(android.R.color.darker_gray)
+            inputVisibilityChange(printerType)
 
+        }
+        binding.cvBluetooth.setOnClickListener {
+            printerType = false
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
+
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivWifi.setColorFilter(android.R.color.darker_gray)
+            inputVisibilityChange(printerType)
         }
     }
 
     private fun checkForm(): Boolean {
-        return true
+        var error = true
+        if (binding.etName.text.isBlank()) {
+            binding.etName.error = "El nombre es requerido"
+            error = false
+        }
+        if (binding.etCopies.text.isBlank()) {
+            binding.etCopies.error = "El número de copias es requerido"
+            error = false
+        }
+        if (binding.etCharacters.text.isBlank()) {
+            binding.etCharacters.error = "El número de caracteres es requerido"
+            error = false
+        }
+        if (binding.etPort.text.isBlank() && printerType) {
+            binding.etPort.error = "El puerto es requerido"
+            error = false
+        }
+        if (binding.etIPAddress.text.isBlank() && printerType) {
+            binding.etIPAddress.error = "La dirección es requerida"
+            error = false
+        }
+        return error
     }
 
     private fun hideSystemUI() {
@@ -125,6 +186,19 @@ class AddPrinterActivity : AppCompatActivity() {
             window.setDecorFitsSystemWindows(false)
         } else {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+    }
+    private fun inputVisibilityChange(param:Boolean){
+        if (param) {
+            binding.etIPAddress.visibility = View.VISIBLE
+            binding.etPort.visibility = View.VISIBLE
+            binding.tilIpAddress.visibility = View.VISIBLE
+            binding.tilPort.visibility = View.VISIBLE
+        } else {
+            binding.etPort.visibility = View.GONE
+            binding.etIPAddress.visibility = View.GONE
+            binding.tilIpAddress.visibility = View.GONE
+            binding.tilPort.visibility = View.GONE
         }
     }
 }

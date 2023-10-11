@@ -9,4 +9,7 @@ class GetPrinter @Inject constructor(private val printerRepository: PrinterRepos
     suspend operator fun invoke(id:Int): Printers {
         return printerRepository.findPrinterById(id).getPrinterModelFromPrinterEntity()
     }
+    suspend fun getPrinterByDocument(document:String): Printers? {
+        return printerRepository.findPrinterByDocumentType(document)?.getPrinterModelFromPrinterEntity()
+    }
 }

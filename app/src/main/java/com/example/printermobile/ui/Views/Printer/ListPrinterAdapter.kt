@@ -10,6 +10,7 @@ import com.example.printermobile.domain.models.Printers
 class ListPrinterAdapter(
     var printers: List<Printers>,
     private val onItemRedirect: (Printers) -> Unit,
+    private val onItemRemove: (Printers) -> Unit,
 ) : RecyclerView.Adapter<ListPrinterViewHolder>() {
 
     fun updateList(newList: List<Printers>){
@@ -28,7 +29,7 @@ class ListPrinterAdapter(
     }
 
     override fun onBindViewHolder(holder: ListPrinterViewHolder, position: Int) {
-        holder.render(printers[position],onItemRedirect)
+        holder.render(printers[position],onItemRedirect,onItemRemove)
     }
 
 }

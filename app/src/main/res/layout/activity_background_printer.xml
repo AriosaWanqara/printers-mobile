@@ -6,12 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".ui.Views.BackgroundPrinterActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/llPrintGift"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="Imprimiendo"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:background="@drawable/background_superior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Impresión ILLarli"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#848484"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txvImpresionNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/white" />
+
+
+            <TextView
+                android:id="@+id/txvImpresionDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/txvImpresionEstado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/white" />
+
+
+            <pl.droidsonroids.gif.GifImageView
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/printing"
+                />
+
+            <TextView
+                android:id="@+id/txvImpresionProceso"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="left"
+                android:lines="4"
+                android:maxLines="4"
+                android:padding="3dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
