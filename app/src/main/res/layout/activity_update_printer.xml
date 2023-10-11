@@ -104,11 +104,6 @@
             android:hint="Tipo de documento"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <Spinner
-            android:id="@+id/spFontType"
-            android:hint="Tipo de letra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -119,6 +114,7 @@
             <Button
                 android:id="@+id/btnSave"
                 android:text="Guardar"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:backgroundTint="@color/illarli_orange"
@@ -127,6 +123,7 @@
             <Button
                 android:id="@+id/btnPrintTest"
                 android:text="Probar"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:backgroundTint="@color/illarli_orange"

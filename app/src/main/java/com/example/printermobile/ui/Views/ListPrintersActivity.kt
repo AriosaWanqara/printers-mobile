@@ -2,13 +2,14 @@ package com.example.printermobile.ui.Views
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.lifecycle.Observer
 import com.example.printermobile.databinding.ActivityListPrintersBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
@@ -28,9 +29,18 @@ class ListPrintersActivity : AppCompatActivity() {
         val id = it.id
         redirect(id!!)
     }, onItemRemove = {
-        CoroutineScope(Dispatchers.IO).launch {
-            listPrintersViewModel.onDeletePrinter(it.id!!)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Eliminar Impresora")
+        builder.setMessage("¿Esta seguro en eliminar este Resgistro?")
+        builder.setPositiveButton(
+            "Eliminar"
+        ) { _, _ ->
+            CoroutineScope(Dispatchers.IO).launch {
+                listPrintersViewModel.onDeletePrinter(it.id!!)
+            }
         }
+        builder.setNegativeButton("Cancelar", null)
+        builder.show()
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {

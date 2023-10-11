@@ -1,5 +1,6 @@
 package com.example.printermobile.ui.Views
 
+import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
@@ -11,7 +12,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
+import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
+import com.example.printermobile.core.print.test.PrintBluetoothTest
 import com.example.printermobile.core.print.test.PrintWifiTest
 import com.example.printermobile.core.print.utils.printer1.Discrimination
 import com.example.printermobile.databinding.ActivityAddPrinterBinding
@@ -27,6 +30,7 @@ import kotlinx.coroutines.withContext
 class AddPrinterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPrinterBinding
     private lateinit var printers: Printers
+    private var printerType:Boolean = true
     private val addPrinterViewModel: AddPrinterViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +57,11 @@ class AddPrinterActivity : AppCompatActivity() {
 //        binding.spFontType.adapter = fontTypeSpinnerAdapter
     }
 
+
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                if (binding.tbPrinterType.isChecked) {
+                if (printerType) {
                     if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
                         PrintWifiTest(
                             binding.etIPAddress.text.toString().trim(),
@@ -68,7 +73,9 @@ class AddPrinterActivity : AppCompatActivity() {
                             .show()
                     }
                 } else {
-                    Toast.makeText(this, "Bluetooth Test", Toast.LENGTH_SHORT).show()
+                    if (!PrintBluetoothTest(this)()){
+                         Toast.makeText(this,"Impresora no vinculada",Toast.LENGTH_SHORT).show()
+                    }
                 }
             } catch (e: Exception) {
                 Toast.makeText(this, "exception", Toast.LENGTH_SHORT)
@@ -86,7 +93,7 @@ class AddPrinterActivity : AppCompatActivity() {
                         binding.spDocumentType.selectedItem.toString().trim(),
                         binding.etCopies.text.toString().toInt(),
                         binding.etCharacters.text.toString().toInt(),
-                        binding.tbPrinterType.isChecked,
+                        printerType,
                         binding.etIPAddress.text.toString().trim(),
                         null
                     )
@@ -130,16 +137,22 @@ class AddPrinterActivity : AppCompatActivity() {
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
-        binding.tbPrinterType.setOnClickListener {
-            if (binding.tbPrinterType.isChecked) {
-                binding.etIPAddress.visibility = View.VISIBLE
-                binding.etPort.visibility = View.VISIBLE
-            } else {
-                binding.etPort.visibility = View.GONE
-                binding.etIPAddress.visibility = View.GONE
-            }
+        binding.cvWifi.setOnClickListener {
+            printerType = true
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
 
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivBluetooth.setColorFilter(android.R.color.darker_gray)
+            inputVisibilityChange(printerType)
 
+        }
+        binding.cvBluetooth.setOnClickListener {
+            printerType = false
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
+
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivWifi.setColorFilter(android.R.color.darker_gray)
+            inputVisibilityChange(printerType)
         }
     }
 
@@ -157,11 +170,11 @@ class AddPrinterActivity : AppCompatActivity() {
             binding.etCharacters.error = "El número de caracteres es requerido"
             error = false
         }
-        if (binding.etPort.text.isBlank() && binding.tbPrinterType.isChecked) {
+        if (binding.etPort.text.isBlank() && printerType) {
             binding.etPort.error = "El puerto es requerido"
             error = false
         }
-        if (binding.etIPAddress.text.isBlank() && binding.tbPrinterType.isChecked) {
+        if (binding.etIPAddress.text.isBlank() && printerType) {
             binding.etIPAddress.error = "La dirección es requerida"
             error = false
         }
@@ -173,6 +186,19 @@ class AddPrinterActivity : AppCompatActivity() {
             window.setDecorFitsSystemWindows(false)
         } else {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+    }
+    private fun inputVisibilityChange(param:Boolean){
+        if (param) {
+            binding.etIPAddress.visibility = View.VISIBLE
+            binding.etPort.visibility = View.VISIBLE
+            binding.tilIpAddress.visibility = View.VISIBLE
+            binding.tilPort.visibility = View.VISIBLE
+        } else {
+            binding.etPort.visibility = View.GONE
+            binding.etIPAddress.visibility = View.GONE
+            binding.tilIpAddress.visibility = View.GONE
+            binding.tilPort.visibility = View.GONE
         }
     }
 }

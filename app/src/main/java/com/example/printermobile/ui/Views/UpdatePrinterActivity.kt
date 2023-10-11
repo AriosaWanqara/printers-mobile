@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
+import com.example.printermobile.core.print.test.PrintBluetoothTest
 import com.example.printermobile.core.print.test.PrintWifiTest
 import com.example.printermobile.databinding.ActivityUpdatePrinterBinding
 import com.example.printermobile.domain.models.Printers
@@ -86,7 +87,9 @@ class UpdatePrinterActivity : AppCompatActivity() {
                                 .show()
                         }
                     } else {
-                        Toast.makeText(this,"Bluetooth Test",Toast.LENGTH_SHORT).show()
+                        if (!PrintBluetoothTest(this)()){
+                            Toast.makeText(this,"Impresora no vinculada",Toast.LENGTH_SHORT).show()
+                        }
                     }
 
             } catch (e: Exception) {
@@ -98,7 +101,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
         binding.btnSave.setOnClickListener {
             if (checkForm()) {
                 try {
-                    var printers = Printers(
+                    val printers = Printers(
                         updatePrinterViewModel.printer.value?.id,
                         binding.etName.text.toString(),
                         "B",
