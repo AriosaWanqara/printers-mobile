@@ -17,9 +17,14 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideRoom(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, DBConnection::class.java, "printer_database").build()
+        Room.databaseBuilder(context, DBConnection::class.java, "printer_database")
+            .fallbackToDestructiveMigration().build()
 
     @Singleton
     @Provides
-    fun providePrinterDAO(database:DBConnection) = database.printersDAO()
+    fun providePrinterDAO(database: DBConnection) = database.printersDAO()
+
+    @Singleton
+    @Provides
+    fun provideSystemTypeDAO(database: DBConnection) = database.systemTypeDAO()
 }

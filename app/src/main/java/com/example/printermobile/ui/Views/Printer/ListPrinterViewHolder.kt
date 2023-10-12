@@ -17,7 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class ListPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val tvCategoryName: TextView = view.findViewById(R.id.tvPrinterName)
     private val tvAddress: TextView = view.findViewById(R.id.tvAddress)
-    private val tvPort: TextView = view.findViewById(R.id.tvPort)
+    private val tvName: TextView = view.findViewById(R.id.tvName)
     private val tvCopy: TextView = view.findViewById(R.id.tvCopy)
     private val tvCharacters: TextView = view.findViewById(R.id.tvCharacters)
     private val cvItemContainer: CardView = view.findViewById(R.id.cvItemContainer)
@@ -27,14 +27,13 @@ class ListPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val documentType: documentType = documentType()
         tvCategoryName.text =
             documentType.findDocumentByKey(printer.documentType) ?: printer.documentType
+        tvName.text = "Nombre: ${printer.name}"
         if (printer.isWifi) {
-            tvAddress.text = "Dirección: ${printer.address}"
+            tvAddress.text = "Dirección: ${printer.address}:${printer.port.toString()}"
             ivType.setImageResource(R.drawable.ic_wifi_ic)
-            tvPort.text = "Puerto: ${printer.port.toString()}"
         } else {
             ivType.setImageResource(R.drawable.ic_bluetooth_ic)
             tvAddress.visibility = View.GONE
-            tvPort.visibility = View.GONE
         }
         tvCopy.text = "Copias: ${printer.copyNumber.toString()}"
         tvCharacters.text = "Caracteres: ${printer.charactersNumber.toString()}"

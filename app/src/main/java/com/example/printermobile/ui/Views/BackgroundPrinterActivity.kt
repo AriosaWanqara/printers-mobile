@@ -49,8 +49,11 @@ class BackgroundPrinterActivity : AppCompatActivity() {
             val comandos = data.split("-".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()
             val printers = backgroundPrinterViewModel.getAll()
+            val st = backgroundPrinterViewModel.getSystemType()
             m_ambiente = "comercios.illarli.com"
-//            "restaurantes.illarli.com"
+            if (st != null){
+                m_ambiente = st.getName()
+            }
             if(!Discrimination(printers,m_ambiente!!,this)(comandos)){
                 result = false
                 val addIntent = Intent(this,AddPrinterActivity::class.java)

@@ -14,8 +14,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.printermobile.R
+import com.example.printermobile.core.system.SystemTypeEnum
 import com.example.printermobile.databinding.ActivityListPrintersBinding
 import com.example.printermobile.domain.models.Printers
+import com.example.printermobile.domain.models.SystemType
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
 import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
 import com.example.printermobile.ui.Views.Printer.SwipeHelper
@@ -24,12 +26,14 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ListPrintersActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListPrintersBinding
     private val listPrintersViewModel: ListPrintersViewModel by viewModels()
     private var printers: List<Printers> = listOf()
+    private var systemType: SystemType? = null;
     private val adapter = ListPrinterAdapter(printers, onItemRedirect = {
         val id = it.id
         redirect(id!!)
@@ -65,6 +69,15 @@ class ListPrintersActivity : AppCompatActivity() {
             }
             adapter.updateList(printers)
         })
+        resetSystemTypeCards()
+        listPrintersViewModel.systemType.observe(this, Observer { system ->
+            if (system == null) {
+                resetSystemTypeCards()
+            } else {
+                systemType = system
+                setSystemTypeCard(system.getIsRestaurant())
+            }
+        })
     }
 
     private fun redirect(id: Int) {
@@ -85,7 +98,7 @@ class ListPrintersActivity : AppCompatActivity() {
             }
         })
 
-        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT){
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -110,12 +123,30 @@ class ListPrintersActivity : AppCompatActivity() {
                 isCurrentlyActive: Boolean
             ) {
 
-                RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(applicationContext, R.color.illarli_red))
+                RecyclerViewSwipeDecorator.Builder(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                    .addBackgroundColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.illarli_red
+                        )
+                    )
                     .addActionIcon(R.drawable.ic_delete)
-                    .setActionIconTint(ContextCompat.getColor(applicationContext,R.color.white))
-                    .addCornerRadius(2,8)
-                    .setSwipeLeftLabelColor(ContextCompat.getColor(applicationContext,R.color.white))
+                    .setActionIconTint(ContextCompat.getColor(applicationContext, R.color.white))
+                    .addCornerRadius(2, 8)
+                    .setSwipeLeftLabelColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.white
+                        )
+                    )
                     .addSwipeLeftLabel("Borrar")
                     .create()
                     .decorate();
@@ -136,6 +167,76 @@ class ListPrintersActivity : AppCompatActivity() {
         personalItemTouch.attachToRecyclerView(binding.rvPrinterList)
 //        itemTouchHelper.attachToRecyclerView(binding.rvPrinterList)
 
+
+        binding.cvRestaurant.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    if (systemType == null) {
+                        listPrintersViewModel.onAddSystemType(
+                            SystemType(
+                                1,
+                                SystemTypeEnum.RESTAURANTE.type,
+                                true
+                            )
+                        )
+                        withContext(Dispatchers.Main) {
+                            setSystemTypeCard(true)
+                        }
+                    } else {
+                        if (!systemType!!.getIsRestaurant()) {
+                            listPrintersViewModel.onAddSystemType(
+                                SystemType(
+                                    1,
+                                    SystemTypeEnum.RESTAURANTE.type,
+                                    true
+                                )
+                            )
+                            withContext(Dispatchers.Main) {
+                                setSystemTypeCard(true)
+                            }
+                        }
+                    }
+
+                } catch (e: Exception) {
+
+                }
+            }
+        }
+
+        binding.cvShop.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    if (systemType == null) {
+                        listPrintersViewModel.onAddSystemType(
+                            SystemType(
+                                1,
+                                SystemTypeEnum.COMERCIO.type,
+                                false
+                            )
+                        )
+                        withContext(Dispatchers.Main) {
+                            setSystemTypeCard(false)
+                        }
+                    } else {
+                        if (systemType!!.getIsRestaurant()) {
+                            listPrintersViewModel.onAddSystemType(
+                                SystemType(
+                                    1,
+                                    SystemTypeEnum.COMERCIO.type,
+                                    false
+                                )
+                            )
+                            withContext(Dispatchers.Main) {
+                                setSystemTypeCard(false)
+                            }
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    println(e)
+                }
+            }
+        }
     }
 
     private fun deleteButton(position: Int): SwipeHelper.UnderlayButton {
@@ -167,5 +268,96 @@ class ListPrintersActivity : AppCompatActivity() {
         } else {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
+    }
+
+    private fun setSystemTypeCard(params: Boolean) {
+        if (params) {
+            binding.cvRestaurant.setCardBackgroundColor(resources.getColor(R.color.primary))
+            binding.ivRestaurant.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+            binding.tvRestaurant.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+
+            binding.cvShop.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivShop.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+            binding.tvShop.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+
+        } else {
+            binding.cvShop.setCardBackgroundColor(resources.getColor(R.color.primary))
+            binding.ivShop.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+            binding.tvShop.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+
+            binding.cvRestaurant.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivRestaurant.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+            binding.tvRestaurant.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+        }
+    }
+
+    private fun resetSystemTypeCards() {
+        binding.cvRestaurant.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+        binding.ivRestaurant.setColorFilter(
+            ContextCompat.getColor(
+                this,
+                android.R.color.darker_gray
+            )
+        )
+        binding.tvRestaurant.setTextColor(
+            ContextCompat.getColor(
+                this,
+                android.R.color.darker_gray
+            )
+        )
+
+        binding.cvShop.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+        binding.ivShop.setColorFilter(
+            ContextCompat.getColor(
+                this,
+                android.R.color.darker_gray
+            )
+        )
+        binding.tvShop.setTextColor(
+            ContextCompat.getColor(
+                this,
+                android.R.color.darker_gray
+            )
+        )
     }
 }

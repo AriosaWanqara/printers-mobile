@@ -154,7 +154,7 @@ class Discrimination(
                 "IMPRESION_FACTURA_ELECTRONICA" -> when (parts[2]) {
                     "COMERCIOS" -> {
                         jsonObject =
-                            Network()("25240631", urlVentasComercios, "comercios.illarli.com")
+                            Network()(parts[1], urlVentasComercios, systemType)
                         if (printerBuilder != null) {
                             printerBuilder!!.imprimirFacturaElectronica(
                                 jsonObject,

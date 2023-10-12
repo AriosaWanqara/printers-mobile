@@ -32,19 +32,16 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:text="Factura electronica" />
-
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="DonnQ" />
             <TextView
                 android:id="@+id/tvAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="192.168.100.70" />
-
-            <TextView
-                android:id="@+id/tvPort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="9100" />
-
             <TextView
                 android:id="@+id/tvCopy"
                 android:layout_width="wrap_content"
@@ -70,7 +67,7 @@
                 android:id="@+id/ivType"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginEnd="7dp"
+                android:layout_marginEnd="13dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_wifi_ic" />

@@ -36,7 +36,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="illarlitest" />
+                <data android:scheme="illarli" />
             </intent-filter>
         </activity>
         <activity
