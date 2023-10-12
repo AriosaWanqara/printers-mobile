@@ -62,13 +62,12 @@
             <TextView
                 android:id="@+id/tvBusinessTypeLabel"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
                 android:text="Tipo de Negocio"
                 android:textColor="@color/textPrimary"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="10sp"
                 android:layout_height="wrap_content"/>
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvRestaurant"
@@ -116,7 +115,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:backgroundTint="@color/primary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cvRestaurant"
@@ -133,7 +131,6 @@
 
                         <TextView
                             android:id="@+id/tvShop"
-                            android:textColor="@color/white"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -141,7 +138,6 @@
                             android:text="Comercios" />
                         <ImageView
                             android:id="@+id/ivShop"
-                            app:tint="@color/white"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_gravity="center"

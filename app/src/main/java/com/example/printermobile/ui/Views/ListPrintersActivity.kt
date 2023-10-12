@@ -169,44 +169,61 @@ class ListPrintersActivity : AppCompatActivity() {
 
 
         binding.cvRestaurant.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    if (systemType == null) {
-                        listPrintersViewModel.onAddSystemType(
-                            SystemType(
-                                1,
-                                SystemTypeEnum.RESTAURANTE.type,
-                                true
-                            )
-                        )
-                        withContext(Dispatchers.Main) {
-                            setSystemTypeCard(true)
-                        }
-                    } else {
-                        if (!systemType!!.getIsRestaurant()) {
-                            listPrintersViewModel.onAddSystemType(
-                                SystemType(
-                                    1,
-                                    SystemTypeEnum.RESTAURANTE.type,
-                                    true
-                                )
-                            )
-                            withContext(Dispatchers.Main) {
-                                setSystemTypeCard(true)
-                            }
-                        }
+            if (systemType != null) {
+                if (!systemType!!.getIsRestaurant()) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Cambiar tipo de negocio")
+                    builder.setMessage("¿Esta seguro que desea cambiar a restaurante?")
+                    builder.setPositiveButton(
+                        "Cambiar"
+                    ) { _, _ ->
+                        updateToRestaurant()
                     }
-
-                } catch (e: Exception) {
-
+                    builder.setNegativeButton("Cancelar", null)
+                    builder.show()
                 }
+            } else {
+                updateToRestaurant()
             }
+
         }
 
         binding.cvShop.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    if (systemType == null) {
+            if (systemType != null) {
+                if (systemType!!.getIsRestaurant()) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Cambiar tipo de negocio")
+                    builder.setMessage("¿Esta seguro que desea cambiar a comercios?")
+                    builder.setPositiveButton(
+                        "Cambiar"
+                    ) { _, _ ->
+                        updateToShop()
+                    }
+                    builder.setNegativeButton("Cancelar", null)
+                    builder.show()
+                }
+            } else {
+                updateToShop()
+            }
+        }
+    }
+
+    private fun updateToShop() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                if (systemType == null) {
+                    listPrintersViewModel.onAddSystemType(
+                        SystemType(
+                            1,
+                            SystemTypeEnum.COMERCIO.type,
+                            false
+                        )
+                    )
+                    withContext(Dispatchers.Main) {
+                        setSystemTypeCard(false)
+                    }
+                } else {
+                    if (systemType!!.getIsRestaurant()) {
                         listPrintersViewModel.onAddSystemType(
                             SystemType(
                                 1,
@@ -217,24 +234,46 @@ class ListPrintersActivity : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             setSystemTypeCard(false)
                         }
-                    } else {
-                        if (systemType!!.getIsRestaurant()) {
-                            listPrintersViewModel.onAddSystemType(
-                                SystemType(
-                                    1,
-                                    SystemTypeEnum.COMERCIO.type,
-                                    false
-                                )
+                    }
+                }
+
+            } catch (e: Exception) {
+                println(e)
+            }
+        }
+    }
+
+    private fun updateToRestaurant() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                if (systemType == null) {
+                    listPrintersViewModel.onAddSystemType(
+                        SystemType(
+                            1,
+                            SystemTypeEnum.RESTAURANTE.type,
+                            true
+                        )
+                    )
+                    withContext(Dispatchers.Main) {
+                        setSystemTypeCard(true)
+                    }
+                } else {
+                    if (!systemType!!.getIsRestaurant()) {
+                        listPrintersViewModel.onAddSystemType(
+                            SystemType(
+                                1,
+                                SystemTypeEnum.RESTAURANTE.type,
+                                true
                             )
-                            withContext(Dispatchers.Main) {
-                                setSystemTypeCard(false)
-                            }
+                        )
+                        withContext(Dispatchers.Main) {
+                            setSystemTypeCard(true)
                         }
                     }
-
-                } catch (e: Exception) {
-                    println(e)
                 }
+
+            } catch (e: Exception) {
+
             }
         }
     }

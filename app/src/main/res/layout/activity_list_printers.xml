@@ -61,13 +61,12 @@
             <TextView
                 android:id="@+id/tvBusinessTypeLabel"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
                 android:text="Tipo de Negocio"
                 android:textColor="@color/textPrimary"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="10sp"
                 android:layout_height="wrap_content"/>
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvRestaurant"
