@@ -61,49 +61,171 @@
         android:layout_marginHorizontal="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView">
-
-        <ToggleButton
-            android:id="@+id/tbPrinterType"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textOn="Wifi"
-            android:checked="true"
-            android:textOff="Bluetooth"
-            android:layout_gravity="center"
-            />
-        <EditText
-            android:id="@+id/etName"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvBluetooth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cvWifi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/illarli_orange">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="5dp"
+                            android:text="Bluetooth" />
+
+                        <ImageView
+                            android:id="@+id/ivBluetooth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_bluetooth_ic" />
+                    </LinearLayout>
+
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvWifi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@color/illarli_orange"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cvBluetooth"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/illarli_orange">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="5dp"
+                            android:text="Wifi" />
+                        <ImageView
+                            android:id="@+id/ivWifi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_wifi_ic" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:hint="Nombre"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etIPAddress"
-            android:hint="Direccion Ip"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilIpAddress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etPort"
-            android:hint="Puerto"
-            android:inputType="number"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etIPAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Direccion Ip" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPort"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etCharacters"
-            android:hint="Número de caracteres"
-            android:inputType="number"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etPort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Puerto"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etCopies"
-            android:hint="Número de copias"
-            android:inputType="number"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etCharacters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Número de caracteres"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <Spinner
-            android:id="@+id/spDocumentType"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etCopies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Número de copias"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/menu"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:hint="Tipo de documento"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <AutoCompleteTextView
+                android:id="@+id/acDocumentType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"

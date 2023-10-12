@@ -29,6 +29,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdatePrinterBinding
     private val updatePrinterViewModel: UpdatePrinterViewModel by viewModels()
+    private var printerType:Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdatePrinterBinding.inflate(layoutInflater)
@@ -54,6 +55,8 @@ class UpdatePrinterActivity : AppCompatActivity() {
         binding.etCopies.setText(printer.copyNumber.toString())
         printer.port?.let { binding.etPort.setText(it.toString()) }
         printer.address?.let { binding.etIPAddress.setText(it) }
+        printerType = printer.isWifi
+        setCardsSelectedState(printer.isWifi)
     }
 
     private fun initUI() {
@@ -63,19 +66,14 @@ class UpdatePrinterActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             documentType.getDocuments()
         )
-//        val fontTypeSpinnerAdapter = ArrayAdapter<String>(
-//            this,
-//            android.R.layout.simple_spinner_dropdown_item,
-//            listOf("B", "A")
-//        )
-        binding.spDocumentType.adapter = documentTypeSpinnerAdapter
-//        binding.spFontType.adapter = fontTypeSpinnerAdapter
+        binding.acDocumentType.setText(documentType.getDocuments()[0])
+        binding.acDocumentType.setAdapter(documentTypeSpinnerAdapter)
     }
 
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                    if (binding.tbPrinterType.isChecked) {
+                    if (printerType) {
                         if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
                             PrintWifiTest(
                                 binding.etIPAddress.text.toString().trim(),
@@ -105,10 +103,10 @@ class UpdatePrinterActivity : AppCompatActivity() {
                         updatePrinterViewModel.printer.value?.id,
                         binding.etName.text.toString(),
                         "B",
-                        binding.spDocumentType.selectedItem.toString().trim(),
+                        binding.acDocumentType.text.toString().trim(),
                         binding.etCopies.text.toString().toInt(),
                         binding.etCharacters.text.toString().toInt(),
-                        binding.tbPrinterType.isChecked,
+                        printerType,
                         binding.etIPAddress.text.toString().trim(),
                         null
                     )
@@ -138,14 +136,11 @@ class UpdatePrinterActivity : AppCompatActivity() {
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
-        binding.tbPrinterType.setOnClickListener {
-            if (binding.tbPrinterType.isChecked) {
-                binding.etIPAddress.visibility = View.VISIBLE
-                binding.etPort.visibility = View.VISIBLE
-            } else {
-                binding.etPort.visibility = View.GONE
-                binding.etIPAddress.visibility = View.GONE
-            }
+        binding.cvWifi.setOnClickListener {
+            setCardsSelectedState(true)
+        }
+        binding.cvBluetooth.setOnClickListener {
+            setCardsSelectedState(false)
         }
     }
 
@@ -163,11 +158,11 @@ class UpdatePrinterActivity : AppCompatActivity() {
             binding.etCharacters.error = "El número de caracteres es requerido"
             error = false
         }
-        if (binding.etPort.text.isBlank() && binding.tbPrinterType.isChecked) {
+        if (binding.etPort.text.isBlank() && printerType) {
             binding.etPort.error = "El puerto es requerido"
             error = false
         }
-        if (binding.etIPAddress.text.isBlank() && binding.tbPrinterType.isChecked) {
+        if (binding.etIPAddress.text.isBlank() && printerType) {
             binding.etIPAddress.error = "La dirección es requerida"
             error = false
         }
@@ -180,6 +175,36 @@ class UpdatePrinterActivity : AppCompatActivity() {
             window.setDecorFitsSystemWindows(false)
         } else {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        }
+    }
+
+    private fun inputVisibilityChange(param: Boolean) {
+        if (param) {
+            binding.etIPAddress.visibility = View.VISIBLE
+            binding.etPort.visibility = View.VISIBLE
+            binding.tilIpAddress.visibility = View.VISIBLE
+            binding.tilPort.visibility = View.VISIBLE
+        } else {
+            binding.etPort.visibility = View.GONE
+            binding.etIPAddress.visibility = View.GONE
+            binding.tilIpAddress.visibility = View.GONE
+            binding.tilPort.visibility = View.GONE
+        }
+    }
+
+    private fun setCardsSelectedState(params: Boolean) {
+        if (params) {
+            printerType = true
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
+
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            inputVisibilityChange(printerType)
+        } else {
+            printerType = false
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
+
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            inputVisibilityChange(printerType)
         }
     }
 }
