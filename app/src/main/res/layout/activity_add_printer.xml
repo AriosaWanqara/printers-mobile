@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
-        android:backgroundTint="@color/illarli_orange"
+        android:backgroundTint="@color/primary"
         app:cardCornerRadius="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +80,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/cvWifi"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:strokeColor="@color/illarli_orange">
+                app:strokeColor="@color/primary">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -93,6 +93,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tvBluetooth"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -101,8 +102,8 @@
 
                         <ImageView
                             android:id="@+id/ivBluetooth"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_bluetooth_ic" />
                     </LinearLayout>
@@ -115,12 +116,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:backgroundTint="@color/illarli_orange"
+                android:backgroundTint="@color/primary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cvBluetooth"
                 app:layout_constraintTop_toTopOf="parent"
-                app:strokeColor="@color/illarli_orange">
+                app:strokeColor="@color/primary">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -133,6 +134,8 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tvWifi"
+                            android:textColor="@color/white"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -140,8 +143,9 @@
                             android:text="Wifi" />
                         <ImageView
                             android:id="@+id/ivWifi"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            app:tint="@color/white"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_wifi_ic" />
                     </LinearLayout>
@@ -242,7 +246,7 @@
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/illarli_orange"
+                android:backgroundTint="@color/primary"
                 android:text="Guardar"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -252,7 +256,7 @@
                 android:id="@+id/btnPrintTest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/illarli_orange"
+                android:backgroundTint="@color/primary"
                 android:text="Probar"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -10,7 +10,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="fontFamily">@font/noto_regular</item>
-        <item name="android:colorPrimary">@color/illarli_orange</item>
+        <item name="android:colorPrimary">@color/primary</item>
         <item name="android:textColorPrimary">@color/black</item>
 
     </style>
@@ -48,11 +48,11 @@
 
     <style name="illarliTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">@color/text_input_box_stroke</item>
-        <item name="colorControlActivated">@color/illarli_orange</item>
-        <item name="colorPrimary">@color/illarli_orange</item>
+        <item name="colorControlActivated">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
     </style>
     <style name="illarliTextInputLayoutStyleTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="colorControlActivated">@color/illarli_orange</item>
-        <item name="colorPrimary">@color/illarli_orange</item>
+        <item name="colorControlActivated">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
     </style>
 </resources>

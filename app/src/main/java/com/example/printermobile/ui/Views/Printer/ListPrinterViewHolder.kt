@@ -28,16 +28,16 @@ class ListPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         tvCategoryName.text =
             documentType.findDocumentByKey(printer.documentType) ?: printer.documentType
         if (printer.isWifi) {
-            tvAddress.text = printer.address
-            ivType.setImageResource(R.mipmap.ic_wifi)
-            tvPort.text = printer.port.toString()
+            tvAddress.text = "Dirección: ${printer.address}"
+            ivType.setImageResource(R.drawable.ic_wifi_ic)
+            tvPort.text = "Puerto: ${printer.port.toString()}"
         } else {
-            ivType.setImageResource(R.mipmap.ic_bluetooth)
+            ivType.setImageResource(R.drawable.ic_bluetooth_ic)
             tvAddress.visibility = View.GONE
             tvPort.visibility = View.GONE
         }
-        tvCopy.text = printer.copyNumber.toString()
-        tvCharacters.text = printer.charactersNumber.toString()
+        tvCopy.text = "Copias: ${printer.copyNumber.toString()}"
+        tvCharacters.text = "Caracteres: ${printer.charactersNumber.toString()}"
         cvItemContainer.setOnClickListener {
             onItemRedirect(printer)
         }

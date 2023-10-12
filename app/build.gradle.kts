@@ -100,6 +100,9 @@ dependencies {
     // Splash
     implementation("androidx.core:core-splashscreen:1.0.0")
 
+    // Swipe decorator
+    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+
     //printer 1
     implementation("org.jsoup:jsoup:1.13.1")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.20")

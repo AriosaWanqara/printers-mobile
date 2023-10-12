@@ -15,64 +15,76 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
             <TextView
                 android:id="@+id/tvPrinterName"
-                tools:text="Factura electronica"
-                android:fontFamily="@font/noto_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 />
+                android:fontFamily="@font/noto_regular"
+                android:textColor="@color/primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:text="Factura electronica" />
 
             <TextView
                 android:id="@+id/tvAddress"
-                tools:text="192.168.100.70"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 />
+                tools:text="192.168.100.70" />
+
             <TextView
                 android:id="@+id/tvPort"
-                tools:text="9100"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 />
+                tools:text="9100" />
+
             <TextView
                 android:id="@+id/tvCopy"
-                tools:text="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 />
+                tools:text="1" />
+
             <TextView
                 android:id="@+id/tvCharacters"
-                tools:text="64"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 />
+                tools:text="64" />
         </LinearLayout>
-        <ImageView
-            android:id="@+id/ivType"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="7dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@mipmap/ic_wifi_foreground"
-            />
-        <ImageButton
-            android:id="@+id/fbDelete"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="wrap_content"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_delete"
-            android:backgroundTint="@android:color/transparent"
-            app:tint="@color/illarli_red"
-            android:layout_marginTop="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivType"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="7dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_wifi_ic" />
+
+            <ImageButton
+                android:id="@+id/fbDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/ic_delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:tint="@color/illarli_red" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

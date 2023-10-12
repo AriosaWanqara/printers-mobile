@@ -6,5 +6,5 @@
     <color name="illarli_blue">#094b7b</color>
     <color name="illarli_orange">#ee7a04</color>
     <color name="primary">@color/illarli_red</color>
-    <color name="textPrimary">@color/black</color>
+    <color name="textPrimary">@color/white</color>
 </resources>

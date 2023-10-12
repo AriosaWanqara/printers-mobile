@@ -1,21 +1,26 @@
 package com.example.printermobile.ui.Views
 
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.printermobile.R
 import com.example.printermobile.databinding.ActivityListPrintersBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
 import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
 import com.example.printermobile.ui.Views.Printer.SwipeHelper
 import dagger.hilt.android.AndroidEntryPoint
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -80,7 +85,56 @@ class ListPrintersActivity : AppCompatActivity() {
             }
         })
 
-        itemTouchHelper.attachToRecyclerView(binding.rvPrinterList)
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    listPrintersViewModel.onDeletePrinter(printers[viewHolder.adapterPosition].id!!)
+                }
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+
+                RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(applicationContext, R.color.illarli_red))
+                    .addActionIcon(R.drawable.ic_delete)
+                    .setActionIconTint(ContextCompat.getColor(applicationContext,R.color.white))
+                    .addCornerRadius(2,8)
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(applicationContext,R.color.white))
+                    .addSwipeLeftLabel("Borrar")
+                    .create()
+                    .decorate();
+
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+
+        }
+        val personalItemTouch = ItemTouchHelper(simpleCallback)
+        personalItemTouch.attachToRecyclerView(binding.rvPrinterList)
+//        itemTouchHelper.attachToRecyclerView(binding.rvPrinterList)
 
     }
 

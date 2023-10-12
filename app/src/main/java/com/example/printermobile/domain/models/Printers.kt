@@ -11,7 +11,7 @@ class Printers {
     val copyNumber: Int
     val charactersNumber: Int
     val isWifi: Boolean
-    val address: String?
+    var address: String?
     var port: Int?
 
     constructor(

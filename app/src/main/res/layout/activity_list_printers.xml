@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="0dp"
-            android:backgroundTint="@color/illarli_orange"
+            android:backgroundTint="@color/primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -64,7 +64,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginBottom="55dp"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/illarli_orange"
+        app:backgroundTint="@color/primary"
         app:fabSize="normal"
         android:layout_gravity="end|bottom"
         app:tint="@color/white"
