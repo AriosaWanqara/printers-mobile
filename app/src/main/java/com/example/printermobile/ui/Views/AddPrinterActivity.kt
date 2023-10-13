@@ -142,7 +142,8 @@ class AddPrinterActivity : AppCompatActivity() {
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.miHelp -> {
-
+                    val helpIntent = Intent(this,HelpPrinterActivity::class.java)
+                    startActivity(helpIntent)
                     true
                 }
                 else -> false

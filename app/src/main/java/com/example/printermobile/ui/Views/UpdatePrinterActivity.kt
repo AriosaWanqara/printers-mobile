@@ -149,6 +149,17 @@ class UpdatePrinterActivity : AppCompatActivity() {
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
+        binding.topAppBar.setOnMenuItemClickListener { menu ->
+            when (menu.itemId) {
+                R.id.miHelp -> {
+                    val helpIntent = Intent(this,HelpPrinterActivity::class.java)
+                    startActivity(helpIntent)
+                    true
+                }
+
+                else -> false
+            }
+        }
         binding.cvWifi.setOnClickListener {
             setCardsSelectedState(true)
         }

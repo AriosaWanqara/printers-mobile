@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -321,7 +322,23 @@ class ListPrintersActivity : AppCompatActivity() {
             val intent = Intent(this, AddPrinterActivity::class.java)
             startActivity(intent)
         }
+        binding.topAppBar.setOnMenuItemClickListener { menu ->
+            when (menu.itemId) {
+                R.id.miHelp -> {
+                    try {
+                        val helpIntent = Intent(this, HelpPrinterActivity::class.java)
+                        startActivity(helpIntent)
+                    } catch (e: Exception) {
+                        println(e)
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
     }
+
     private fun setSystemTypeCard(params: Boolean) {
         if (params) {
             binding.cvRestaurant.setCardBackgroundColor(resources.getColor(R.color.primary))
