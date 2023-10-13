@@ -21,6 +21,7 @@ import com.example.printermobile.domain.models.SystemType
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
 import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
 import com.example.printermobile.ui.Views.Printer.SwipeHelper
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +58,6 @@ class ListPrintersActivity : AppCompatActivity() {
         binding = ActivityListPrintersBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        hideSystemUI()
         initUI()
         initListeners()
 
@@ -109,7 +109,29 @@ class ListPrintersActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    listPrintersViewModel.onDeletePrinter(printers[viewHolder.adapterPosition].id!!)
+                    val printer = printers[viewHolder.adapterPosition]
+                    listPrintersViewModel.onDeletePrinter(printer.id!!)
+                    withContext(Dispatchers.Main) {
+                        Snackbar.make(
+                            binding.rvPrinterList,
+                            "Impresora Eliminada",
+                            Snackbar.LENGTH_SHORT
+                        ).setAction("Restaurar") {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                try {
+                                    val entity = printer.createEntityFromPrinterModel()
+                                    listPrintersViewModel.onAdd(entity)
+                                } catch (e: Exception) {
+                                    println(e)
+                                }
+                            }
+                        }.setActionTextColor(
+                            ContextCompat.getColor(
+                                applicationContext,
+                                R.color.primary
+                            )
+                        ).show()
+                    }
                 }
             }
 
@@ -300,15 +322,6 @@ class ListPrintersActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
-    }
-
     private fun setSystemTypeCard(params: Boolean) {
         if (params) {
             binding.cvRestaurant.setCardBackgroundColor(resources.getColor(R.color.primary))

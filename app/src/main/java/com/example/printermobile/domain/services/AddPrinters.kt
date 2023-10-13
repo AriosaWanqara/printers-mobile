@@ -6,7 +6,11 @@ import javax.inject.Inject
 
 
 class AddPrinters @Inject constructor(private val repository: PrinterRepository) {
-    suspend operator fun invoke(printers: Printers){
-        repository.add(printers)
+    suspend operator fun invoke(printers: Printers) {
+        try {
+            repository.add(printers)
+        } catch (e: Exception) {
+            println(e)
+        }
     }
 }

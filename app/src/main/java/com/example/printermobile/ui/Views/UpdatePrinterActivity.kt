@@ -19,6 +19,7 @@ import com.example.printermobile.databinding.ActivityUpdatePrinterBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
 import com.example.printermobile.ui.ViewModels.UpdatePrinterViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdatePrinterBinding
     private val updatePrinterViewModel: UpdatePrinterViewModel by viewModels()
-    private var printerType:Boolean = true
+    private var printerType: Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdatePrinterBinding.inflate(layoutInflater)
@@ -40,7 +41,6 @@ class UpdatePrinterActivity : AppCompatActivity() {
             updatePrinterViewModel.onCreate(it.toInt())
         }
 
-        hideSystemUI()
         initUI()
         initListeners()
 
@@ -73,22 +73,22 @@ class UpdatePrinterActivity : AppCompatActivity() {
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                    if (printerType) {
-                        if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
-                            PrintWifiTest(
-                                binding.etIPAddress.text.toString().trim(),
-                                binding.etPort.text.toString().toInt(),
-                                "B"
-                            )()
-                        } else {
-                            Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                if (printerType) {
+                    if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
+                        PrintWifiTest(
+                            binding.etIPAddress.text.toString().trim(),
+                            binding.etPort.text.toString().toInt(),
+                            "B"
+                        )()
                     } else {
-                        if (!PrintBluetoothTest(this)()){
-                            Toast.makeText(this,"Impresora no vinculada",Toast.LENGTH_SHORT).show()
-                        }
+                        Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
+                            .show()
                     }
+                } else {
+                    if (!PrintBluetoothTest(this)()) {
+                        Toast.makeText(this, "Impresora no vinculada", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
             } catch (e: Exception) {
                 Toast.makeText(this, "exception", Toast.LENGTH_SHORT)
@@ -114,7 +114,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
                         printers.port = binding.etPort.text.toString().toInt()
                     }
 
-                    if (!printerType){
+                    if (!printerType) {
                         printers.port = null
                         printers.address = null
                     }
@@ -122,8 +122,16 @@ class UpdatePrinterActivity : AppCompatActivity() {
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             updatePrinterViewModel.onAdd(printerToSave)
-                            withContext(Dispatchers.Main){
-                                Toast.makeText(applicationContext,"Impresora actualizada",Toast.LENGTH_SHORT).show()
+                            withContext(Dispatchers.Main) {
+                                val snackbar = Snackbar.make(
+                                    binding.btnSave,
+                                    "Impresora actualizada",
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                snackbar.setAction("Cerrar") {
+                                    snackbar.dismiss()
+                                }
+                                snackbar.show()
                             }
                         } catch (e: Exception) {
                             println(e)
@@ -137,7 +145,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnBack.setOnClickListener {
+        binding.topAppBar.setNavigationOnClickListener{
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
@@ -174,14 +182,6 @@ class UpdatePrinterActivity : AppCompatActivity() {
         return error
     }
 
-
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
-    }
 
     private fun inputVisibilityChange(param: Boolean) {
         if (param) {

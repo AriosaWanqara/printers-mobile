@@ -5,74 +5,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.Views.ListPrintersActivity">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="0dp"
-        android:padding="0dp"
         tools:context=".ui.Views.MainActivity">
 
-        <com.google.android.material.card.MaterialCardView
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/materialCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="0dp"
-            android:backgroundTint="@color/primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/clBusinessType"
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            >
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                app:menu="@menu/topbar_list_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginVertical="10dp"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <TextView
-                    android:id="@+id/tvAction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="monospace"
-                    android:text="Mis impresoras"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:layout_marginTop="3dp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
-
+                android:background="@color/primary"
+                android:minHeight="?attr/actionBarSize"
+                app:title="Mis Impresoras"
+                app:titleTextColor="@color/white" />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clBusinessType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
             android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/rvPrinterList"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/rvPrinterList"
-            app:layout_constraintTop_toBottomOf="@+id/materialCardView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
             <TextView
                 android:id="@+id/tvBusinessTypeLabel"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Tipo de Negocio"
                 android:textColor="@color/textPrimary"
-                android:textStyle="bold"
                 android:textSize="10sp"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cvRestaurant"
                 android:layout_width="0dp"
-                android:layout_marginTop="6dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:layout_marginEnd="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/cvShop"
@@ -94,9 +81,9 @@
                             android:id="@+id/tvRestaurant"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="5dp"
+                            android:layout_marginBottom="2dp"
                             android:text="Restaurante" />
 
                         <ImageView
@@ -120,6 +107,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/cvRestaurant"
                 app:strokeColor="@color/primary">
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
@@ -132,20 +120,21 @@
 
                         <TextView
                             android:id="@+id/tvShop"
-                            android:textColor="@color/white"
                             android:layout_width="wrap_content"
-                            android:layout_marginBottom="2dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="5dp"
-                            android:text="Comercios" />
+                            android:layout_marginBottom="2dp"
+                            android:text="Comercios"
+                            android:textColor="@color/white" />
+
                         <ImageView
                             android:id="@+id/ivShop"
-                            app:tint="@color/white"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_store" />
+                            android:src="@drawable/ic_store"
+                            app:tint="@color/white" />
                     </LinearLayout>
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -155,19 +144,21 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPrinterList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginHorizontal="15dp"
             android:layout_marginTop="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/clBusinessType" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddPrinter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="10dp"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@color/primary"
         android:elevation="0dp"

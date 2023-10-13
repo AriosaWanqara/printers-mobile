@@ -50,4 +50,18 @@ class Printers {
             this.port
         )
     }
+    fun createEntityFromPrinterModel(): Printers {
+        val documentType:documentType = documentType()
+        return Printers(
+            this.id,
+            this.name,
+            this.fontSize,
+            this.documentType,
+            this.copyNumber,
+            this.charactersNumber,
+            this.isWifi,
+            this.address,
+            this.port
+        )
+    }
 }

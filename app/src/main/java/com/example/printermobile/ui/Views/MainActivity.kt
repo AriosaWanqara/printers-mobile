@@ -62,7 +62,6 @@ class MainActivity : AppCompatActivity() {
             slideUp.start()
         }
 
-        hideSystemUI()
         initUI()
         initListeners()
 
@@ -118,12 +117,5 @@ class MainActivity : AppCompatActivity() {
         val updatePrinterIntent = Intent(this, UpdatePrinterActivity::class.java)
         updatePrinterIntent.putExtra("printer", id.toString())
         startActivity(updatePrinterIntent)
-    }
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
     }
 }

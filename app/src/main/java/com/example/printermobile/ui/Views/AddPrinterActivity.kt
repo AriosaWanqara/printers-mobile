@@ -20,6 +20,7 @@ import com.example.printermobile.core.print.utils.printer1.Discrimination
 import com.example.printermobile.databinding.ActivityAddPrinterBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +38,7 @@ class AddPrinterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddPrinterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        hideSystemUI()
+
         initUI()
         initListeners()
     }
@@ -104,11 +105,15 @@ class AddPrinterActivity : AppCompatActivity() {
                         try {
                             addPrinterViewModel.onAdd(printerToSave)
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(
-                                    applicationContext,
+                                val snackbar = Snackbar.make(
+                                    binding.btnSave,
                                     "Impresora guardada",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                snackbar.setAction("Cerrar") {
+                                    snackbar.dismiss()
+                                }
+                                snackbar.show()
                             }
                             if (!possibleCommands.isNullOrEmpty()) {
                                 val m_ambiente = "comercios.illarli.com";
@@ -129,10 +134,21 @@ class AddPrinterActivity : AppCompatActivity() {
                     .show()
             }
         }
-        binding.btnBack.setOnClickListener {
+        binding.topAppBar.setNavigationOnClickListener{
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
+
+        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.miHelp -> {
+
+                    true
+                }
+                else -> false
+            }
+        }
+
         binding.cvWifi.setOnClickListener {
             setCardsSelectedState(true)
         }
@@ -164,14 +180,6 @@ class AddPrinterActivity : AppCompatActivity() {
             error = false
         }
         return error
-    }
-
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
     }
 
     private fun inputVisibilityChange(param: Boolean) {
