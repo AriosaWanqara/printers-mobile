@@ -94,6 +94,7 @@
                             android:id="@+id/tvRestaurant"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="5dp"
                             android:text="Restaurante" />
@@ -133,6 +134,7 @@
                             android:id="@+id/tvShop"
                             android:textColor="@color/white"
                             android:layout_width="wrap_content"
+                            android:layout_marginBottom="2dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="5dp"
@@ -165,12 +167,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginBottom="55dp"
+        android:layout_marginBottom="60dp"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@color/primary"
+        android:elevation="0dp"
+        app:elevation="0dp"
         app:fabSize="normal"
         android:layout_gravity="end|bottom"
-        app:tint="@color/white"
-        android:contentDescription="ADD_PRINTER" />
-
+        app:tint="@color/white" />
 </FrameLayout>
