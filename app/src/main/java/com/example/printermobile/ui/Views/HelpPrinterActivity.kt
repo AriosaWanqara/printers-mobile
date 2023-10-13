@@ -13,7 +13,7 @@ import com.example.printermobile.ui.Views.faq.HelpPrinterAdapter
 class HelpPrinterActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityHelpPrinterBinding
-    private var faQList:List<FaQ> = listOf()
+    private var faQList:List<FaQ> = listOf(FaQ(),FaQ())
     private var adapter = HelpPrinterAdapter(faQList)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
