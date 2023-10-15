@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
@@ -18,6 +19,7 @@ import com.example.printermobile.databinding.ActivityUpdatePrinterBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
 import com.example.printermobile.ui.ViewModels.UpdatePrinterViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +31,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdatePrinterBinding
     private val updatePrinterViewModel: UpdatePrinterViewModel by viewModels()
+    private var printerType: Boolean = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdatePrinterBinding.inflate(layoutInflater)
@@ -38,14 +41,12 @@ class UpdatePrinterActivity : AppCompatActivity() {
             updatePrinterViewModel.onCreate(it.toInt())
         }
 
-        hideSystemUI()
         initUI()
         initListeners()
 
         updatePrinterViewModel.printer.observe(this, Observer {
             initData(it)
         })
-
     }
 
     private fun initData(printer: Printers) {
@@ -54,6 +55,8 @@ class UpdatePrinterActivity : AppCompatActivity() {
         binding.etCopies.setText(printer.copyNumber.toString())
         printer.port?.let { binding.etPort.setText(it.toString()) }
         printer.address?.let { binding.etIPAddress.setText(it) }
+        printerType = printer.isWifi
+        setCardsSelectedState(printer.isWifi)
     }
 
     private fun initUI() {
@@ -63,34 +66,29 @@ class UpdatePrinterActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             documentType.getDocuments()
         )
-//        val fontTypeSpinnerAdapter = ArrayAdapter<String>(
-//            this,
-//            android.R.layout.simple_spinner_dropdown_item,
-//            listOf("B", "A")
-//        )
-        binding.spDocumentType.adapter = documentTypeSpinnerAdapter
-//        binding.spFontType.adapter = fontTypeSpinnerAdapter
+        binding.acDocumentType.setText(documentType.getDocuments()[0])
+        binding.acDocumentType.setAdapter(documentTypeSpinnerAdapter)
     }
 
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                    if (binding.tbPrinterType.isChecked) {
-                        if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
-                            PrintWifiTest(
-                                binding.etIPAddress.text.toString().trim(),
-                                binding.etPort.text.toString().toInt(),
-                                "B"
-                            )()
-                        } else {
-                            Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                if (printerType) {
+                    if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
+                        PrintWifiTest(
+                            binding.etIPAddress.text.toString().trim(),
+                            binding.etPort.text.toString().toInt(),
+                            "B"
+                        )()
                     } else {
-                        if (!PrintBluetoothTest(this)()){
-                            Toast.makeText(this,"Impresora no vinculada",Toast.LENGTH_SHORT).show()
-                        }
+                        Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
+                            .show()
                     }
+                } else {
+                    if (!PrintBluetoothTest(this)()) {
+                        Toast.makeText(this, "Impresora no vinculada", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
             } catch (e: Exception) {
                 Toast.makeText(this, "exception", Toast.LENGTH_SHORT)
@@ -101,26 +99,39 @@ class UpdatePrinterActivity : AppCompatActivity() {
         binding.btnSave.setOnClickListener {
             if (checkForm()) {
                 try {
-                    val printers = Printers(
+                    var printers = Printers(
                         updatePrinterViewModel.printer.value?.id,
                         binding.etName.text.toString(),
                         "B",
-                        binding.spDocumentType.selectedItem.toString().trim(),
+                        binding.acDocumentType.text.toString().trim(),
                         binding.etCopies.text.toString().toInt(),
                         binding.etCharacters.text.toString().toInt(),
-                        binding.tbPrinterType.isChecked,
+                        printerType,
                         binding.etIPAddress.text.toString().trim(),
                         null
                     )
                     if (binding.etPort.text.isNotBlank()) {
                         printers.port = binding.etPort.text.toString().toInt()
                     }
+
+                    if (!printerType) {
+                        printers.port = null
+                        printers.address = null
+                    }
                     val printerToSave = printers.createPrinterEntityFromPrinterModel()
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             updatePrinterViewModel.onAdd(printerToSave)
-                            withContext(Dispatchers.Main){
-                                Toast.makeText(applicationContext,"Impresora actualizada",Toast.LENGTH_SHORT).show()
+                            withContext(Dispatchers.Main) {
+                                val snackbar = Snackbar.make(
+                                    binding.btnSave,
+                                    "Impresora actualizada",
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                snackbar.setAction("Cerrar") {
+                                    snackbar.dismiss()
+                                }
+                                snackbar.show()
                             }
                         } catch (e: Exception) {
                             println(e)
@@ -134,18 +145,26 @@ class UpdatePrinterActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnBack.setOnClickListener {
+        binding.topAppBar.setNavigationOnClickListener{
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
-        binding.tbPrinterType.setOnClickListener {
-            if (binding.tbPrinterType.isChecked) {
-                binding.etIPAddress.visibility = View.VISIBLE
-                binding.etPort.visibility = View.VISIBLE
-            } else {
-                binding.etPort.visibility = View.GONE
-                binding.etIPAddress.visibility = View.GONE
+        binding.topAppBar.setOnMenuItemClickListener { menu ->
+            when (menu.itemId) {
+                R.id.miHelp -> {
+                    val helpIntent = Intent(this,HelpPrinterActivity::class.java)
+                    startActivity(helpIntent)
+                    true
+                }
+
+                else -> false
             }
+        }
+        binding.cvWifi.setOnClickListener {
+            setCardsSelectedState(true)
+        }
+        binding.cvBluetooth.setOnClickListener {
+            setCardsSelectedState(false)
         }
     }
 
@@ -163,11 +182,11 @@ class UpdatePrinterActivity : AppCompatActivity() {
             binding.etCharacters.error = "El número de caracteres es requerido"
             error = false
         }
-        if (binding.etPort.text.isBlank() && binding.tbPrinterType.isChecked) {
+        if (binding.etPort.text.isBlank() && printerType) {
             binding.etPort.error = "El puerto es requerido"
             error = false
         }
-        if (binding.etIPAddress.text.isBlank() && binding.tbPrinterType.isChecked) {
+        if (binding.etIPAddress.text.isBlank() && printerType) {
             binding.etIPAddress.error = "La dirección es requerida"
             error = false
         }
@@ -175,11 +194,84 @@ class UpdatePrinterActivity : AppCompatActivity() {
     }
 
 
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
+    private fun inputVisibilityChange(param: Boolean) {
+        if (param) {
+            binding.etIPAddress.visibility = View.VISIBLE
+            binding.etPort.visibility = View.VISIBLE
+            binding.tilIpAddress.visibility = View.VISIBLE
+            binding.tilPort.visibility = View.VISIBLE
         } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+            binding.etPort.visibility = View.GONE
+            binding.etIPAddress.visibility = View.GONE
+            binding.tilIpAddress.visibility = View.GONE
+            binding.tilPort.visibility = View.GONE
+        }
+    }
+
+    private fun setCardsSelectedState(params: Boolean) {
+        if (params) {
+            printerType = true
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.primary))
+            binding.ivWifi.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+            binding.tvWifi.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivBluetooth.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+            binding.tvBluetooth.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+
+            inputVisibilityChange(printerType)
+        } else {
+            printerType = false
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.primary))
+            binding.ivBluetooth.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+            binding.tvBluetooth.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+
+
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivWifi.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+            binding.tvWifi.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+
+            inputVisibilityChange(printerType)
         }
     }
 }

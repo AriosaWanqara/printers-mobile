@@ -1,17 +1,17 @@
 package com.example.printermobile.ui.Views
 
-import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
-import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.isDigitsOnly
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
 import com.example.printermobile.core.print.test.PrintBluetoothTest
@@ -20,23 +20,25 @@ import com.example.printermobile.core.print.utils.printer1.Discrimination
 import com.example.printermobile.databinding.ActivityAddPrinterBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+
 @AndroidEntryPoint
 class AddPrinterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddPrinterBinding
     private lateinit var printers: Printers
-    private var printerType:Boolean = true
+    private var printerType: Boolean = true
     private val addPrinterViewModel: AddPrinterViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddPrinterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        hideSystemUI()
+
         initUI()
         initListeners()
     }
@@ -48,13 +50,8 @@ class AddPrinterActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_dropdown_item,
             documentType.getDocuments()
         )
-//        val fontTypeSpinnerAdapter = ArrayAdapter<String>(
-//            this,
-//            android.R.layout.simple_spinner_dropdown_item,
-//            listOf("B", "A")
-//        )
-        binding.spDocumentType.adapter = documentTypeSpinnerAdapter
-//        binding.spFontType.adapter = fontTypeSpinnerAdapter
+        binding.acDocumentType.setText(documentType.getDocuments()[0])
+        binding.acDocumentType.setAdapter(documentTypeSpinnerAdapter)
     }
 
 
@@ -73,8 +70,8 @@ class AddPrinterActivity : AppCompatActivity() {
                             .show()
                     }
                 } else {
-                    if (!PrintBluetoothTest(this)()){
-                         Toast.makeText(this,"Impresora no vinculada",Toast.LENGTH_SHORT).show()
+                    if (!PrintBluetoothTest(this)()) {
+                        Toast.makeText(this, "Impresora no vinculada", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
@@ -90,7 +87,7 @@ class AddPrinterActivity : AppCompatActivity() {
                         null,
                         binding.etName.text.toString(),
                         "B",
-                        binding.spDocumentType.selectedItem.toString().trim(),
+                        binding.acDocumentType.text.toString().trim(),
                         binding.etCopies.text.toString().toInt(),
                         binding.etCharacters.text.toString().toInt(),
                         printerType,
@@ -108,11 +105,15 @@ class AddPrinterActivity : AppCompatActivity() {
                         try {
                             addPrinterViewModel.onAdd(printerToSave)
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(
-                                    applicationContext,
+                                val snackbar = Snackbar.make(
+                                    binding.btnSave,
                                     "Impresora guardada",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    Snackbar.LENGTH_SHORT
+                                )
+                                snackbar.setAction("Cerrar") {
+                                    snackbar.dismiss()
+                                }
+                                snackbar.show()
                             }
                             if (!possibleCommands.isNullOrEmpty()) {
                                 val m_ambiente = "comercios.illarli.com";
@@ -133,26 +134,27 @@ class AddPrinterActivity : AppCompatActivity() {
                     .show()
             }
         }
-        binding.btnBack.setOnClickListener {
+        binding.topAppBar.setNavigationOnClickListener{
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
+
+        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.miHelp -> {
+                    val helpIntent = Intent(this,HelpPrinterActivity::class.java)
+                    startActivity(helpIntent)
+                    true
+                }
+                else -> false
+            }
+        }
+
         binding.cvWifi.setOnClickListener {
-            printerType = true
-            binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
-
-            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
-            binding.ivBluetooth.setColorFilter(android.R.color.darker_gray)
-            inputVisibilityChange(printerType)
-
+            setCardsSelectedState(true)
         }
         binding.cvBluetooth.setOnClickListener {
-            printerType = false
-            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.illarli_orange))
-
-            binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
-            binding.ivWifi.setColorFilter(android.R.color.darker_gray)
-            inputVisibilityChange(printerType)
+            setCardsSelectedState(false)
         }
     }
 
@@ -181,14 +183,7 @@ class AddPrinterActivity : AppCompatActivity() {
         return error
     }
 
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-        } else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
-    }
-    private fun inputVisibilityChange(param:Boolean){
+    private fun inputVisibilityChange(param: Boolean) {
         if (param) {
             binding.etIPAddress.visibility = View.VISIBLE
             binding.etPort.visibility = View.VISIBLE
@@ -199,6 +194,73 @@ class AddPrinterActivity : AppCompatActivity() {
             binding.etIPAddress.visibility = View.GONE
             binding.tilIpAddress.visibility = View.GONE
             binding.tilPort.visibility = View.GONE
+        }
+    }
+
+    private fun setCardsSelectedState(params: Boolean) {
+        if (params) {
+            printerType = true
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.primary))
+            binding.ivWifi.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+            binding.tvWifi.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivBluetooth.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+            binding.tvBluetooth.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+
+            inputVisibilityChange(printerType)
+        } else {
+            printerType = false
+            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.primary))
+            binding.ivBluetooth.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+            binding.tvBluetooth.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.white
+                )
+            )
+
+
+            binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+            binding.ivWifi.setColorFilter(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+            binding.tvWifi.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    android.R.color.darker_gray
+                )
+            )
+
+            inputVisibilityChange(printerType)
         }
     }
 }

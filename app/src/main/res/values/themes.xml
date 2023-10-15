@@ -1,15 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.PrinterMobile" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:opacity">opaque</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:fitsSystemWindows">false</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/primary</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
         <item name="fontFamily">@font/noto_regular</item>
-
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:textColorPrimary">@color/black</item>
     </style>
 
     <style name="Theme.PrinterMobile" parent="Base.Theme.PrinterMobile" />
@@ -30,28 +26,8 @@
         <item name="postSplashScreenTheme">@style/Theme.PrinterMobile</item>
     </style>
 
-    <style name="CustomCardHeaderCorner" parent="@style/Widget.MaterialComponents.CardView">
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay_card_custom_corners</item>
-    </style>
-
-
-    <style name="ShapeAppearanceOverlay_card_custom_corners" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">0dp</item>
-        <item name="cornerSizeTopLeft">0dp</item>
-        <item name="cornerSizeBottomRight">32dp</item>
-        <item name="cornerSizeBottomLeft">32dp</item>
-        <item name="android:statusBarColor">@color/illarli_red</item>
-    </style>
-
-    <style name="illarliTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">@color/text_input_box_stroke</item>
-
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@android:color/darker_gray</item>
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="android:colorAccent">@color/illarli_orange</item>
-        <item name="android:colorControlNormal">@color/illarli_orange</item>
-        <item name="android:colorControlActivated">@color/illarli_orange</item>
+    <style name="illarliTextInputLayoutStyleTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="colorControlActivated">@color/primary</item>
+        <item name="colorPrimary">@color/primary</item>
     </style>
 </resources>

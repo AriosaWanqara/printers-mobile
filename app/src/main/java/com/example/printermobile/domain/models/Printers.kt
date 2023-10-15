@@ -11,7 +11,7 @@ class Printers {
     val copyNumber: Int
     val charactersNumber: Int
     val isWifi: Boolean
-    val address: String?
+    var address: String?
     var port: Int?
 
     constructor(
@@ -43,6 +43,20 @@ class Printers {
             this.name,
             this.fontSize,
             documentType.findKeyByDocument(this.documentType) ?: this.documentType,
+            this.copyNumber,
+            this.charactersNumber,
+            this.isWifi,
+            this.address,
+            this.port
+        )
+    }
+    fun createEntityFromPrinterModel(): Printers {
+        val documentType:documentType = documentType()
+        return Printers(
+            this.id,
+            this.name,
+            this.fontSize,
+            this.documentType,
             this.copyNumber,
             this.charactersNumber,
             this.isWifi,

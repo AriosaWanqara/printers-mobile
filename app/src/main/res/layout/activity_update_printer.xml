@@ -5,53 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.Views.UpdatePrinterActivity">
-    <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/materialCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="0dp"
-        app:cardCornerRadius="0dp"
-        android:backgroundTint="@color/illarli_orange"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        >
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginVertical="10dp"
-            android:padding="10dp"
-            android:gravity="bottom"
-            android:orientation="vertical">
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_marginTop="5dp"
-                android:src="@drawable/ic_arrow_back"
-                android:backgroundTint="@android:color/transparent"
-                app:tint="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tvAction"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-            <TextView
-                android:id="@+id/tvAction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="Actualizar"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btnBack"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+            android:background="@color/primary"
+            app:titleTextColor="@color/white"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:menu="@menu/topbar_list_menu"
+            app:title="Actualizar"
+            app:navigationIconTint="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -61,74 +36,216 @@
         android:layout_marginHorizontal="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialCardView">
-
-        <ToggleButton
-            android:id="@+id/tbPrinterType"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textOn="Wifi"
-            android:checked="true"
-            android:textOff="Bluetooth"
-            android:layout_gravity="center"
-            />
-        <EditText
-            android:id="@+id/etName"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvBluetooth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cvWifi"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/primary">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvBluetooth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginBottom="2dp"
+                            android:text="Bluetooth" />
+
+                        <ImageView
+                            android:id="@+id/ivBluetooth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_bluetooth_ic" />
+                    </LinearLayout>
+
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvWifi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:backgroundTint="@color/primary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cvBluetooth"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/primary">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvWifi"
+                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="5dp"
+                            android:text="Wifi" />
+                        <ImageView
+                            android:id="@+id/ivWifi"
+                            app:tint="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_wifi_ic" />
+                    </LinearLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:hint="Nombre"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etIPAddress"
-            android:hint="Direccion Ip"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilIpAddress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etPort"
-            android:hint="Puerto"
-            android:inputType="number"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etIPAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Direccion Ip" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPort"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etCharacters"
-            android:hint="Número de caracteres"
-            android:inputType="number"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etPort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Puerto"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:id="@+id/etCopies"
-            android:hint="Número de copias"
-            android:inputType="number"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etCharacters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Número de caracteres"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <Spinner
-            android:id="@+id/spDocumentType"
+            android:layout_height="60dp"
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <EditText
+                android:id="@+id/etCopies"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Número de copias"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/menu"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:hint="Tipo de documento"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+            <AutoCompleteTextView
+                android:id="@+id/acDocumentType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:layout_marginBottom="55dp"
-            android:orientation="horizontal"
-            >
-            <Button
+            android:orientation="horizontal">
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/primary"
                 android:text="Guardar"
-                android:textColor="@color/white"
+                app:elevation="0dp"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:backgroundTint="@color/illarli_orange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <Button
+                app:iconTint="@color/white"
+                app:icon="@android:drawable/ic_input_add"
+                />
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                 android:id="@+id/btnPrintTest"
-                android:text="Probar"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:backgroundTint="@color/illarli_orange"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="50dp"
+                android:textColor="@color/white"
+                android:layout_marginBottom="5dp"
+                app:elevation="0dp"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
+                android:backgroundTint="@color/primary"
+                android:text="Probar"
+                app:iconSize="18dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:iconTint="@color/white"
+                app:icon="@drawable/ic_print"
+                />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
