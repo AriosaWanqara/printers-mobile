@@ -103,6 +103,9 @@ dependencies {
     // Swipe decorator
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
 
+    // Expansion panel
+    implementation("com.robertlevonyan.view:MaterialExpansionPanel:2.1.6")
+
     //printer 1
     implementation("org.jsoup:jsoup:1.13.1")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.20")

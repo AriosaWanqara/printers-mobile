@@ -1,4 +1,13 @@
 package com.example.printermobile.domain.models
 
-class FaQ {
+class FaQ(private val quest:String,private val response:String,private val url:String?) {
+    fun getQuest(): String {
+        return this.quest
+    }
+    fun getResponse(): String {
+        return this.response
+    }
+    fun getUrl(): String? {
+        return this.url
+    }
 }

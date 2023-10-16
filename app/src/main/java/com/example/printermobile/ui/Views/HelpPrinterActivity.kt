@@ -12,8 +12,19 @@ import com.example.printermobile.ui.Views.faq.HelpPrinterAdapter
 
 class HelpPrinterActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityHelpPrinterBinding
-    private var faQList:List<FaQ> = listOf(FaQ(),FaQ())
+    private lateinit var binding: ActivityHelpPrinterBinding
+    private var faQList: List<FaQ> = listOf(
+        FaQ(
+            "¿Cómo configurar una impresora con el Sistema Illarli?",
+            "Para configurar una impresora con su sistema Illarli es necesario descargar e instalar la aplicación de Configuración de Dispositivos como se muestra en el siguiente enlace",
+            "https://wanqara.com/configuracion-de-equipos-con-illarli/"
+        ),
+        FaQ(
+            "¿Cómo configurar la firma electrónica?",
+            "Para configurar la firma electrónica se debe ingresar al modulo MIS DATOS, donde se puede actualizar la información de la empresa, y al final se tiene la opción para cargar la firma, recuerde que la firma debe estar en formato p12.",
+            "https://wanqara.com/configurar-mis-datos-y-carga-de-firma-electronica-illarli-comercios/"
+        )
+    )
     private var adapter = HelpPrinterAdapter(faQList)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +42,7 @@ class HelpPrinterActivity : AppCompatActivity() {
 
     private fun initListeners() {
         binding.topAppBar.setNavigationOnClickListener {
-            val listActivity = Intent(this,ListPrintersActivity::class.java)
+            val listActivity = Intent(this, ListPrintersActivity::class.java)
             startActivity(listActivity)
         }
     }
