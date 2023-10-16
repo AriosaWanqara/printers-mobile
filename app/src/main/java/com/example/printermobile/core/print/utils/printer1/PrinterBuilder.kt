@@ -976,7 +976,7 @@ class PrinterBuilder(private val tipo: String?) {
 
     fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             var detalles: JSONArray
@@ -1109,12 +1109,11 @@ class PrinterBuilder(private val tipo: String?) {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
     }
 
     fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             var detalles: JSONArray
@@ -1247,14 +1246,13 @@ class PrinterBuilder(private val tipo: String?) {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
     }
 
 
     // FUNCIONES
     fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             var detalles: JSONArray
@@ -1421,7 +1419,6 @@ class PrinterBuilder(private val tipo: String?) {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
     }
 
     fun abrirGaveta() {
