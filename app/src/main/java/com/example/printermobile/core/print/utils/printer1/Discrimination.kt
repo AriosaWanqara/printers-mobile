@@ -40,7 +40,7 @@ class Discrimination(
         }
     }
 
-    operator fun invoke(commands: Array<String>): Boolean {
+    suspend operator fun invoke(commands: Array<String>): Boolean {
         var jsonObject: JSONObject?
         var errorCount = 0
         var errorCommand:Array<String> = arrayOf()
