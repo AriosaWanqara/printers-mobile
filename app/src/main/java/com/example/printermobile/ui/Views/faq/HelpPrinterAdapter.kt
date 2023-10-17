@@ -16,6 +16,7 @@ class HelpPrinterAdapter(private val faQList: List<FaQ>) :
     override fun getItemCount(): Int = faQList.size
 
     override fun onBindViewHolder(holder: HelpPrinterViewHolder, position: Int) {
+
         holder.render(faQList[position])
     }
 }
