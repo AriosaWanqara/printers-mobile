@@ -1,5 +1,6 @@
 package com.example.printermobile.di
 
+import com.example.printermobile.data.network.FaQApiClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +16,14 @@ object RetrofitModule {
     @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("")
+            .baseUrl("https://dev.illarli.com.ec/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFaQApiClient(retrofit: Retrofit):FaQApiClient{
+        return retrofit.create(FaQApiClient::class.java)
     }
 }

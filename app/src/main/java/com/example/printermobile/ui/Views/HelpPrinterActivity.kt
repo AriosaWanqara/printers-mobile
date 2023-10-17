@@ -3,28 +3,25 @@ package com.example.printermobile.ui.Views
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.printermobile.R
 import com.example.printermobile.databinding.ActivityHelpPrinterBinding
 import com.example.printermobile.domain.models.FaQ
+import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
+import com.example.printermobile.ui.ViewModels.HelpViewModel
 import com.example.printermobile.ui.Views.faq.HelpPrinterAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HelpPrinterActivity : AppCompatActivity() {
 
+    private val helpViewModel: HelpViewModel by viewModels()
     private lateinit var binding: ActivityHelpPrinterBinding
-    private var faQList: List<FaQ> = listOf(
-        FaQ(
-            "¿Cómo configurar una impresora con el Sistema Illarli?",
-            "Para configurar una impresora con su sistema Illarli es necesario descargar e instalar la aplicación de Configuración de Dispositivos como se muestra en el siguiente enlace",
-            "https://wanqara.com/configuracion-de-equipos-con-illarli/"
-        ),
-        FaQ(
-            "¿Cómo configurar la firma electrónica?",
-            "Para configurar la firma electrónica se debe ingresar al modulo MIS DATOS, donde se puede actualizar la información de la empresa, y al final se tiene la opción para cargar la firma, recuerde que la firma debe estar en formato p12.",
-            "https://wanqara.com/configurar-mis-datos-y-carga-de-firma-electronica-illarli-comercios/"
-        )
-    )
+    private var faQList: List<FaQ> = listOf()
     private var adapter = HelpPrinterAdapter(faQList)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +30,21 @@ class HelpPrinterActivity : AppCompatActivity() {
 
         initUI()
         initListeners()
+        helpViewModel.onCreate()
+        helpViewModel.faQ.observe(this, Observer {
+            faQList = listOf()
+            it.map { it ->
+                faQList = faQList.plus(it)
+            }
+            adapter.updateList(faQList)
+        })
+        helpViewModel.isFaQLoading.observe(this, Observer {
+            if (it){
+                binding.cpLoading.visibility = View.VISIBLE
+            }else{
+                binding.cpLoading.visibility = View.GONE
+            }
+        })
     }
 
     private fun initUI() {

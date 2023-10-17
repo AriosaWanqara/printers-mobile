@@ -70,9 +70,9 @@ class PrinterBuilder(private val tipo: String?) {
         return true
     }
 
-    fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int): String? {
+    fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             var detalles: JSONArray
@@ -157,7 +157,7 @@ class PrinterBuilder(private val tipo: String?) {
             prn.escribirTextoSinSalto("P.U. Total")
             prn.agregarSalto()
             prn.LineasIgual()
-            val x:String? = "cantidadDet"
+            val x: String? = "cantidadDet"
             detalles = js.getJSONArray("listaDetalleOrdenVenta")
             for (j in 0 until detalles.length()) {
                 jo = detalles.getJSONObject(j)
@@ -215,16 +215,15 @@ class PrinterBuilder(private val tipo: String?) {
             prn.feedFinal()
             prn.alineadoIzquierda()
             prn.cortar()
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
     }
 
-    fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String): String? {
+    fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             var detalles: JSONArray
@@ -377,17 +376,17 @@ class PrinterBuilder(private val tipo: String?) {
             }
             prn.feedFinal()
             prn.cortar()
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
+
     }
 
 
-    fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?): String? {
+    fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             val detalles: JSONArray
@@ -446,11 +445,11 @@ class PrinterBuilder(private val tipo: String?) {
             prn.negritaOff()
             prn.feedFinal()
             prn.cortar()
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
+
     }
 
     fun imprimirFacturaElectronica(
@@ -458,9 +457,9 @@ class PrinterBuilder(private val tipo: String?) {
         copias: Int,
         caracteres: Int,
         programa: String
-    ): String? {
+    ) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             var detalles: JSONArray
@@ -733,16 +732,20 @@ class PrinterBuilder(private val tipo: String?) {
                     prn.cortar()
                 }
             }
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
     }
 
-    fun imprimirFacturPreimpresa(js: JSONObject?, copias: Int, caracteres: Int, programa: String): String? {
+    fun imprimirFacturPreimpresa(
+        js: JSONObject?,
+        copias: Int,
+        caracteres: Int,
+        programa: String
+    ) {
         try {
-            if (js == null) return null
+            if (js == null) return
 
             // reutilizables
             var detalles: JSONArray
@@ -967,11 +970,10 @@ class PrinterBuilder(private val tipo: String?) {
                 prn.feedFinal()
                 prn.cortar()
             }
-            return prn.getTrabajo()
+            enviarImprimir(prn.getTrabajo())
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return ""
     }
 
     fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int) {

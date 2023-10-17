@@ -2,12 +2,22 @@ package com.example.printermobile.ui.Views.faq
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.printermobile.R
 import com.example.printermobile.domain.models.FaQ
+import com.example.printermobile.domain.models.Printers
+import com.example.printermobile.ui.Views.Printer.ListPrintersDiffUtils
 
-class HelpPrinterAdapter(private val faQList: List<FaQ>) :
+class HelpPrinterAdapter(private var faQList: List<FaQ>) :
     RecyclerView.Adapter<HelpPrinterViewHolder>() {
+
+    fun updateList(newList: List<FaQ>){
+        val listPrintersDiffUtils = HelperPrinterDiffUtils(faQList,newList)
+        val result = DiffUtil.calculateDiff(listPrintersDiffUtils)
+        faQList = newList
+        result.dispatchUpdatesTo(this)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HelpPrinterViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_faq, parent, false)
         return HelpPrinterViewHolder(view)
