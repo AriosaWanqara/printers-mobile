@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcItemContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:strokeColor="@color/primary">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="12dp">
+
+            <TextView
+                android:id="@+id/tvDocumentTypeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="asd" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/mcIconContainer"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:backgroundTint="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/textPrimary">
+
+                <ImageView
+                    android:id="@+id/ivCheckIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_done"
+                    android:visibility="gone"
+                    app:tint="@color/textPrimary" />
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

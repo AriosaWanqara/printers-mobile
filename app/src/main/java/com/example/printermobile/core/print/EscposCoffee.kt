@@ -74,10 +74,10 @@ class EscposCoffee : PrinterLibraryRepository {
         }
     }
 
-    suspend fun printMessage(message: String) {
+     fun printMessage(message: String) {
         try {
             this.escPos.write(message)
-            this.escPos.write("\u001B" + "\u0042" + "\u0005" + "\u0002")
+//            this.escPos.write("\u001B" + "\u0042" + "\u0005" + "\u0002")
             this.escPos.close()
         } catch (e: Exception) {
             println(e)

@@ -1,24 +1,19 @@
 package com.example.printermobile.ui.Views
 
 import android.content.Intent
-import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
 import com.example.printermobile.core.print.test.PrintBluetoothTest
 import com.example.printermobile.core.print.test.PrintWifiTest
 import com.example.printermobile.core.print.utils.printer1.Discrimination
-import com.example.printermobile.databinding.ActivityAddPrinterBinding
+import com.example.printermobile.databinding.ActivityMissingPrintersBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
 import com.example.printermobile.ui.Views.Printer.MissingPrinterAdapter
@@ -29,22 +24,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 @AndroidEntryPoint
-class AddPrinterActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAddPrinterBinding
+class MissingPrintersActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMissingPrintersBinding
     private lateinit var printers: Printers
     private var documentType: List<String> = listOf()
-    private var selectedDocument: List<String> = listOf()
     private var printerType: Boolean = true
+    private var selectedDocument: List<String> = listOf()
     private val addPrinterViewModel: AddPrinterViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddPrinterBinding.inflate(layoutInflater)
+        binding = ActivityMissingPrintersBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         initData()
-        initUI()
         initListeners()
+        initUI()
     }
 
     private fun initUI() {
@@ -57,9 +53,7 @@ class AddPrinterActivity : AppCompatActivity() {
                 selectedDocument.plus(it)
             }
         }
-
     }
-
 
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
@@ -109,22 +103,17 @@ class AddPrinterActivity : AppCompatActivity() {
                                 val printerToSave = printers.createPrinterEntityFromPrinterModel()
                                 addPrinterViewModel.onAdd(printerToSave)
                             }
-                            withContext(Dispatchers.Main) {
-                                val snackbar = Snackbar.make(
-                                    binding.btnSave,
-                                    "Impresora guardada",
-                                    Snackbar.LENGTH_SHORT
-                                )
-                                snackbar.setAction("Cerrar") {
-                                    snackbar.dismiss()
-                                }
-                                snackbar.setActionTextColor(
-                                    ContextCompat.getColor(
-                                        applicationContext,
-                                        R.color.primary
-                                    )
-                                )
-                                snackbar.show()
+                            val possibleSet =
+                                applicationContext.getSharedPreferences("asd", 0)
+                                    .getStringSet("Commands", setOf())
+                            val possibleCommands = possibleSet?.toTypedArray()
+                            if (!possibleCommands.isNullOrEmpty()) {
+                                val m_ambiente = "comercios.illarli.com";
+                                Discrimination(
+                                    addPrinterViewModel.getAll(),
+                                    m_ambiente,
+                                    applicationContext
+                                )(possibleCommands)
                             }
                         } catch (e: Exception) {
                             println(e)
@@ -182,6 +171,11 @@ class AddPrinterActivity : AppCompatActivity() {
         }
         if (binding.etIPAddress.text.isBlank() && printerType) {
             binding.etIPAddress.error = "La dirección es requerida"
+            error = false
+        }
+        if (selectedDocument.isEmpty()) {
+            Toast.makeText(this, "Debe seleccionar un docuemnto", Toast.LENGTH_SHORT).show()
+            println(selectedDocument)
             error = false
         }
         return error
@@ -269,7 +263,21 @@ class AddPrinterActivity : AppCompatActivity() {
     }
 
     private fun initData() {
+        val possibleSet =
+            getSharedPreferences("asd", 0).getStringSet("Commands", setOf())
+        val possibleCommands = possibleSet?.toTypedArray()
         val documentEnum: documentType = documentType()
-        documentType = documentEnum.getDocuments()
+        if (possibleCommands!!.isNotEmpty()) {
+            for (command in possibleCommands) {
+                val parts = command.split(",".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray()
+                val possibleDocumentName = documentEnum.findDocumentByKey(parts[0])
+                if (possibleDocumentName != null) {
+                    documentType = documentType.plus(possibleDocumentName)
+                }
+            }
+        } else {
+            documentType = documentEnum.getDocuments()
+        }
     }
 }

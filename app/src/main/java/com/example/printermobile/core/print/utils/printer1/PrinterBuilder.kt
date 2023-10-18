@@ -70,7 +70,7 @@ class PrinterBuilder(private val tipo: String?) {
         return true
     }
 
-    suspend fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int) {
+     fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -221,7 +221,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-    suspend fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String) {
+     fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String) {
         try {
             if (js == null) return
 
@@ -384,7 +384,7 @@ class PrinterBuilder(private val tipo: String?) {
     }
 
 
-    suspend fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?) {
+     fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?) {
         try {
             if (js == null) return
 
@@ -452,7 +452,7 @@ class PrinterBuilder(private val tipo: String?) {
 
     }
 
-    suspend fun imprimirFacturaElectronica(
+     fun imprimirFacturaElectronica(
         js: JSONObject?,
         copias: Int,
         caracteres: Int,
@@ -738,7 +738,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-    suspend fun imprimirFacturPreimpresa(
+     fun imprimirFacturPreimpresa(
         js: JSONObject?,
         copias: Int,
         caracteres: Int,
@@ -976,7 +976,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-    suspend fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int) {
+     fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -1113,7 +1113,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-    suspend fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int) {
+     fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -1252,7 +1252,7 @@ class PrinterBuilder(private val tipo: String?) {
 
 
     // FUNCIONES
-    suspend fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int) {
+     fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -1423,14 +1423,14 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-    suspend fun abrirGaveta() {
+     fun abrirGaveta() {
         val prn = PrinterHelpers(50, 1)
         prn.abrirGaveta1()
         prn.abrirGaveta2()
         enviarImprimir(prn.getTrabajo())
     }
 
-    suspend fun imprimirTest(tipoTransaccion: String) {
+     fun imprimirTest(tipoTransaccion: String) {
         val prn = PrinterHelpers(100, 1)
         prn.iniciar()
         prn.setFontA()
@@ -1458,7 +1458,7 @@ class PrinterBuilder(private val tipo: String?) {
         enviarImprimir(prn.getTrabajo())
     }
 
-    suspend fun enviarImprimir(trabajo: String) {
+     fun enviarImprimir(trabajo: String) {
         try {
             if (tipo == "RED") {
                 TcpIpOutputStream(this.address, this.port!!).use { outputStream ->

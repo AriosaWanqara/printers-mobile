@@ -41,7 +41,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
             updatePrinterViewModel.onCreate(it.toInt())
         }
 
-        initUI()
+        initUI("Recibos")
         initListeners()
 
         updatePrinterViewModel.printer.observe(this, Observer {
@@ -50,6 +50,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
     }
 
     private fun initData(printer: Printers) {
+        val documentType: documentType = documentType()
         binding.etName.setText(printer.name)
         binding.etCharacters.setText(printer.charactersNumber.toString())
         binding.etCopies.setText(printer.copyNumber.toString())
@@ -57,16 +58,17 @@ class UpdatePrinterActivity : AppCompatActivity() {
         printer.address?.let { binding.etIPAddress.setText(it) }
         printerType = printer.isWifi
         setCardsSelectedState(printer.isWifi)
+        initUI(documentType.findDocumentByKey(printer.documentType)!!)
     }
 
-    private fun initUI() {
+    private fun initUI(name: String) {
         val documentType: documentType = documentType()
         val documentTypeSpinnerAdapter = ArrayAdapter<String>(
             this,
             android.R.layout.simple_spinner_dropdown_item,
             documentType.getDocuments()
         )
-        binding.acDocumentType.setText(documentType.getDocuments()[0])
+        binding.acDocumentType.setText(name)
         binding.acDocumentType.setAdapter(documentTypeSpinnerAdapter)
     }
 
@@ -131,6 +133,12 @@ class UpdatePrinterActivity : AppCompatActivity() {
                                 snackbar.setAction("Cerrar") {
                                     snackbar.dismiss()
                                 }
+                                snackbar.setActionTextColor(
+                                    ContextCompat.getColor(
+                                        applicationContext,
+                                        R.color.primary
+                                    )
+                                )
                                 snackbar.show()
                             }
                         } catch (e: Exception) {

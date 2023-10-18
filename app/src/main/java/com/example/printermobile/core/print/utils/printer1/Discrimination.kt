@@ -37,13 +37,15 @@ class Discrimination(
                 printerBuilder = PrinterBuilder("BLUETOOTH")
                 printerBuilder!!.InicializarImpresoraBluetooth()
             }
+        }else{
+            printerBuilder = null
         }
     }
 
-    suspend operator fun invoke(commands: Array<String>): Boolean {
+    operator fun invoke(commands: Array<String>): Boolean {
         var jsonObject: JSONObject?
         var errorCount = 0
-        var errorCommand:Array<String> = arrayOf()
+        var errorCommand: Array<String> = arrayOf()
         for (command in commands) {
             val parts = command.split(",".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()
@@ -62,7 +64,8 @@ class Discrimination(
                             )
                         } else {
                             errorCount++
-                            if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                            if (!errorCommand.contains(command)) errorCommand =
+                                errorCommand.plus(command)
                         }
                     }
 
@@ -81,7 +84,8 @@ class Discrimination(
                             )
                         } else {
                             errorCount++
-                            if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                            if (!errorCommand.contains(command)) errorCommand =
+                                errorCommand.plus(command)
                         }
                     }
                 }
@@ -96,7 +100,8 @@ class Discrimination(
                         )
                     } else {
                         errorCount++
-                        if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                        if (!errorCommand.contains(command)) errorCommand =
+                            errorCommand.plus(command)
                     }
                 }
 
@@ -113,7 +118,8 @@ class Discrimination(
                         )
                     } else {
                         errorCount++
-                        if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                        if (!errorCommand.contains(command)) errorCommand =
+                            errorCommand.plus(command)
                     }
                 }
 
@@ -130,7 +136,8 @@ class Discrimination(
                             )
                         } else {
                             errorCount++
-                            if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                            if (!errorCommand.contains(command)) errorCommand =
+                                errorCommand.plus(command)
                         }
                     }
 
@@ -146,7 +153,8 @@ class Discrimination(
                             )
                         } else {
                             errorCount++
-                            if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                            if (!errorCommand.contains(command)) errorCommand =
+                                errorCommand.plus(command)
                         }
                     }
                 }
@@ -164,7 +172,8 @@ class Discrimination(
                             )
                         } else {
                             errorCount++
-                            if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                            if (!errorCommand.contains(command)) errorCommand =
+                                errorCommand.plus(command)
                         }
                     }
 
@@ -181,7 +190,8 @@ class Discrimination(
                             printerBuilder!!.cerrarConexion()
                         } else {
                             errorCount++
-                            if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                            if (!errorCommand.contains(command)) errorCommand =
+                                errorCommand.plus(command)
                         }
                     }
                 }
@@ -198,7 +208,8 @@ class Discrimination(
                         printerBuilder!!.cerrarConexion()
                     } else {
                         errorCount++
-                        if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                        if (!errorCommand.contains(command)) errorCommand =
+                            errorCommand.plus(command)
                     }
                 }
 
@@ -214,7 +225,8 @@ class Discrimination(
                         printerBuilder!!.cerrarConexion()
                     } else {
                         errorCount++
-                        if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                        if (!errorCommand.contains(command)) errorCommand =
+                            errorCommand.plus(command)
                     }
                 }
 
@@ -230,7 +242,8 @@ class Discrimination(
                         printerBuilder!!.cerrarConexion()
                     } else {
                         errorCount++
-                        if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                        if (!errorCommand.contains(command)) errorCommand =
+                            errorCommand.plus(command)
                     }
                 }
 
@@ -240,13 +253,27 @@ class Discrimination(
                         printerBuilder!!.cerrarConexion()
                     } else {
                         errorCount++
-                        if (!errorCommand.contains(command)) errorCommand = errorCommand.plus(command)
+                        if (!errorCommand.contains(command)) errorCommand =
+                            errorCommand.plus(command)
                     }
                 }
             }
         }
         if (errorCommand.size > 0) {
-           context.getSharedPreferences("asd",0).edit().putStringSet("Commands",errorCommand.toSet()).apply()
+            var possibleSet =
+                context.getSharedPreferences("asd", 0).getStringSet("Commands", setOf())
+            possibleSet
+            context.getSharedPreferences("asd", 0).edit().putStringSet("Commands", setOf()).apply()
+            possibleSet =
+                context.getSharedPreferences("asd", 0).getStringSet("Commands", setOf())
+            possibleSet
+            context.getSharedPreferences("asd", 0).edit()
+                .putStringSet("Commands", errorCommand.toSet()).apply()
+            possibleSet =
+                context.getSharedPreferences("asd", 0).getStringSet("Commands", setOf())
+            possibleSet
+        } else {
+            context.getSharedPreferences("asd", 0).edit().putStringSet("Commands", setOf()).apply()
         }
         return errorCount == 0
     }

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.Views.AddPrinterActivity">
-
+    tools:context=".ui.Views.MissingPrintersActivity">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/materialCardView"
         app:layout_constraintTop_toTopOf="parent"
@@ -209,7 +208,6 @@
             android:layout_marginTop="16dp">
 
         </androidx.recyclerview.widget.RecyclerView>
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -252,4 +250,5 @@
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -39,9 +41,9 @@ class HelpPrinterActivity : AppCompatActivity() {
             adapter.updateList(faQList)
         })
         helpViewModel.isFaQLoading.observe(this, Observer {
-            if (it){
+            if (it) {
                 binding.cpLoading.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.cpLoading.visibility = View.GONE
             }
         })
@@ -56,6 +58,16 @@ class HelpPrinterActivity : AppCompatActivity() {
         binding.topAppBar.setNavigationOnClickListener {
             val listActivity = Intent(this, ListPrintersActivity::class.java)
             startActivity(listActivity)
+        }
+        binding.searchBarr.editText.addTextChangedListener {
+            if (binding.searchBarr.editText.text.isNotBlank()) {
+                val filterList = faQList.filter { it.getQuest().contains(binding.searchBarr.editText.text) }
+                if (filterList.isNotEmpty()){
+                    adapter.updateList(filterList)
+                }
+            }else{
+                adapter.updateList(faQList)
+            }
         }
     }
 }

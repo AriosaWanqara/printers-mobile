@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.system.exitProcess
 
 
@@ -36,7 +37,7 @@ class BackgroundPrinterActivity : AppCompatActivity() {
 
     private fun initListeners() {
         binding.btnSaveMissingPrinters.setOnClickListener {
-            val addIntent = Intent(this, AddPrinterActivity::class.java)
+            val addIntent = Intent(this, MissingPrintersActivity::class.java)
             startActivity(addIntent)
         }
         binding.btnCancelMissingPrinters.setOnClickListener {
@@ -76,8 +77,10 @@ class BackgroundPrinterActivity : AppCompatActivity() {
             }
             if (!Discrimination(printers, m_ambiente!!, this)(commands)) {
                 result = false
-                binding.llPrintGift.visibility = View.GONE
-                binding.mcMissingPrintersWarningContainer.visibility = View.VISIBLE
+               withContext(Dispatchers.Main){
+                   binding.llPrintGift.visibility = View.GONE
+                   binding.mcMissingPrintersWarningContainer.visibility = View.VISIBLE
+               }
 
             }
         } catch (e: InterruptedException) {
