@@ -14,7 +14,9 @@ import androidx.lifecycle.Observer
 import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
 import com.example.printermobile.core.print.test.PrintBluetoothTest
+import com.example.printermobile.core.print.test.PrintUSBTest
 import com.example.printermobile.core.print.test.PrintWifiTest
+import com.example.printermobile.core.printType.PrinterType
 import com.example.printermobile.databinding.ActivityUpdatePrinterBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
@@ -31,7 +33,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityUpdatePrinterBinding
     private val updatePrinterViewModel: UpdatePrinterViewModel by viewModels()
-    private var printerType: Boolean = true
+    private var printerType: String = PrinterType.WIFI.type
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUpdatePrinterBinding.inflate(layoutInflater)
@@ -56,8 +58,8 @@ class UpdatePrinterActivity : AppCompatActivity() {
         binding.etCopies.setText(printer.copyNumber.toString())
         printer.port?.let { binding.etPort.setText(it.toString()) }
         printer.address?.let { binding.etIPAddress.setText(it) }
-        printerType = printer.isWifi
-        setCardsSelectedState(printer.isWifi)
+        printerType = printer.type
+        setCardsSelectedState(printer.type)
         initUI(documentType.findDocumentByKey(printer.documentType)!!)
     }
 
@@ -75,7 +77,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                if (printerType) {
+                if (printerType == PrinterType.WIFI.type) {
                     if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
                         PrintWifiTest(
                             binding.etIPAddress.text.toString().trim(),
@@ -86,9 +88,13 @@ class UpdatePrinterActivity : AppCompatActivity() {
                         Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
                             .show()
                     }
-                } else {
+                } else if (printerType == PrinterType.BLUETOOTH.type) {
                     if (!PrintBluetoothTest(this)()) {
                         Toast.makeText(this, "Impresora no vinculada", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    if (!PrintUSBTest(this)()) {
+                        Toast.makeText(this, "Impresora no conectada", Toast.LENGTH_SHORT).show()
                     }
                 }
 
@@ -116,7 +122,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
                         printers.port = binding.etPort.text.toString().toInt()
                     }
 
-                    if (!printerType) {
+                    if (printerType == PrinterType.BLUETOOTH.type || printerType == PrinterType.USB.type) {
                         printers.port = null
                         printers.address = null
                     }
@@ -153,14 +159,14 @@ class UpdatePrinterActivity : AppCompatActivity() {
             }
         }
 
-        binding.topAppBar.setNavigationOnClickListener{
+        binding.topAppBar.setNavigationOnClickListener {
             val intent = Intent(this, ListPrintersActivity::class.java)
             startActivity(intent)
         }
         binding.topAppBar.setOnMenuItemClickListener { menu ->
             when (menu.itemId) {
                 R.id.miHelp -> {
-                    val helpIntent = Intent(this,HelpPrinterActivity::class.java)
+                    val helpIntent = Intent(this, HelpPrinterActivity::class.java)
                     startActivity(helpIntent)
                     true
                 }
@@ -169,10 +175,13 @@ class UpdatePrinterActivity : AppCompatActivity() {
             }
         }
         binding.cvWifi.setOnClickListener {
-            setCardsSelectedState(true)
+            setCardsSelectedState(PrinterType.WIFI.type)
         }
         binding.cvBluetooth.setOnClickListener {
-            setCardsSelectedState(false)
+            setCardsSelectedState(PrinterType.BLUETOOTH.type)
+        }
+        binding.cvUSB.setOnClickListener {
+            setCardsSelectedState(PrinterType.USB.type)
         }
     }
 
@@ -190,11 +199,11 @@ class UpdatePrinterActivity : AppCompatActivity() {
             binding.etCharacters.error = "El número de caracteres es requerido"
             error = false
         }
-        if (binding.etPort.text.isBlank() && printerType) {
+        if (binding.etPort.text.isBlank() && printerType == PrinterType.WIFI.type) {
             binding.etPort.error = "El puerto es requerido"
             error = false
         }
-        if (binding.etIPAddress.text.isBlank() && printerType) {
+        if (binding.etIPAddress.text.isBlank() && printerType == PrinterType.WIFI.type) {
             binding.etIPAddress.error = "La dirección es requerida"
             error = false
         }
@@ -216,70 +225,145 @@ class UpdatePrinterActivity : AppCompatActivity() {
         }
     }
 
-    private fun setCardsSelectedState(params: Boolean) {
-        if (params) {
-            printerType = true
-            binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.primary))
-            binding.ivWifi.setColorFilter(
-                ContextCompat.getColor(
-                    this,
-                    R.color.white
+    private fun setCardsSelectedState(params: String) {
+        when (params) {
+            PrinterType.WIFI.type -> {
+                printerType = PrinterType.WIFI.type
+                binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.primary))
+                binding.ivWifi.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
                 )
-            )
-            binding.tvWifi.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.white
+                binding.tvWifi.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
                 )
-            )
 
-            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
-            binding.ivBluetooth.setColorFilter(
-                ContextCompat.getColor(
-                    this,
-                    android.R.color.darker_gray
+                binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+                binding.ivBluetooth.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
                 )
-            )
-            binding.tvBluetooth.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    android.R.color.darker_gray
+                binding.tvBluetooth.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
                 )
-            )
+                binding.cvUSB.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+                binding.ivUSB.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                binding.tvUSB.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                inputVisibilityChange(true)
+            }
 
-            inputVisibilityChange(printerType)
-        } else {
-            printerType = false
-            binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.primary))
-            binding.ivBluetooth.setColorFilter(
-                ContextCompat.getColor(
-                    this,
-                    R.color.white
+            PrinterType.BLUETOOTH.type -> {
+                printerType = PrinterType.BLUETOOTH.type
+                binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.primary))
+                binding.ivBluetooth.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
                 )
-            )
-            binding.tvBluetooth.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    R.color.white
+                binding.tvBluetooth.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
                 )
-            )
 
 
-            binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
-            binding.ivWifi.setColorFilter(
-                ContextCompat.getColor(
-                    this,
-                    android.R.color.darker_gray
+                binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+                binding.ivWifi.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
                 )
-            )
-            binding.tvWifi.setTextColor(
-                ContextCompat.getColor(
-                    this,
-                    android.R.color.darker_gray
+                binding.tvWifi.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
                 )
-            )
 
-            inputVisibilityChange(printerType)
+                binding.cvUSB.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+                binding.ivUSB.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                binding.tvUSB.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                inputVisibilityChange(false)
+            }
+
+            else -> {
+                printerType = PrinterType.USB.type
+                binding.cvUSB.setCardBackgroundColor(resources.getColor(R.color.primary))
+                binding.ivUSB.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
+                )
+                binding.tvUSB.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.white
+                    )
+                )
+
+
+                binding.cvBluetooth.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+                binding.ivBluetooth.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                binding.tvBluetooth.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
+                binding.ivWifi.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                binding.tvWifi.setTextColor(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.darker_gray
+                    )
+                )
+                inputVisibilityChange(false)
+            }
         }
     }
 }

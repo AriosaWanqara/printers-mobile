@@ -1,6 +1,5 @@
 package com.example.printermobile.domain.services
 
-import com.example.printermobile.data.database.entities.Printers
 import com.example.printermobile.data.database.repositories.PrinterRepository
 import javax.inject.Inject
 

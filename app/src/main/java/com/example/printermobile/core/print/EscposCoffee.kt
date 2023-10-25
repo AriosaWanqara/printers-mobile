@@ -202,6 +202,47 @@ class EscposCoffee : PrinterLibraryRepository {
             println(e)
         }
     }
+    override fun printUSBTest(fontType: String) {
+        try {
+            val escpos = EscPos(this.outputStream)
+            val title = Style()
+                .setFontSize(Style.FontSize._2, Style.FontSize._2)
+                .setJustification(EscPosConst.Justification.Center)
+            val title1 = Style()
+                .setLineSpacing(8)
+                .setFontName(Style.FontName.Font_B)
+            val characters = arrayOfNulls<String>(11)
+            Arrays.fill(characters, "000000000-")
+            val zeros = java.lang.String.join("", *characters)
+            escpos.writeLF(title, "Test")
+            val pms = PrintModeStyle().setFontSize(false, false)
+            if (fontType == "A") {
+                pms.setFontName(PrintModeStyle.FontName.Font_A_Default)
+            } else {
+                pms.setFontName(PrintModeStyle.FontName.Font_B)
+            }
+            escpos.feed(1)
+            escpos.writeLF(pms, zeros)
+            escpos.feed(1)
+            escpos.writeLF(
+                title1,
+                "Cuente los caracteres que entran en la primera linea de texto y coloque el valor en Cantidad de caracteres"
+            )
+            escpos.feed(1)
+            escpos.writeLF(
+                Style().setJustification(EscPosConst.Justification.Center),
+                "Configuracion Actual"
+            )
+            escpos.writeLF("Tipo de Impresora: USB")
+            escpos.writeLF("Tipo de fuente: " + fontType)
+            escpos.feed(2)
+            escpos.feed(5)
+            escpos.cut(EscPos.CutMode.FULL)
+            escpos.close()
+        } catch (e: Exception) {
+            println(e)
+        }
+    }
 
     override fun openCashDrawer() {
         try {

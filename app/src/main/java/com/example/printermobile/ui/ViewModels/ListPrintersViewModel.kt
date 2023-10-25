@@ -65,7 +65,7 @@ class ListPrintersViewModel @Inject constructor(
         }
     }
 
-    suspend fun onAdd(printer: com.example.printermobile.data.database.entities.Printers) {
+    suspend fun onAdd(printer: com.example.printermobile.data.database.entities.PrintersEntity) {
         try {
             addPrinter(printer)
             withContext(Dispatchers.Main) {

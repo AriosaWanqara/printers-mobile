@@ -1,12 +1,20 @@
 package com.example.printermobile.core.print.utils.printer1
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.Context
+import android.content.Intent
+import android.hardware.usb.UsbManager
+import androidx.appcompat.app.AppCompatActivity
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
+import com.dantsu.escposprinter.connection.usb.UsbOutputStream
+import com.dantsu.escposprinter.connection.usb.UsbPrintersConnections
 import com.example.printermobile.core.print.EscposCoffee
 import com.example.printermobile.core.print.messageBuilder.BodyBuilder
+import com.example.printermobile.core.printType.PrinterType
 import com.github.anastaciocintra.escpos.Style
 import com.github.anastaciocintra.output.TcpIpOutputStream
 import org.json.JSONArray
@@ -26,9 +34,10 @@ class PrinterBuilder(private val tipo: String?) {
 
     private var socketBluetooth: BluetoothSocket? = null
     private var streamBluetooth: OutputStream? = null
+    private var usbOutputStream: OutputStream? = null
     private var socketRed: Socket? = null
     private var streamRed: OutputStream? = null
-
+    private val ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION"
     private val eslocale = Locale("es", "US")
     private val symbols = DecimalFormatSymbols(eslocale)
     private val df = DecimalFormat("0.00", symbols)
@@ -69,8 +78,34 @@ class PrinterBuilder(private val tipo: String?) {
         this.address = direccion
         return true
     }
+    fun InintUsbPrinter(context: Context): Boolean {
+        try {
+            val usbConnection = UsbPrintersConnections.selectFirstConnected(context)
+            val usbManager =
+                context.getSystemService(AppCompatActivity.USB_SERVICE) as UsbManager
 
-     fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int) {
+            if (usbConnection != null && usbManager != null) {
+                val permissionIntent: PendingIntent = PendingIntent.getBroadcast(
+                    context, 0, Intent(ACTION_USB_PERMISSION),
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+                if (!usbManager.hasPermission(usbConnection.device)) {
+                    usbManager.requestPermission(usbConnection.device, permissionIntent)
+                        .let {
+                            usbOutputStream = UsbOutputStream(usbManager, usbConnection.device)
+                        }
+                }
+                usbOutputStream = UsbOutputStream(usbManager, usbConnection.device)
+                return  true
+            }
+        } catch (e: Exception) {
+            println(e)
+            return false
+        }
+        return false
+    }
+
+    fun imprimirPreticket(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -221,7 +256,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-     fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String) {
+    fun imprimirRecibo(js: JSONObject?, copias: Int, caracteres: Int, programa: String) {
         try {
             if (js == null) return
 
@@ -384,7 +419,7 @@ class PrinterBuilder(private val tipo: String?) {
     }
 
 
-     fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?) {
+    fun imprimirComandas(js: JSONObject?, copias: Int, caracteres: Int, lugar: String?) {
         try {
             if (js == null) return
 
@@ -452,7 +487,7 @@ class PrinterBuilder(private val tipo: String?) {
 
     }
 
-     fun imprimirFacturaElectronica(
+    fun imprimirFacturaElectronica(
         js: JSONObject?,
         copias: Int,
         caracteres: Int,
@@ -738,7 +773,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-     fun imprimirFacturPreimpresa(
+    fun imprimirFacturPreimpresa(
         js: JSONObject?,
         copias: Int,
         caracteres: Int,
@@ -976,7 +1011,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-     fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int) {
+    fun imprimirCotizacionResumida(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -1113,7 +1148,7 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-     fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int) {
+    fun imprimirCotizacionDetallada(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -1252,7 +1287,7 @@ class PrinterBuilder(private val tipo: String?) {
 
 
     // FUNCIONES
-     fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int) {
+    fun imprimirCierreCaja(js: JSONObject?, copias: Int, caracteres: Int) {
         try {
             if (js == null) return
 
@@ -1423,14 +1458,14 @@ class PrinterBuilder(private val tipo: String?) {
         }
     }
 
-     fun abrirGaveta() {
+    fun abrirGaveta() {
         val prn = PrinterHelpers(50, 1)
         prn.abrirGaveta1()
         prn.abrirGaveta2()
         enviarImprimir(prn.getTrabajo())
     }
 
-     fun imprimirTest(tipoTransaccion: String) {
+    fun imprimirTest(tipoTransaccion: String) {
         val prn = PrinterHelpers(100, 1)
         prn.iniciar()
         prn.setFontA()
@@ -1458,20 +1493,22 @@ class PrinterBuilder(private val tipo: String?) {
         enviarImprimir(prn.getTrabajo())
     }
 
-     fun enviarImprimir(trabajo: String) {
+    fun enviarImprimir(trabajo: String) {
         try {
-            if (tipo == "RED") {
+            if (tipo == PrinterType.WIFI.type) {
                 TcpIpOutputStream(this.address, this.port!!).use { outputStream ->
                     val style = Style()
                     val escposCoffee = EscposCoffee(style, outputStream)
                     escposCoffee.printMessage(trabajo)
                 }
-            } else {
+            } else if (tipo == PrinterType.BLUETOOTH.type) {
                 val style = Style()
                 val escposCoffee = EscposCoffee(style, this.streamBluetooth!!)
                 escposCoffee.printMessage(trabajo)
 //                streamBluetooth!!.write(trabajo.toByteArray(charset("ISO-8859-1")))
                 Thread.sleep(10)
+            } else {
+
             }
         } catch (e: IOException) {
             e.printStackTrace()
@@ -1514,7 +1551,7 @@ class PrinterBuilder(private val tipo: String?) {
     }
 
     fun cerrarConexion() {
-        if (tipo == "RED") {
+        if (tipo == PrinterType.WIFI.type) {
             cerrarConexionRed()
         } else {
             cerrarConexionBluetooth()

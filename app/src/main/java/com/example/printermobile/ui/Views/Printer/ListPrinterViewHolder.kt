@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
+import com.example.printermobile.core.printType.PrinterType
 import com.example.printermobile.domain.models.Printers
 
 class ListPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -24,11 +25,14 @@ class ListPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         tvCategoryName.text =
             documentType.findDocumentByKey(printer.documentType) ?: printer.documentType
         tvName.text = "Nombre: ${printer.name}"
-        if (printer.isWifi) {
+        if (printer.type == PrinterType.WIFI.type) {
             tvAddress.text = "Dirección: ${printer.address}:${printer.port.toString()}"
             ivType.setImageResource(R.drawable.ic_wifi_ic)
-        } else {
+        } else if (printer.type == PrinterType.BLUETOOTH.type){
             ivType.setImageResource(R.drawable.ic_bluetooth_ic)
+            tvAddress.visibility = View.GONE
+        }else if (printer.type == PrinterType.USB.type){
+            ivType.setImageResource(R.drawable.ic_usb)
             tvAddress.visibility = View.GONE
         }
         tvCopy.text = "Copias: ${printer.copyNumber.toString()}"

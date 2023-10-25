@@ -13,6 +13,7 @@ import com.example.printermobile.core.document.documentType
 import com.example.printermobile.core.print.test.PrintBluetoothTest
 import com.example.printermobile.core.print.test.PrintWifiTest
 import com.example.printermobile.core.print.utils.printer1.Discrimination
+import com.example.printermobile.core.printType.PrinterType
 import com.example.printermobile.databinding.ActivityMissingPrintersBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
@@ -30,7 +31,7 @@ class MissingPrintersActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMissingPrintersBinding
     private lateinit var printers: Printers
     private var documentType: List<String> = listOf()
-    private var printerType: Boolean = true
+    private var printerType: String = PrinterType.WIFI.type
     private var selectedDocument: List<String> = listOf()
     private val addPrinterViewModel: AddPrinterViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +59,7 @@ class MissingPrintersActivity : AppCompatActivity() {
     private fun initListeners() {
         binding.btnPrintTest.setOnClickListener {
             try {
-                if (printerType) {
+                if (printerType == PrinterType.WIFI.type) {
                     if (binding.etPort.text.isNotBlank() && binding.etIPAddress.text.isNotBlank()) {
                         PrintWifiTest(
                             binding.etIPAddress.text.toString().trim(),
@@ -144,10 +145,10 @@ class MissingPrintersActivity : AppCompatActivity() {
         }
 
         binding.cvWifi.setOnClickListener {
-            setCardsSelectedState(true)
+            setCardsSelectedState(PrinterType.WIFI.type)
         }
         binding.cvBluetooth.setOnClickListener {
-            setCardsSelectedState(false)
+            setCardsSelectedState(PrinterType.BLUETOOTH.type)
         }
     }
 
@@ -165,11 +166,11 @@ class MissingPrintersActivity : AppCompatActivity() {
             binding.etCharacters.error = "El número de caracteres es requerido"
             error = false
         }
-        if (binding.etPort.text.isBlank() && printerType) {
+        if (binding.etPort.text.isBlank() && printerType == PrinterType.WIFI.type) {
             binding.etPort.error = "El puerto es requerido"
             error = false
         }
-        if (binding.etIPAddress.text.isBlank() && printerType) {
+        if (binding.etIPAddress.text.isBlank() && printerType == PrinterType.WIFI.type) {
             binding.etIPAddress.error = "La dirección es requerida"
             error = false
         }
@@ -195,9 +196,9 @@ class MissingPrintersActivity : AppCompatActivity() {
         }
     }
 
-    private fun setCardsSelectedState(params: Boolean) {
-        if (params) {
-            printerType = true
+    private fun setCardsSelectedState(params: String) {
+        if (params == PrinterType.WIFI.type) {
+            printerType = PrinterType.WIFI.type
             binding.cvWifi.setCardBackgroundColor(resources.getColor(R.color.primary))
             binding.ivWifi.setColorFilter(
                 ContextCompat.getColor(
@@ -226,9 +227,9 @@ class MissingPrintersActivity : AppCompatActivity() {
                 )
             )
 
-            inputVisibilityChange(printerType)
+            inputVisibilityChange(true)
         } else {
-            printerType = false
+            printerType = PrinterType.BLUETOOTH.type
             binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.primary))
             binding.ivBluetooth.setColorFilter(
                 ContextCompat.getColor(
@@ -258,7 +259,7 @@ class MissingPrintersActivity : AppCompatActivity() {
                 )
             )
 
-            inputVisibilityChange(printerType)
+            inputVisibilityChange(false)
         }
     }
 

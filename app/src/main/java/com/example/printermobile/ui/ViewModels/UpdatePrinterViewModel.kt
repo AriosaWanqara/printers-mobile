@@ -33,7 +33,7 @@ class UpdatePrinterViewModel @Inject constructor(
             }
         }
     }
-    suspend fun onAdd(printers: com.example.printermobile.data.database.entities.Printers) {
-        addPrinters(printers)
+    suspend fun onAdd(printersEntity: com.example.printermobile.data.database.entities.PrintersEntity) {
+        addPrinters(printersEntity)
     }
 }

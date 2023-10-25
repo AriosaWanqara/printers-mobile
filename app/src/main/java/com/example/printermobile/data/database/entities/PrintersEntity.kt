@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.example.printermobile.domain.models.Printers
 
 @Entity
-data class Printers(
+data class PrintersEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int? = 0,
 
@@ -25,8 +25,8 @@ data class Printers(
     @ColumnInfo(name = "characters_number")
     var charactersNumber: Int,
 
-    @ColumnInfo(name = "is_usb")
-    var isUsb: Boolean,
+    @ColumnInfo(name = "type")
+    var type: String,
 
     @ColumnInfo(name = "address")
     var address: String?,
@@ -42,7 +42,7 @@ data class Printers(
             this.documentType,
             this.copyNumber,
             this.charactersNumber,
-            this.isUsb,
+            this.type,
             this.address,
             this.port
         )

@@ -20,6 +20,7 @@ interface PrinterLibraryRepository {
 
     fun printWifiTest(host: String, port: Int, fontType: String)
     fun printBluetoothTest(fontType: String)
+    fun printUSBTest(fontType: String)
 
     fun openCashDrawer()
 }

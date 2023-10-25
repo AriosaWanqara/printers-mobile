@@ -1,7 +1,7 @@
 package com.example.printermobile.domain.models
 
 import com.example.printermobile.core.document.documentType
-import com.example.printermobile.data.database.entities.Printers
+import com.example.printermobile.data.database.entities.PrintersEntity
 
 class Printers {
     val id: Int?
@@ -10,7 +10,7 @@ class Printers {
     val documentType: String
     val copyNumber: Int
     val charactersNumber: Int
-    val isWifi: Boolean
+    val type: String
     var address: String?
     var port: Int?
 
@@ -21,7 +21,7 @@ class Printers {
         documentType: String,
         copyNumber: Int,
         charactersNumber: Int,
-        isWifi: Boolean,
+        type: String,
         address: String?,
         port: Int?
     ) {
@@ -31,35 +31,34 @@ class Printers {
         this.documentType = documentType
         this.copyNumber = copyNumber
         this.charactersNumber = charactersNumber
-        this.isWifi = isWifi
+        this.type = type
         this.address = address
         this.port = port
     }
 
-    fun createPrinterEntityFromPrinterModel(): Printers {
+    fun createPrinterEntityFromPrinterModel(): PrintersEntity {
         val documentType:documentType = documentType()
-        return Printers(
+        return PrintersEntity(
             this.id,
             this.name,
             this.fontSize,
             documentType.findKeyByDocument(this.documentType) ?: this.documentType,
             this.copyNumber,
             this.charactersNumber,
-            this.isWifi,
+            this.type,
             this.address,
             this.port
         )
     }
-    fun createEntityFromPrinterModel(): Printers {
-        val documentType:documentType = documentType()
-        return Printers(
+    fun createEntityFromPrinterModel(): PrintersEntity {
+        return PrintersEntity(
             this.id,
             this.name,
             this.fontSize,
             this.documentType,
             this.copyNumber,
             this.charactersNumber,
-            this.isWifi,
+            this.type,
             this.address,
             this.port
         )
