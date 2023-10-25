@@ -65,7 +65,6 @@ class AddPrinterActivity : AppCompatActivity() {
                 selectedDocument.plus(it)
             }
         }
-
     }
 
 
@@ -83,11 +82,11 @@ class AddPrinterActivity : AppCompatActivity() {
                         Toast.makeText(this, "Debe ingresar la IP y el Puerto", Toast.LENGTH_SHORT)
                             .show()
                     }
-                } else if (printerType == PrinterType.BLUETOOTH.type){
+                } else if (printerType == PrinterType.BLUETOOTH.type) {
                     if (!PrintBluetoothTest(this)()) {
                         Toast.makeText(this, "Impresora no vinculada", Toast.LENGTH_SHORT).show()
                     }
-                }else{
+                } else {
                     if (!PrintUSBTest(this)()) {
                         Toast.makeText(this, "Impresora no conectada", Toast.LENGTH_SHORT).show()
                     }
@@ -199,6 +198,11 @@ class AddPrinterActivity : AppCompatActivity() {
             binding.etIPAddress.error = "La dirección es requerida"
             error = false
         }
+        if (selectedDocument.isEmpty()) {
+            Toast.makeText(this, "Debe seleccionar un docuemnto", Toast.LENGTH_SHORT).show()
+            println(selectedDocument)
+            error = false
+        }
         return error
     }
 
@@ -262,6 +266,7 @@ class AddPrinterActivity : AppCompatActivity() {
                 )
                 inputVisibilityChange(true)
             }
+
             PrinterType.BLUETOOTH.type -> {
                 printerType = PrinterType.BLUETOOTH.type
                 binding.cvBluetooth.setCardBackgroundColor(resources.getColor(R.color.primary))
@@ -308,6 +313,7 @@ class AddPrinterActivity : AppCompatActivity() {
                 )
                 inputVisibilityChange(false)
             }
+
             else -> {
                 printerType = PrinterType.USB.type
                 binding.cvUSB.setCardBackgroundColor(resources.getColor(R.color.primary))

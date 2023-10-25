@@ -37,6 +37,9 @@ class Discrimination(
             } else if(printer!!.type == PrinterType.BLUETOOTH.type){
                 printerBuilder = PrinterBuilder(PrinterType.BLUETOOTH.type)
                 printerBuilder!!.InicializarImpresoraBluetooth()
+            }else{
+                printerBuilder = PrinterBuilder(PrinterType.USB.type)
+                printerBuilder!!.InintUsbPrinter(context)
             }
         }else{
             printerBuilder = null

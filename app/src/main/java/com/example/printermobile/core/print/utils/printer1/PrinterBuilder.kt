@@ -5,8 +5,10 @@ import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import androidx.appcompat.app.AppCompatActivity
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
@@ -78,8 +80,38 @@ class PrinterBuilder(private val tipo: String?) {
         this.address = direccion
         return true
     }
+
     fun InintUsbPrinter(context: Context): Boolean {
         try {
+            val usbReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context, intent: Intent) {
+                    if (ACTION_USB_PERMISSION == intent.action) {
+                        synchronized(this) {
+                            if (intent.getBooleanExtra(
+                                    UsbManager.EXTRA_PERMISSION_GRANTED,
+                                    false
+                                )
+                            ) {
+                                try {
+                                    val usbConnection =
+                                        UsbPrintersConnections.selectFirstConnected(context)
+                                    val usbManager =
+                                        context.getSystemService(AppCompatActivity.USB_SERVICE) as UsbManager
+                                    if (usbConnection != null && usbManager != null) {
+                                        usbOutputStream =
+                                            UsbOutputStream(usbManager, usbConnection.device)
+                                    }
+                                } catch (e: Exception) {
+                                    println(e)
+                                }
+                                return
+                            }
+                        }
+                    }
+                }
+            }
+            val filter = IntentFilter(ACTION_USB_PERMISSION)
+            context.registerReceiver(usbReceiver, filter)
             val usbConnection = UsbPrintersConnections.selectFirstConnected(context)
             val usbManager =
                 context.getSystemService(AppCompatActivity.USB_SERVICE) as UsbManager
@@ -87,16 +119,14 @@ class PrinterBuilder(private val tipo: String?) {
             if (usbConnection != null && usbManager != null) {
                 val permissionIntent: PendingIntent = PendingIntent.getBroadcast(
                     context, 0, Intent(ACTION_USB_PERMISSION),
-                    PendingIntent.FLAG_IMMUTABLE
+                    PendingIntent.FLAG_MUTABLE
                 )
                 if (!usbManager.hasPermission(usbConnection.device)) {
                     usbManager.requestPermission(usbConnection.device, permissionIntent)
-                        .let {
-                            usbOutputStream = UsbOutputStream(usbManager, usbConnection.device)
-                        }
+                } else {
+                    usbOutputStream = UsbOutputStream(usbManager, usbConnection.device)
                 }
-                usbOutputStream = UsbOutputStream(usbManager, usbConnection.device)
-                return  true
+                return true
             }
         } catch (e: Exception) {
             println(e)
@@ -1508,7 +1538,9 @@ class PrinterBuilder(private val tipo: String?) {
 //                streamBluetooth!!.write(trabajo.toByteArray(charset("ISO-8859-1")))
                 Thread.sleep(10)
             } else {
-
+                val style = Style()
+                val escposCoffee = EscposCoffee(style, this.usbOutputStream!!)
+                escposCoffee.printMessage(trabajo)
             }
         } catch (e: IOException) {
             e.printStackTrace()
