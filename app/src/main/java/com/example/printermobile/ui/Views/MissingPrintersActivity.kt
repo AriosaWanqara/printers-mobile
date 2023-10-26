@@ -114,7 +114,11 @@ class MissingPrintersActivity : AppCompatActivity() {
                                     .getStringSet("Commands", setOf())
                             val possibleCommands = possibleSet?.toTypedArray()
                             if (!possibleCommands.isNullOrEmpty()) {
-                                val m_ambiente = "comercios.illarli.com";
+                                val st = addPrinterViewModel.getSystemType()
+                                var m_ambiente = "comercios.illarli.com";
+                                if (st != null) {
+                                    m_ambiente = st.getName()
+                                }
                                 Discrimination(
                                     addPrinterViewModel.getAll(),
                                     m_ambiente,

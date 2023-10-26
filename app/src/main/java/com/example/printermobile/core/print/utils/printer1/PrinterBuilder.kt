@@ -2,7 +2,6 @@ package com.example.printermobile.core.print.utils.printer1
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.BroadcastReceiver
@@ -15,8 +14,8 @@ import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnection
 import com.dantsu.escposprinter.connection.usb.UsbOutputStream
 import com.dantsu.escposprinter.connection.usb.UsbPrintersConnections
 import com.example.printermobile.core.print.EscposCoffee
-import com.example.printermobile.core.print.messageBuilder.BodyBuilder
 import com.example.printermobile.core.printType.PrinterType
+import com.example.printermobile.domain.models.Printers
 import com.github.anastaciocintra.escpos.Style
 import com.github.anastaciocintra.output.TcpIpOutputStream
 import org.json.JSONArray
@@ -25,12 +24,12 @@ import org.json.JSONObject
 import java.io.IOException
 import java.io.OutputStream
 import java.math.BigDecimal
-import java.net.InetAddress
 import java.net.Socket
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale
 import java.util.UUID
+import kotlin.system.exitProcess
 
 class PrinterBuilder(private val tipo: String?) {
 
@@ -81,7 +80,9 @@ class PrinterBuilder(private val tipo: String?) {
         return true
     }
 
-    fun InintUsbPrinter(context: Context): Boolean {
+    fun InintUsbPrinter(
+        context: Context,
+    ): Boolean {
         try {
             val usbReceiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context, intent: Intent) {
@@ -123,8 +124,12 @@ class PrinterBuilder(private val tipo: String?) {
                 )
                 if (!usbManager.hasPermission(usbConnection.device)) {
                     usbManager.requestPermission(usbConnection.device, permissionIntent)
+                    context.getSharedPreferences("usb", 0).edit().putBoolean("permissions", true)
+                        .apply()
                 } else {
                     usbOutputStream = UsbOutputStream(usbManager, usbConnection.device)
+                    context.getSharedPreferences("usb", 0).edit().putBoolean("permissions", false)
+                        .apply()
                 }
                 return true
             }
@@ -1542,10 +1547,8 @@ class PrinterBuilder(private val tipo: String?) {
                 val escposCoffee = EscposCoffee(style, this.usbOutputStream!!)
                 escposCoffee.printMessage(trabajo)
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
+        } catch (e: Exception) {
+            println("")
         }
     }
 
@@ -1560,14 +1563,8 @@ class PrinterBuilder(private val tipo: String?) {
             streamBluetooth = null
             socketBluetooth?.close()
             socketBluetooth = null
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } catch (e: RuntimeException) {
-            e.printStackTrace()
-        } catch (e: OutOfMemoryError) {
-            e.printStackTrace()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
+        } catch (e: Exception) {
+            println(e)
         }
     }
 
@@ -1578,7 +1575,7 @@ class PrinterBuilder(private val tipo: String?) {
             socketRed?.close()
             socketRed = null
         } catch (e: IOException) {
-            e.printStackTrace()
+            println(e)
         }
     }
 

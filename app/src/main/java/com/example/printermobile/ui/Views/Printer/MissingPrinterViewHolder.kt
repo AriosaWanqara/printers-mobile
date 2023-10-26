@@ -6,24 +6,10 @@ import com.example.printermobile.databinding.ItemDocumentTypeBinding
 
 class MissingPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val binding = ItemDocumentTypeBinding.bind(view)
-    var isSelected: Boolean = false
-    fun render(documentName: String, onItemSelected: (String) -> Unit) {
+    val ivCheckIcon = binding.ivCheckIcon;
+    val mcItemContainer = binding.mcItemContainer;
+    fun render(documentName: String) {
         binding.tvDocumentTypeName.text = documentName
-        binding.mcItemContainer.setOnClickListener {
-            isSelected = !isSelected
-            onItemSelected(documentName)
-            setView()
-        }
-    }
-
-
-     fun setView(){
-        if (isSelected){
-//            binding.mcItemContainer.setCardBackgroundColor(ContextCompat.getColor(itemView.context,R.color.primary))
-            binding.ivCheckIcon.visibility = View.VISIBLE
-        }else{
-//            binding.mcItemContainer.setCardBackgroundColor(ContextCompat.getColor(itemView.context,android.R.color.transparent))
-            binding.ivCheckIcon.visibility = View.GONE
-        }
+        ivCheckIcon.visibility = View.GONE
     }
 }

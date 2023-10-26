@@ -1,11 +1,8 @@
 package com.example.printermobile.core.print.utils.printer1
 
 import android.content.Context
-import android.content.Intent
 import com.example.printermobile.core.printType.PrinterType
 import com.example.printermobile.domain.models.Printers
-import com.example.printermobile.ui.Views.AddPrinterActivity
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.json.JSONObject
 
 class Discrimination(
@@ -23,23 +20,27 @@ class Discrimination(
     private var printer: Printers? = null
     private var printerBuilder: PrinterBuilder? = null
 
-    private fun setup(document: String) {
+    private fun setup(document: String , commands: Array<String>) {
         printer = allPrinters.find {
             it.documentType == document
         }
         if (printer != null) {
-            if (printer!!.type == PrinterType.WIFI.type) {
-                printerBuilder = PrinterBuilder(PrinterType.WIFI.type)
-                printerBuilder!!.InicializarImpresoraRed(
-                    printer!!.address,
-                    printer!!.port!!
-                )
-            } else if(printer!!.type == PrinterType.BLUETOOTH.type){
-                printerBuilder = PrinterBuilder(PrinterType.BLUETOOTH.type)
-                printerBuilder!!.InicializarImpresoraBluetooth()
-            }else{
-                printerBuilder = PrinterBuilder(PrinterType.USB.type)
-                printerBuilder!!.InintUsbPrinter(context)
+            when (printer!!.type) {
+                PrinterType.WIFI.type -> {
+                    printerBuilder = PrinterBuilder(PrinterType.WIFI.type)
+                    printerBuilder!!.InicializarImpresoraRed(
+                        printer!!.address,
+                        printer!!.port!!
+                    )
+                }
+                PrinterType.BLUETOOTH.type -> {
+                    printerBuilder = PrinterBuilder(PrinterType.BLUETOOTH.type)
+                    printerBuilder!!.InicializarImpresoraBluetooth()
+                }
+                else -> {
+                    printerBuilder = PrinterBuilder(PrinterType.USB.type)
+                    printerBuilder!!.InintUsbPrinter(context)
+                }
             }
         }else{
             printerBuilder = null
@@ -53,7 +54,7 @@ class Discrimination(
         for (command in commands) {
             val parts = command.split(",".toRegex()).dropLastWhile { it.isEmpty() }
                 .toTypedArray()
-            setup(parts[0])
+            setup(parts[0],commands)
             when (parts[0]) {
                 "IMPRESION_RECIBO" -> when (parts[2]) {
                     "COMERCIOS" -> {
@@ -112,7 +113,7 @@ class Discrimination(
                 "IMPRESION_COMANDA" -> {
                     jsonObject = Network()(parts[1], urlComandas, systemType)
                     val area = jsonObject?.optString("areaImpresionPed")
-                    setup("IMPRESION_COMANDA:$area")
+                    setup("IMPRESION_COMANDA:$area",commands)
                     if (printerBuilder != null) {
                         printerBuilder!!.imprimirComandas(
                             jsonObject,
