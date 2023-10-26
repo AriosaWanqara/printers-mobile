@@ -24,15 +24,15 @@
         <activity
             android:name=".ui.Views.MissingPrintersActivity"
             android:exported="false"
-            android:theme="@style/Theme.PrinterMobile" />
+            android:theme="@style/Base.Theme.PrinterMobile" />
         <activity
             android:name=".ui.Views.HelpPrinterActivity"
             android:exported="false"
-            android:theme="@style/Theme.PrinterMobile" />
+            android:theme="@style/Base.Theme.PrinterMobile" />
         <activity
             android:name=".ui.Views.ListPrintersActivity"
             android:exported="false"
-            android:theme="@style/Theme.PrinterMobile" />
+            android:theme="@style/Base.Theme.PrinterMobile" />
         <activity
             android:name=".ui.Views.BackgroundPrinterActivity"
             android:exported="true"
@@ -49,11 +49,11 @@
         <activity
             android:name=".ui.Views.UpdatePrinterActivity"
             android:exported="false"
-            android:theme="@style/Theme.PrinterMobile" />
+            android:theme="@style/Base.Theme.PrinterMobile" />
         <activity
             android:name=".ui.Views.AddPrinterActivity"
             android:exported="false"
-            android:theme="@style/Theme.PrinterMobile" />
+            android:theme="@style/Base.Theme.PrinterMobile" />
         <activity
             android:name=".ui.Views.MainActivity"
             android:exported="true">

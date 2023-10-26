@@ -1,44 +1,32 @@
 package com.example.printermobile.ui.Views
 
 import android.animation.ObjectAnimator
-import android.app.ActivityOptions
 import android.content.Intent
-import android.os.Build
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.text.Html
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.animation.AnticipateInterpolator
-import androidx.activity.viewModels
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
+import com.example.printermobile.R
 import com.example.printermobile.databinding.ActivityMainBinding
-import com.example.printermobile.domain.models.Printers
-import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
-import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
-import com.example.printermobile.ui.Views.Printer.SwipeHelper
+import com.example.printermobile.ui.Views.onboarding.OnBoardingPageAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val mainViewModel: ListPrintersViewModel by viewModels()
-    private var printers: List<Printers> = listOf()
-    private val adapter = ListPrinterAdapter(printers, onItemRedirect = {
-        val id = it.id
-        redirect(id!!)
-    }, onItemRemove = {
-        CoroutineScope(Dispatchers.IO).launch {
-            mainViewModel.onDeletePrinter(it.id!!)
-        }
-    })
+    private lateinit var onBoardingPageAdapter: OnBoardingPageAdapter
+    private var dots: List<TextView> = listOf()
+    private var currentItem = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val screenSplash = installSplashScreen()
@@ -52,70 +40,108 @@ class MainActivity : AppCompatActivity() {
                 0f,
                 -splashScreenView.view.height.toFloat()
             )
+            val isFirstTime =
+                getSharedPreferences("onBoarding", MODE_PRIVATE).getString("tour", "a")
             slideUp.interpolator = AnticipateInterpolator()
             slideUp.duration = 200L
             slideUp.doOnEnd {
-                splashScreenView.remove()
-                val intent = Intent(this,ListPrintersActivity::class.java)
-                startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
+                if (isFirstTime == "END") {
+                    val listPrinterIntent = Intent(this, ListPrintersActivity::class.java)
+                    startActivity(listPrinterIntent)
+                } else {
+                    splashScreenView.remove()
+                }
             }
-            slideUp.start()
+            if (isFirstTime == "END") {
+                val listPrinterIntent = Intent(this, ListPrintersActivity::class.java)
+                startActivity(listPrinterIntent)
+            } else {
+                slideUp.start()
+            }
         }
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initUI()
         initListeners()
-
-        mainViewModel.onCreate()
-        mainViewModel.printers.observe(this, Observer {
-            printers = listOf()
-            it.map { printer ->
-                printers = printers.plus(printer)
-            }
-            adapter.updateList(printers)
-        })
         screenSplash.setKeepOnScreenCondition { false }
     }
 
     private fun initUI() {
-        binding.rvPrinterList.layoutManager = LinearLayoutManager(this)
-        binding.rvPrinterList.adapter = adapter
-        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.rvPrinterList) {
-            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
-                var buttons = listOf<UnderlayButton>()
-                val deleteButton = deleteButton(position)
-                buttons = listOf(deleteButton)
-                return buttons
-            }
-        })
+        onBoardingPageAdapter = OnBoardingPageAdapter(applicationContext)
 
-        itemTouchHelper.attachToRecyclerView(binding.rvPrinterList)
-
+        setDots(0)
+        binding.vpSliderLayout.adapter = onBoardingPageAdapter
     }
 
-    private fun deleteButton(position: Int): SwipeHelper.UnderlayButton {
-        return SwipeHelper.UnderlayButton(
-            this,
-            "Delete",
-            14.0f,
-            android.R.color.holo_red_light,
-            object : SwipeHelper.UnderlayButtonClickListener {
-                override fun onClick() {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        mainViewModel.onDeletePrinter(printers[position].id!!)
+    private fun setDots(position:Int){
+        dots = listOf()
+        binding.clDotContainer.removeAllViews()
+        for (i in 1..onBoardingPageAdapter.count) {
+            val dot = TextView(this)
+            dot.text = Html.fromHtml("&#8226;")
+            dot.textSize = 35F
+            dots = dots.plus(dot)
+            binding.clDotContainer.addView(dot)
+        }
+        dots[position].setTextColor(ContextCompat.getColor(this,R.color.primary))
+    }
+
+    private fun initListeners() {
+        binding.vpSliderLayout.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+                setDots(position)
+                currentItem = position
+                when (position) {
+                    0 -> {
+                        val animation =
+                            AnimationUtils.loadAnimation(applicationContext, R.anim.button_fide_out)
+                        val fadeIn =
+                            AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
+                        binding.btnFinishOnboarding.animation = animation
+                        binding.btnOnBoardingNext.animation = fadeIn
+                        binding.btnFinishOnboarding.visibility = View.GONE
+                        binding.btnOnBoardingNext.visibility = View.VISIBLE
                     }
 
+                    1 -> {
+                        val animation =
+                            AnimationUtils.loadAnimation(applicationContext, R.anim.button_fide_in)
+                        val fadeOut =
+                            AnimationUtils.loadAnimation(applicationContext, R.anim.fade_out)
+                        binding.btnOnBoardingNext.animation = fadeOut
+                        binding.btnFinishOnboarding.animation = animation
+                        binding.btnFinishOnboarding.visibility = View.VISIBLE
+                        binding.btnOnBoardingNext.visibility = View.GONE
+                    }
                 }
-            })
-    }
-    private fun initListeners() {
-        binding.fabAddPrinter.setOnClickListener {
-            val intent = Intent(this, AddPrinterActivity::class.java)
-            startActivity(intent)
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+
+        })
+        binding.btnFinishOnboarding.setOnClickListener {
+            getSharedPreferences("onBoarding", MODE_PRIVATE).edit().putString("tour", "END").apply()
+            val printerListIntent = Intent(this, ListPrintersActivity::class.java)
+            startActivity(printerListIntent)
         }
-    }
-    private fun redirect(id: Int) {
-        val updatePrinterIntent = Intent(this, UpdatePrinterActivity::class.java)
-        updatePrinterIntent.putExtra("printer", id.toString())
-        startActivity(updatePrinterIntent)
+        binding.btnOnBoardingNext.setOnClickListener {
+            Thread.sleep(200)
+            currentItem += 1
+            binding.vpSliderLayout.currentItem = currentItem
+        }
+        binding.btnSkipOnBoarding.setOnClickListener {
+            getSharedPreferences("onBoarding", MODE_PRIVATE).edit().putString("tour", "END").apply()
+            val printerListIntent = Intent(this, ListPrintersActivity::class.java)
+            startActivity(printerListIntent)
+        }
     }
 }

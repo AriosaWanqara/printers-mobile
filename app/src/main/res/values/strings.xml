@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PrinterMobile</string>
+
+    <!--  ONBOARDING TITLES  -->
+    <string name="onboarding_title_1">Mayor compatibilidad</string>
+    <string name="onboarding_title_2">Mayor integración</string>
+
+    <!--  ONBOARDING CONTENT  -->
+    <string name="onboarding_content_1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, nisi</string>
+    <string name="onboarding_content_2">magni nesciunt laudantium odio eligendi doloribus veniam fugit voluptate</string>
+
 </resources>
