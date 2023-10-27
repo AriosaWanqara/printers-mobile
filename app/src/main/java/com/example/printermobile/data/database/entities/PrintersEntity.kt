@@ -37,8 +37,8 @@ data class PrintersEntity(
     fun getPrinterModelFromPrinterEntity(): Printers {
         return Printers(
             this.id,
-            this.name,
             this.fontSize,
+            this.name,
             this.documentType,
             this.copyNumber,
             this.charactersNumber,

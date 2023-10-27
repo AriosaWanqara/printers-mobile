@@ -35,7 +35,6 @@ class Printers {
         this.address = address
         this.port = port
     }
-
     fun createPrinterEntityFromPrinterModel(): PrintersEntity {
         val documentType:documentType = documentType()
         return PrintersEntity(

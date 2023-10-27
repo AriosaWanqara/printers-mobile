@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/advance_navigation"
+    app:startDestination="@id/printerTypeFragment">
+
+    <fragment
+        android:id="@+id/printerTypeFragment"
+        android:name="com.example.printermobile.ui.Views.advance.PrinterTypeFragment"
+        android:label="fragment_printer_type"
+        tools:layout="@layout/fragment_printer_type" >
+        <action
+            android:id="@+id/action_printerTypeFragment_to_printerConfigFragment"
+            app:destination="@id/printerConfigFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/printerConfigFragment"
+        android:name="com.example.printermobile.ui.Views.advance.PrinterConfigFragment"
+        android:label="fragment_printer_config"
+        tools:layout="@layout/fragment_printer_config" >
+        <action
+            android:id="@+id/action_printerConfigFragment_to_printerTypeFragment"
+            app:destination="@id/printerTypeFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_printerConfigFragment_to_printerCopyNumberFragment"
+            app:destination="@id/printerCopyNumberFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/printerDocumentTypeFragment"
+        android:name="com.example.printermobile.ui.Views.advance.PrinterDocumentTypeFragment"
+        android:label="fragment_printer_document_type"
+        tools:layout="@layout/fragment_printer_document_type" >
+        <action
+            android:id="@+id/action_printerDocumentTypeFragment_to_printerCopyNumberFragment"
+            app:destination="@id/printerCopyNumberFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/printerCopyNumberFragment"
+        android:name="com.example.printermobile.ui.Views.advance.PrinterCopyNumberFragment"
+        android:label="fragment_printer_copy_number"
+        tools:layout="@layout/fragment_printer_copy_number" >
+        <action
+            android:id="@+id/action_printerCopyNumberFragment_to_printerDocumentTypeFragment"
+            app:destination="@id/printerDocumentTypeFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_printerCopyNumberFragment_to_printerConfigFragment"
+            app:destination="@id/printerConfigFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out" />
+    </fragment>
+</navigation>

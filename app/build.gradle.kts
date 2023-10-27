@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.example.printermobile"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.printermobile"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -49,6 +49,7 @@ dependencies {
     val retrofit_version = "2.9.0"
     val room_version = "2.5.0"
     val hilt_version = "2.44"
+    val navigation_fragment = "2.7.4"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -57,6 +58,10 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // Navigation Fragment
+    implementation("androidx.navigation:navigation-fragment-ktx:${navigation_fragment}")
+    implementation("androidx.navigation:navigation-ui-ktx:${navigation_fragment}")
 
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")

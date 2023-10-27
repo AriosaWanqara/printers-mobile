@@ -105,8 +105,8 @@ class AddPrinterActivity : AppCompatActivity() {
                             for (documents in selectedDocument) {
                                 printers = Printers(
                                     null,
-                                    binding.etName.text.toString(),
                                     "B",
+                                    binding.etName.text.toString(),
                                     documents,
                                     binding.etCopies.text.toString().toInt(),
                                     binding.etCharacters.text.toString().toInt(),

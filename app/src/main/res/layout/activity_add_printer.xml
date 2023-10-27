@@ -159,19 +159,20 @@
 
                             <TextView
                                 android:id="@+id/tvWifi"
-                                android:textColor="@color/white"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginEnd="5dp"
-                                android:text="Wifi" />
+                                android:text="Wifi"
+                                android:textColor="@color/white" />
+
                             <ImageView
                                 android:id="@+id/ivWifi"
-                                app:tint="@color/white"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/ic_wifi_ic" />
+                                android:src="@drawable/ic_wifi_ic"
+                                app:tint="@color/white" />
                         </LinearLayout>
                     </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -243,12 +244,12 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:text="Tipo de documento"
-                android:layout_marginTop="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/textPrimary"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Tipo de documento"
+                android:textColor="@color/textPrimary"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDocumentType"
@@ -265,39 +266,39 @@
                 android:layout_marginBottom="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
+
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/btnSave"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/primary"
-                    android:text="Guardar"
-                    app:elevation="0dp"
-                    android:stateListAnimator="@null"
-                    android:elevation="0dp"
                     android:layout_marginBottom="5dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:iconTint="@color/white"
+                    android:backgroundTint="@color/primary"
+                    android:elevation="0dp"
+                    android:stateListAnimator="@null"
+                    android:text="Guardar"
+                    android:textColor="@color/white"
+                    app:elevation="0dp"
                     app:icon="@android:drawable/ic_input_add"
-                    />
+                    app:iconTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
                 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                     android:id="@+id/btnPrintTest"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:textColor="@color/white"
-                    app:iconSize="18dp"
                     android:layout_marginBottom="5dp"
-                    app:elevation="0dp"
-                    android:stateListAnimator="@null"
-                    android:elevation="0dp"
                     android:backgroundTint="@color/primary"
+                    android:elevation="0dp"
+                    android:stateListAnimator="@null"
                     android:text="Probar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:iconTint="@color/white"
+                    android:textColor="@color/white"
+                    app:elevation="0dp"
                     app:icon="@drawable/ic_print"
-                    />
+                    app:iconSize="18dp"
+                    app:iconTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

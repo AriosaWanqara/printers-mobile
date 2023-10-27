@@ -109,8 +109,8 @@ class UpdatePrinterActivity : AppCompatActivity() {
                 try {
                     var printers = Printers(
                         updatePrinterViewModel.printer.value?.id,
-                        binding.etName.text.toString(),
                         "B",
+                        binding.etName.text.toString(),
                         binding.acDocumentType.text.toString().trim(),
                         binding.etCopies.text.toString().toInt(),
                         binding.etCharacters.text.toString().toInt(),

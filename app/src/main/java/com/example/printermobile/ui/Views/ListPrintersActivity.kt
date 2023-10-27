@@ -2,10 +2,7 @@ package com.example.printermobile.ui.Views
 
 import android.content.Intent
 import android.graphics.Canvas
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -319,7 +316,7 @@ class ListPrintersActivity : AppCompatActivity() {
 
     private fun initListeners() {
         binding.fabAddPrinter.setOnClickListener {
-            val intent = Intent(this, AddPrinterActivity::class.java)
+            val intent = Intent(this, AdvanceAddPrinterActivity::class.java)
             startActivity(intent)
         }
         binding.topAppBar.setOnMenuItemClickListener { menu ->
