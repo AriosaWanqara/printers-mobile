@@ -86,10 +86,10 @@ class PrinterTypeFragment : Fragment() {
             binding.tilIpAddress.animation = fadeOut
             binding.etIPAddress.animation = fadeOut
             binding.etPort.animation = fadeOut
-            binding.tilPort.visibility = View.GONE
-            binding.tilIpAddress.visibility = View.GONE
-            binding.etPort.visibility = View.GONE
-            binding.etIPAddress.visibility = View.GONE
+            binding.tilPort.visibility = View.INVISIBLE
+            binding.tilIpAddress.visibility = View.INVISIBLE
+            binding.etPort.visibility = View.INVISIBLE
+            binding.etIPAddress.visibility = View.INVISIBLE
         }
     }
 
