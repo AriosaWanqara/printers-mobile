@@ -142,26 +142,26 @@ class PrinterTypeFragment : Fragment() {
                 binding.ivBluetooth.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.tvBluetooth.setTextColor(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.cvUSB.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
                 binding.ivUSB.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.tvUSB.setTextColor(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 inputVisibilityChange(true)
@@ -188,13 +188,13 @@ class PrinterTypeFragment : Fragment() {
                 binding.ivWifi.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.tvWifi.setTextColor(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
 
@@ -202,13 +202,13 @@ class PrinterTypeFragment : Fragment() {
                 binding.ivUSB.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.tvUSB.setTextColor(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 inputVisibilityChange(false)
@@ -235,26 +235,26 @@ class PrinterTypeFragment : Fragment() {
                 binding.ivBluetooth.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.tvBluetooth.setTextColor(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.cvWifi.setCardBackgroundColor(resources.getColor(android.R.color.transparent))
                 binding.ivWifi.setColorFilter(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 binding.tvWifi.setTextColor(
                     ContextCompat.getColor(
                         requireActivity().applicationContext,
-                        android.R.color.darker_gray
+                        R.color.textPrimary
                     )
                 )
                 inputVisibilityChange(false)

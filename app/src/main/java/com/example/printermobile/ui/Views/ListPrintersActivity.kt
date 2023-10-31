@@ -362,13 +362,13 @@ class ListPrintersActivity : AppCompatActivity() {
             binding.ivShop.setColorFilter(
                 ContextCompat.getColor(
                     this,
-                    android.R.color.darker_gray
+                    R.color.textPrimary
                 )
             )
             binding.tvShop.setTextColor(
                 ContextCompat.getColor(
                     this,
-                    android.R.color.darker_gray
+                    R.color.textPrimary
                 )
             )
 
@@ -391,13 +391,13 @@ class ListPrintersActivity : AppCompatActivity() {
             binding.ivRestaurant.setColorFilter(
                 ContextCompat.getColor(
                     this,
-                    android.R.color.darker_gray
+                    R.color.textPrimary
                 )
             )
             binding.tvRestaurant.setTextColor(
                 ContextCompat.getColor(
                     this,
-                    android.R.color.darker_gray
+                    R.color.textPrimary
                 )
             )
         }

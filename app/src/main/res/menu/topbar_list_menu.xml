@@ -5,8 +5,8 @@
         android:id="@+id/miHelp"
         android:icon="@drawable/ic_help"
         android:iconTint="@color/white"
-
-        android:title="Help"
+        android:title="ic_help"
+        android:fillColor="?attr/colorControlNormal"
         app:showAsAction="ifRoom"
         />
 </menu>
