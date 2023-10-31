@@ -20,7 +20,6 @@ import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.domain.models.SystemType
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
 import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
-import com.example.printermobile.ui.Views.Printer.SwipeHelper
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator

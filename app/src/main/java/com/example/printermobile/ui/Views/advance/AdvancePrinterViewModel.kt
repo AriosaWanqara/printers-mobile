@@ -25,6 +25,7 @@ class AdvancePrinterViewModel @Inject constructor(
     var copyNumber = MutableLiveData<String>(null)
     var charactersNumber = MutableLiveData<String>(null)
     var documentType = MutableLiveData<List<String>>(listOf())
+    var progression = MutableLiveData(0)
 
     fun printTest(context: Context) {
         try {

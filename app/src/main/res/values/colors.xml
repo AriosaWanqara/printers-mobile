@@ -6,6 +6,7 @@
     <color name="illarli_blue">#094b7b</color>
     <color name="illarli_orange">#ee7a04</color>
     <color name="primary">@color/illarli_red</color>
+    <color name="secondary">@color/illarli_orange</color>
     <color name="textPrimary">@color/black</color>
     <color name="whatsapp">#25D366</color>
 </resources>

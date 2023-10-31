@@ -25,6 +25,7 @@ class PrinterDocumentTypeFragment : Fragment() {
 
     private val advancePrinterViewModel by activityViewModels<AdvancePrinterViewModel>()
     private var _binding: FragmentPrinterDocumentTypeBinding? = null
+    private lateinit var adapter: MissingPrinterAdapter
     private val binding get() = _binding!!
     private var documentType: List<String> = listOf()
 
@@ -47,7 +48,14 @@ class PrinterDocumentTypeFragment : Fragment() {
                 GridLayoutManager.VERTICAL,
                 false
             )
-        binding.rvDocumentTypeList.adapter = MissingPrinterAdapter(documentType) {
+
+        binding.rvDocumentTypeList.adapter = adapter
+    }
+
+    private fun initData() {
+        val documentEnum: documentType = documentType()
+        documentType = documentEnum.getDocuments()
+        adapter = MissingPrinterAdapter(documentType) {
             advancePrinterViewModel.documentType.value =
                 if (advancePrinterViewModel.documentType.value!!.contains(it)) {
                     advancePrinterViewModel.documentType.value!!.minus(it)
@@ -55,11 +63,9 @@ class PrinterDocumentTypeFragment : Fragment() {
                     advancePrinterViewModel.documentType.value!!.plus(it)
                 }
         }
-    }
-
-    private fun initData() {
-        val documentEnum: documentType = documentType()
-        documentType = documentEnum.getDocuments()
+        if (!advancePrinterViewModel.documentType.value.isNullOrEmpty()) {
+            adapter.onSelectedItem(advancePrinterViewModel.documentType.value!!)
+        }
     }
 
     private fun initListeners() {
@@ -68,10 +74,16 @@ class PrinterDocumentTypeFragment : Fragment() {
         }
         binding.btnPrintConfigNext.setOnClickListener {
             if (checkForm()) {
+                if (advancePrinterViewModel.progression.value!! <= 4) {
+                    advancePrinterViewModel.progression.value = 4
+                }
                 CoroutineScope(Dispatchers.IO).launch {
                     advancePrinterViewModel.onAdd()
-                    withContext(Dispatchers.Main){
-                        val listPrinterIntent = Intent(requireContext().applicationContext,ListPrintersActivity::class.java)
+                    withContext(Dispatchers.Main) {
+                        val listPrinterIntent = Intent(
+                            requireContext().applicationContext,
+                            ListPrintersActivity::class.java
+                        )
                         startActivity(listPrinterIntent)
                     }
                 }

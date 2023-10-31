@@ -25,8 +25,13 @@ class PrinterConfigFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPrinterConfigBinding.inflate(layoutInflater, container, false)
+        initData()
         initListeners()
         return binding.root
+    }
+
+    private fun initData() {
+        binding.etCharacters.setText(advancePrinterViewModel.charactersNumber.value)
     }
 
     private fun initListeners() {
@@ -35,7 +40,11 @@ class PrinterConfigFragment : Fragment() {
         }
         binding.btnPrintConfigNext.setOnClickListener {
             if (checkForm()) {
-                advancePrinterViewModel.charactersNumber.value = binding.etCharacters.text.toString()
+                if (advancePrinterViewModel.progression.value!! <= 2) {
+                    advancePrinterViewModel.progression.value = 2
+                }
+                advancePrinterViewModel.charactersNumber.value =
+                    binding.etCharacters.text.toString()
                 findNavController().navigate(R.id.action_printerConfigFragment_to_printerCopyNumberFragment)
             }
         }

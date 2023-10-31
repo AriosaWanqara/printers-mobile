@@ -13,17 +13,49 @@ class MissingPrinterAdapter(
     private val onItemSelected: (String) -> Unit,
 ) : RecyclerView.Adapter<MissingPrinterViewHolder>() {
 
-    var imageViewList = listOf<Map<Int, ImageView>>()
+    private var imageViewList = listOf<Map<Int, ImageView>>()
+    private var selectedDocuments: List<String> = listOf()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MissingPrinterViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_document_type, parent, false)
         return MissingPrinterViewHolder(view)
     }
 
+    private fun updateCards(position: Int, ivCheckIcon: ImageView) {
+        try {
+            if (imageViewList.isNotEmpty()) {
+                imageViewList.map { it ->
+                    if (it.containsKey(position)) {
+                        if (it.getValue(position) == ivCheckIcon) {
+                            it.getValue(position).visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            println(e)
+        }
+    }
+
+    fun onSelectedItem(selected: List<String>) {
+        selectedDocuments = selected
+    }
+
+    private fun updateSelectedItem(documentName:String){
+        if (selectedDocuments.contains(documentName)){
+            selectedDocuments = selectedDocuments.minus(documentName)
+        }
+    }
     override fun getItemCount(): Int = documentType.size
 
     override fun onBindViewHolder(holder: MissingPrinterViewHolder, position: Int) {
         holder.render(documentType[position])
+        if (selectedDocuments.isNotEmpty()) {
+            if (!holder.documentName.isNullOrEmpty() && selectedDocuments.contains(holder.documentName)) {
+                imageViewList = imageViewList.plus(mapOf(position to holder.ivCheckIcon))
+            }
+        }
         holder.mcItemContainer.setOnClickListener {
             onItemSelected(documentType[position])
             val ivIcon = holder.ivCheckIcon
@@ -33,33 +65,9 @@ class MissingPrinterAdapter(
             } else {
                 imageViewList = imageViewList.plus(mapOf(position to ivIcon))
             }
-            try {
-                if (imageViewList.isNotEmpty()) {
-                    imageViewList.map { it ->
-                        if (it.containsKey(position)) {
-                            if (it.getValue(position) == holder.ivCheckIcon) {
-                                it.getValue(position).visibility = View.VISIBLE
-                            }
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                println(e)
-            }
+            updateCards(position, holder.ivCheckIcon)
         }
-        try {
-            if (imageViewList.isNotEmpty()) {
-                imageViewList.map { it ->
-                    if (it.containsKey(position)) {
-                        if (it.getValue(position) == holder.ivCheckIcon) {
-                            it.getValue(position).visibility = View.VISIBLE
-                        }
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            println(e)
-        }
+        updateCards(position, holder.ivCheckIcon)
     }
 
 }

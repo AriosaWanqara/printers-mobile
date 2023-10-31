@@ -27,6 +27,14 @@
             app:navigationIcon="@drawable/ic_arrow_back"
             />
     </com.google.android.material.appbar.AppBarLayout>
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/lpiWizardState"
+        app:layout_constraintStart_toStartOf="parent"
+        app:indicatorColor="@color/secondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcvAdvanceContainer"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -34,7 +42,7 @@
         app:navGraph="@navigation/advance_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/materialCardView"
+        app:layout_constraintTop_toBottomOf="@id/lpiWizardState"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="0dp"
         android:layout_height="0dp">

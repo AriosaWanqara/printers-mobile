@@ -20,8 +20,14 @@ class PrinterCopyNumberFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPrinterCopyNumberBinding.inflate(layoutInflater, container, false)
+
+        initData()
         initListeners()
         return binding.root
+    }
+
+    private fun initData() {
+        binding.etCopies.setText(advancePrinterViewModel.copyNumber.value)
     }
 
     private fun initListeners() {
@@ -30,6 +36,9 @@ class PrinterCopyNumberFragment : Fragment() {
         }
         binding.btnPrintConfigNext.setOnClickListener {
             if (checkForm()) {
+                if (advancePrinterViewModel.progression.value!! <= 3) {
+                    advancePrinterViewModel.progression.value = 3
+                }
                 advancePrinterViewModel.copyNumber.value = binding.etCopies.text.toString()
                 findNavController().navigate(R.id.action_printerCopyNumberFragment_to_printerDocumentTypeFragment)
             }

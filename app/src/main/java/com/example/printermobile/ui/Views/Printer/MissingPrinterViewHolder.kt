@@ -8,7 +8,9 @@ class MissingPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val binding = ItemDocumentTypeBinding.bind(view)
     val ivCheckIcon = binding.ivCheckIcon;
     val mcItemContainer = binding.mcItemContainer;
+    var documentName:String? = null
     fun render(documentName: String) {
+        this.documentName = documentName
         binding.tvDocumentTypeName.text = documentName
         ivCheckIcon.visibility = View.GONE
     }

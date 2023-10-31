@@ -29,14 +29,21 @@ class PrinterTypeFragment : Fragment() {
         _binding = FragmentPrinterTypeBinding.inflate(layoutInflater, container, false)
 
         initUI()
+        initData()
         initListeners()
         return binding.root
     }
 
+    private fun initData() {
+        binding.etPort.setText(advancePrinterViewModel.port.value)
+        binding.etIPAddress.setText(advancePrinterViewModel.ipAddress.value)
+        binding.etName.setText(advancePrinterViewModel.name.value)
+    }
+
     private fun initUI() {
-        if (advancePrinterViewModel.printerType.value.isNullOrEmpty()){
+        if (advancePrinterViewModel.printerType.value.isNullOrEmpty()) {
             setCardsSelectedState(PrinterType.WIFI.type)
-        }else{
+        } else {
             setCardsSelectedState(advancePrinterViewModel.printerType.value!!)
         }
     }
@@ -58,6 +65,9 @@ class PrinterTypeFragment : Fragment() {
         }
         binding.btnPrintTypeNext.setOnClickListener {
             if (checkForm()) {
+                if (advancePrinterViewModel.progression.value!! <= 1) {
+                    advancePrinterViewModel.progression.value = 1
+                }
                 advancePrinterViewModel.port.value = binding.etPort.text.toString()
                 advancePrinterViewModel.ipAddress.value = binding.etIPAddress.text.toString()
                 advancePrinterViewModel.name.value = binding.etName.text.toString()
@@ -95,7 +105,7 @@ class PrinterTypeFragment : Fragment() {
 
     private fun checkForm(): Boolean {
         var error = true
-        if (binding.etName.text.isBlank()){
+        if (binding.etName.text.isBlank()) {
             binding.etName.error = "El nombre es requerido"
             error = false
         }
