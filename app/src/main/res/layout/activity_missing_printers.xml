@@ -187,32 +187,7 @@
                     android:hint="Nombre" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilIpAddress"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:theme="@style/illarliTextInputLayoutStyleTheme">
 
-                <EditText
-                    android:id="@+id/etIPAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Direccion Ip" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPort"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:theme="@style/illarliTextInputLayoutStyleTheme">
-
-                <EditText
-                    android:id="@+id/etPort"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Puerto"
-                    android:inputType="number" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -237,6 +212,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Número de copias"
+                    android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilIpAddress"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+                <EditText
+                    android:id="@+id/etIPAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Direccion Ip" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPort"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:theme="@style/illarliTextInputLayoutStyleTheme">
+
+                <EditText
+                    android:id="@+id/etPort"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Puerto"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 

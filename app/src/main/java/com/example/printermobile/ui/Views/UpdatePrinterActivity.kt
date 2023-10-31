@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -107,7 +108,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
         binding.btnSave.setOnClickListener {
             if (checkForm()) {
                 try {
-                    var printers = Printers(
+                    val printers = Printers(
                         updatePrinterViewModel.printer.value?.id,
                         "B",
                         binding.etName.text.toString(),
@@ -213,15 +214,41 @@ class UpdatePrinterActivity : AppCompatActivity() {
 
     private fun inputVisibilityChange(param: Boolean) {
         if (param) {
-            binding.etIPAddress.visibility = View.VISIBLE
-            binding.etPort.visibility = View.VISIBLE
-            binding.tilIpAddress.visibility = View.VISIBLE
-            binding.tilPort.visibility = View.VISIBLE
+            val fadeIn = AnimationUtils.loadAnimation(this,R.anim.fade_in)
+            binding.etIPAddress.apply {
+                animation = fadeIn
+                visibility = View.VISIBLE
+            }
+            binding.etPort.apply {
+                animation = fadeIn
+                visibility = View.VISIBLE
+            }
+            binding.tilIpAddress.apply {
+                animation = fadeIn
+                visibility = View.VISIBLE
+            }
+            binding.tilPort.apply {
+                animation = fadeIn
+                visibility = View.VISIBLE
+            }
         } else {
-            binding.etPort.visibility = View.GONE
-            binding.etIPAddress.visibility = View.GONE
-            binding.tilIpAddress.visibility = View.GONE
-            binding.tilPort.visibility = View.GONE
+            val fadeOut = AnimationUtils.loadAnimation(this,R.anim.fade_out)
+            binding.etPort.apply {
+                animation = fadeOut
+                visibility = View.INVISIBLE
+            }
+            binding.etIPAddress.apply {
+                animation = fadeOut
+                visibility = View.INVISIBLE
+            }
+            binding.tilIpAddress.apply {
+                animation = fadeOut
+                visibility = View.INVISIBLE
+            }
+            binding.tilPort.apply {
+                animation = fadeOut
+                visibility = View.INVISIBLE
+            }
         }
     }
 
