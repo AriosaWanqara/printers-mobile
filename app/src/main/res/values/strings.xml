@@ -8,7 +8,15 @@
     <!--  ONBOARDING CONTENT  -->
     <string name="onboarding_content_1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, nisi</string>
     <string name="onboarding_content_2">magni nesciunt laudantium odio eligendi doloribus veniam fugit voluptate</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!--    Advance add printer form titles-->
+    <string name="advance_title_1">Escoja el tipo de impresora</string>
+    <string name="advance_title_2">Cantidad de caracteres</string>
+    <string name="advance_title_3">Numero de copias</string>
+    <string name="advance_title_4">Que tipo de documento desea imprimir</string>
+
+    <!--    Advance add printer form content-->
+    <string name="advance_content_1">magni nesciunt laudantium odio eligendi doloribus veniam fugit voluptate</string>
+    <string name="advance_content_2">magni nesciunt laudantium odio eligendi doloribus veniam fugit voluptate</string>
+    <string name="advance_content_3">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, nisi</string>
 </resources>

@@ -6,51 +6,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.Views.advance.PrinterConfigFragment">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/giNumberCharacters"
-        android:paddingHorizontal="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/impresion" />
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:paddingHorizontal="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/giNumberCharacters"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/clActionContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
-        <LinearLayout
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/clActionContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/tvAdvanceCharacterNumberTitle"
+            android:text="@string/advance_title_2"
+            android:textSize="15sp"
+            android:textColor="@color/textPrimary"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/giNumberCharacters"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:layout_marginTop="18dp"
+            android:src="@mipmap/impresion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAdvanceCharacterNumberTitle" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/btnPrintTest"
-                android:layout_width="200dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="25dp"
-                android:backgroundTint="@color/primary"
-                android:elevation="0dp"
-                android:stateListAnimator="@null"
-                android:text="Probar"
-                android:textColor="@color/white"
-                app:elevation="0dp"
-                app:icon="@drawable/ic_print"
-                app:iconSize="18dp"
-                app:iconTint="@color/white" />
+            app:layout_constraintTop_toBottomOf="@+id/giNumberCharacters">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/advance_content_2"
+                android:textAlignment="center"
+                android:textColor="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:theme="@style/illarliTextInputLayoutStyleTheme">
-
+                android:layout_marginTop="18dp"
+                android:theme="@style/illarliTextInputLayoutStyleTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/btnPrintTest"
+                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintStart_toStartOf="parent">
                 <EditText
                     android:id="@+id/etCharacters"
                     android:layout_width="match_parent"
@@ -58,7 +72,26 @@
                     android:hint="Número de caracteres"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                android:id="@+id/btnPrintTest"
+                android:layout_width="200dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="18dp"
+                android:backgroundTint="@color/primary"
+                android:elevation="0dp"
+                android:stateListAnimator="@null"
+                android:text="Re imprimir"
+                android:textColor="@color/white"
+                app:elevation="0dp"
+                app:icon="@drawable/ic_print"
+                app:iconSize="18dp"
+                app:iconTint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clActionContainer"

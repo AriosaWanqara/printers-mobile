@@ -9,14 +9,26 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="20dp"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="30dp"
         app:layout_constraintBottom_toTopOf="@+id/clActionContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/tvAdvanceCopyNumberTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/advance_title_3"
+            android:textColor="@color/textPrimary"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <com.google.android.material.textfield.TextInputLayout
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="18dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvAdvanceCopyNumberTitle"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -29,6 +41,16 @@
                 android:hint="Número de copias"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/advance_content_3"
+            android:textAlignment="center"
+            android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clActionContainer"
