@@ -3,6 +3,8 @@ package com.example.printermobile.ui.Views
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
+import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -43,8 +45,30 @@ class ListPrintersActivity : AppCompatActivity() {
         builder.setPositiveButton(
             "Eliminar"
         ) { _, _ ->
+            val printer = it
             CoroutineScope(Dispatchers.IO).launch {
                 listPrintersViewModel.onDeletePrinter(it.id!!)
+                withContext(Dispatchers.Main) {
+                    Snackbar.make(
+                        binding.rvPrinterList,
+                        "Impresora Eliminada",
+                        Snackbar.LENGTH_SHORT
+                    ).setAction("Restaurar") {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                val entity = printer.createEntityFromPrinterModel()
+                                listPrintersViewModel.onAdd(entity)
+                            } catch (e: Exception) {
+                                println(e)
+                            }
+                        }
+                    }.setActionTextColor(
+                        ContextCompat.getColor(
+                            applicationContext,
+                            R.color.primary
+                        )
+                    ).show()
+                }
             }
         }
         builder.setNegativeButton("Cancelar", null)
@@ -61,16 +85,24 @@ class ListPrintersActivity : AppCompatActivity() {
 
         listPrintersViewModel.onCreate()
         listPrintersViewModel.printers.observe(this, Observer {
-            printers = listOf()
-            it.map { printer ->
-                printers = printers.plus(printer)
-            }
+            printers = it
             adapter.updateList(printers)
+            if (adapter.itemCount <= 0 && listPrintersViewModel.isLoading.value == false) {
+                val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+                binding.clEmptyMessageContainer.apply {
+                    visibility = View.VISIBLE
+                    animation = fadeIn
+                }
+            } else {
+                binding.clEmptyMessageContainer.apply {
+                    visibility = View.INVISIBLE
+                }
+            }
         })
         resetSystemTypeCards()
         listPrintersViewModel.systemType.observe(this, Observer { system ->
             if (system == null) {
-                resetSystemTypeCards()
+                updateToShop()
             } else {
                 systemType = system
                 setSystemTypeCard(system.getIsRestaurant())
@@ -87,14 +119,6 @@ class ListPrintersActivity : AppCompatActivity() {
     private fun initUI() {
         binding.rvPrinterList.layoutManager = LinearLayoutManager(this)
         binding.rvPrinterList.adapter = adapter
-        val itemTouchHelper = ItemTouchHelper(object : SwipeHelper(binding.rvPrinterList) {
-            override fun instantiateUnderlayButton(position: Int): List<UnderlayButton> {
-                var buttons = listOf<UnderlayButton>()
-                val deleteButton = deleteButton(position)
-                buttons = listOf(deleteButton)
-                return buttons
-            }
-        })
 
         val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
@@ -185,7 +209,6 @@ class ListPrintersActivity : AppCompatActivity() {
         }
         val personalItemTouch = ItemTouchHelper(simpleCallback)
         personalItemTouch.attachToRecyclerView(binding.rvPrinterList)
-//        itemTouchHelper.attachToRecyclerView(binding.rvPrinterList)
 
 
         binding.cvRestaurant.setOnClickListener {
@@ -296,22 +319,6 @@ class ListPrintersActivity : AppCompatActivity() {
 
             }
         }
-    }
-
-    private fun deleteButton(position: Int): SwipeHelper.UnderlayButton {
-        return SwipeHelper.UnderlayButton(
-            this,
-            "Delete",
-            14.0f,
-            android.R.color.holo_red_light,
-            object : SwipeHelper.UnderlayButtonClickListener {
-                override fun onClick() {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        listPrintersViewModel.onDeletePrinter(printers[position].id!!)
-                    }
-
-                }
-            })
     }
 
     private fun initListeners() {

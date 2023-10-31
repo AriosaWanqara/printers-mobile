@@ -27,22 +27,24 @@ class ListPrintersViewModel @Inject constructor(
 
     var printers = MutableLiveData<List<Printers>>(listOf())
     var systemType = MutableLiveData<SystemType?>()
+    var isLoading = MutableLiveData(false)
     fun onCreate() {
+        isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = getAllPrinters.getAll()
                 val systemTypeResult = getSystemType(1)
                 withContext(Dispatchers.Main) {
-                    if (result.isNotEmpty()) {
-                        printers.value = mutableListOf()
-                        printers.value = result
-                    }
+                    isLoading.value = false
+                    printers.value = result
                     systemType.value = systemTypeResult
                 }
-
-
             } catch (e: Exception) {
                 println(e)
+            } finally {
+                withContext(Dispatchers.Main) {
+                    isLoading.value = false
+                }
             }
         }
     }
