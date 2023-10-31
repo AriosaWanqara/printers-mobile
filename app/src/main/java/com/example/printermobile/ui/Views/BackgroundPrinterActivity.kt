@@ -8,12 +8,14 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.dantsu.escposprinter.connection.usb.UsbOutputStream
 import com.dantsu.escposprinter.connection.usb.UsbPrintersConnections
+import com.example.printermobile.R
 import com.example.printermobile.core.print.utils.printer1.Discrimination
 import com.example.printermobile.core.printType.PrinterType
 import com.example.printermobile.databinding.ActivityBackgroundPrinterBinding
@@ -133,8 +135,12 @@ class BackgroundPrinterActivity : AppCompatActivity() {
             if (!Discrimination(printers, m_ambiente!!, this)(commands)) {
                 result = false
                 withContext(Dispatchers.Main) {
-                    binding.llPrintGift.visibility = View.GONE
-                    binding.mcMissingPrintersWarningContainer.visibility = View.VISIBLE
+                    val fadeIn = AnimationUtils.loadAnimation(applicationContext,R.anim.fade_in)
+                    binding.llPrintGift.visibility = View.INVISIBLE
+                    binding.mcMissingPrintersWarningContainer.apply {
+                        animation = fadeIn
+                        visibility = View.VISIBLE
+                    }
                 }
 
             }
