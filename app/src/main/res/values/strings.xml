@@ -6,8 +6,8 @@
     <string name="onboarding_title_2">Mayor integración</string>
 
     <!--  ONBOARDING CONTENT  -->
-    <string name="onboarding_content_1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus, nisi</string>
-    <string name="onboarding_content_2">magni nesciunt laudantium odio eligendi doloribus veniam fugit voluptate</string>
+    <string name="onboarding_content_1">Ahora, nuestra app es compatible con una gama más amplia de dispositivos Android</string>
+    <string name="onboarding_content_2">Estamos encantados de anunciarte que ahora soportamos la impresión USB</string>
 
     <!--    Advance add printer form titles-->
     <string name="advance_title_1">Escoja el tipo de impresora</string>

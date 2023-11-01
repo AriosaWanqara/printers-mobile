@@ -1,18 +1,23 @@
 package com.example.printermobile.ui.Views
 
+
 import android.content.Intent
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.allViews
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.erkutaras.showcaseview.ShowcaseManager
 import com.example.printermobile.R
 import com.example.printermobile.core.system.SystemTypeEnum
 import com.example.printermobile.databinding.ActivityListPrintersBinding
@@ -27,6 +32,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+
 
 @AndroidEntryPoint
 class ListPrintersActivity : AppCompatActivity() {
@@ -107,12 +113,24 @@ class ListPrintersActivity : AppCompatActivity() {
                 setSystemTypeCard(system.getIsRestaurant())
             }
         })
+        Handler().postDelayed({
+            if (!getSharedPreferences("tour", MODE_PRIVATE).getBoolean("list-tour", false)) {
+                getTour().build().show()
+            }
+        }, 10)
     }
 
     private fun redirect(id: Int) {
         val updatePrinterIntent = Intent(this, UpdatePrinterActivity::class.java)
         updatePrinterIntent.putExtra("printer", id.toString())
         startActivity(updatePrinterIntent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ShowcaseManager.REQUEST_CODE_SHOWCASE && resultCode == RESULT_OK) {
+            getSharedPreferences("tour", MODE_PRIVATE).edit().putBoolean("list-tour", true).apply()
+        }
     }
 
     private fun initUI() {
@@ -336,7 +354,10 @@ class ListPrintersActivity : AppCompatActivity() {
                     }
                     true
                 }
-
+                R.id.miTourPlay -> {
+                    getTour().build().show()
+                    true
+                }
                 else -> false
             }
         }
@@ -431,5 +452,52 @@ class ListPrintersActivity : AppCompatActivity() {
                 android.R.color.darker_gray
             )
         )
+    }
+
+    private fun getTour(): ShowcaseManager.Builder {
+        val help = binding.topAppBar.allViews.toSet().toTypedArray()[4]
+        val tourPlay = binding.topAppBar.allViews.toSet().toTypedArray()[3]
+        val builder = ShowcaseManager.Builder()
+        builder.context(this)
+            .key("KEY")
+            .view(binding.clBusinessType)
+            .developerMode(true)
+            .descriptionTitle("Tipo de negocio")
+            .descriptionText("En esta sección podra configurar su tipo de negocio")
+            .buttonText("Siguiente")
+            .roundedRectangle()
+            .marginFocusArea(5)
+            .cancelButtonColor(Color.GREEN)
+            .selectedMoveButtonColor(Color.GREEN)
+            .unSelectedMoveButtonColor(Color.RED)
+            .add()
+
+            .view(binding.fabAddPrinter)
+            .roundedRectangle()
+            .marginFocusArea(5)
+            .descriptionTitle("Agregar impresora")
+            .descriptionText("Con este boton podra configurar sus impresoras")
+            .buttonText("Siguiente")
+            .moveButtonsVisibility(true)
+            .add()
+
+            .view(tourPlay)
+            .roundedRectangle()
+            .marginFocusArea(5)
+            .descriptionTitle("Tour")
+            .descriptionText("Esta es la sección del tour, aquí podrá repetir el tour si tiene dudas")
+            .buttonText("Siguiente")
+            .moveButtonsVisibility(true)
+            .add()
+
+            .view(help)
+            .roundedRectangle()
+            .marginFocusArea(5)
+            .descriptionTitle("Ayuda")
+            .descriptionText("Esta es la sección de ayuda, aquí encontrará recursos que le ayuden a solucionar su problema")
+            .buttonText("Finalizar")
+            .moveButtonsVisibility(true)
+            .add()
+        return builder
     }
 }

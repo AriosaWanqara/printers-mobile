@@ -111,9 +111,12 @@ dependencies {
     // Expansion panel
     implementation("com.robertlevonyan.view:MaterialExpansionPanel:2.1.6")
 
-    //printer 1
+    // printer 1
     implementation("org.jsoup:jsoup:1.13.1")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.20")
+
+    // Showcase View
+    implementation ("com.github.erkutaras:ShowcaseView:1.5.0")
 }
 kapt {
     correctErrorTypes = true

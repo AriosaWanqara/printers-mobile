@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
@@ -17,7 +18,11 @@ class OnBoardingPageAdapter(private val context: Context) : PagerAdapter() {
     )
     private val contents = listOf<Int>(
         R.string.onboarding_content_1,
-        R.string.onboarding_content_1
+        R.string.onboarding_content_2
+    )
+    private val icons = listOf<Int>(
+        R.drawable.ic_android,
+        R.drawable.ic_usb
     )
 
     lateinit var layoutInflater: LayoutInflater
@@ -30,10 +35,11 @@ class OnBoardingPageAdapter(private val context: Context) : PagerAdapter() {
 
         val title = view.findViewById<TextView>(R.id.tvOnBoardingTitle)
         val content = view.findViewById<TextView>(R.id.tvOnBoardingText)
+        val icon = view.findViewById<ImageView>(R.id.imOnBoardingIcon)
 
         title.setText(titles[position])
         content.setText(contents[position])
-
+        icon.setImageResource(icons[position])
         container.addView(view)
 
         return view

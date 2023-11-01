@@ -3,15 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:paddingTop="70dp"
     android:layout_height="match_parent"
     android:paddingHorizontal="20dp">
-
+    <ImageView
+        android:id="@+id/imOnBoardingIcon"
+        app:tint="@color/textPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvOnBoardingTitle"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
     <TextView
         android:id="@+id/tvOnBoardingTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
         android:textColor="@android:color/darker_gray"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,10 +30,10 @@
     <TextView
         android:id="@+id/tvOnBoardingText"
         android:layout_width="wrap_content"
-        android:textColor="@color/textPrimary"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:textAlignment="center"
+        android:textColor="@color/textPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvOnBoardingTitle"
