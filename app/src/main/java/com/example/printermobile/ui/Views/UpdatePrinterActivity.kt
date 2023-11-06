@@ -65,6 +65,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
     }
 
     private fun initUI(name: String) {
+        binding.topAppBar.menu.removeItem(R.id.miTourPlay)
         val documentType: documentType = documentType()
         val documentTypeSpinnerAdapter = ArrayAdapter<String>(
             this,

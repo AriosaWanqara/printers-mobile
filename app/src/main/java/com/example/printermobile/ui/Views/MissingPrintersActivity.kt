@@ -47,6 +47,7 @@ class MissingPrintersActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
+        binding.topAppBar.menu.removeItem(R.id.miTourPlay)
         binding.rvDocumentType.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvDocumentType.adapter = MissingPrinterAdapter(documentType) {

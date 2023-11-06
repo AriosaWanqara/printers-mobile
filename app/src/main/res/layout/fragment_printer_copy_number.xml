@@ -41,16 +41,16 @@
                 android:hint="Número de copias"
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
-        <TextView
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="@string/advance_content_3"
-            android:textAlignment="center"
-            android:textColor="@android:color/darker_gray"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+<!--        <TextView-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            android:text="@string/advance_content_3"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="@android:color/darker_gray"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clActionContainer"

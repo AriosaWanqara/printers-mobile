@@ -23,6 +23,7 @@ class AdvanceAddPrinterActivity : AppCompatActivity() {
         binding = ActivityAdvanceAddPrinterBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initListeners()
+        initUI()
         advancePrinterViewModel.progression.observe(this, Observer {
             if (it > 0) {
                 val x = (it * 100) / 4
@@ -47,14 +48,13 @@ class AdvanceAddPrinterActivity : AppCompatActivity() {
                     }
                     true
                 }
-
-                R.id.miTourPlay -> {
-                    true
-                }
-
                 else -> false
             }
         }
+    }
+
+    private fun initUI(){
+        binding.topAppBar.menu.removeItem(R.id.miTourPlay)
     }
 
     private fun getTour(): ShowcaseManager.Builder {

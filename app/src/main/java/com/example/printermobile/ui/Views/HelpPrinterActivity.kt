@@ -52,6 +52,7 @@ class HelpPrinterActivity : AppCompatActivity() {
     private fun initUI() {
         binding.rvFaQList.layoutManager = LinearLayoutManager(this)
         binding.rvFaQList.adapter = adapter
+        binding.topAppBar.menu.removeItem(R.id.miTourPlay)
     }
 
     private fun initListeners() {
