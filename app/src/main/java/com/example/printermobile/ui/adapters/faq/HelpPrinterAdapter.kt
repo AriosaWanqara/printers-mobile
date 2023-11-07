@@ -1,4 +1,4 @@
-package com.example.printermobile.ui.Views.faq
+package com.example.printermobile.ui.adapters.faq
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.printermobile.R
 import com.example.printermobile.domain.models.FaQ
-import com.example.printermobile.domain.models.Printers
-import com.example.printermobile.ui.Views.Printer.ListPrintersDiffUtils
 
 class HelpPrinterAdapter(private var faQList: List<FaQ>) :
     RecyclerView.Adapter<HelpPrinterViewHolder>() {

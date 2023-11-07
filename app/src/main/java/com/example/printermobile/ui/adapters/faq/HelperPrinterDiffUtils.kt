@@ -1,4 +1,4 @@
-package com.example.printermobile.ui.Views.faq
+package com.example.printermobile.ui.adapters.faq
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.printermobile.domain.models.FaQ

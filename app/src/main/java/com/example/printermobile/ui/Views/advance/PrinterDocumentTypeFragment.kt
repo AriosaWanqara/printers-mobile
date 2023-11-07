@@ -15,7 +15,7 @@ import com.example.printermobile.R
 import com.example.printermobile.core.document.documentType
 import com.example.printermobile.databinding.FragmentPrinterDocumentTypeBinding
 import com.example.printermobile.ui.Views.ListPrintersActivity
-import com.example.printermobile.ui.Views.Printer.MissingPrinterAdapter
+import com.example.printermobile.ui.adapters.Printer.MissingPrinterAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

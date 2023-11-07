@@ -1,4 +1,4 @@
-package com.example.printermobile.ui.Views.Printer
+package com.example.printermobile.ui.adapters.Printer
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.printermobile.domain.models.Printers

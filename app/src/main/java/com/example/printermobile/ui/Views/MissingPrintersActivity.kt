@@ -19,7 +19,7 @@ import com.example.printermobile.core.printType.PrinterType
 import com.example.printermobile.databinding.ActivityMissingPrintersBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
-import com.example.printermobile.ui.Views.Printer.MissingPrinterAdapter
+import com.example.printermobile.ui.adapters.Printer.MissingPrinterAdapter
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope

@@ -24,7 +24,7 @@ import com.example.printermobile.databinding.ActivityListPrintersBinding
 import com.example.printermobile.domain.models.Printers
 import com.example.printermobile.domain.models.SystemType
 import com.example.printermobile.ui.ViewModels.ListPrintersViewModel
-import com.example.printermobile.ui.Views.Printer.ListPrinterAdapter
+import com.example.printermobile.ui.adapters.Printer.ListPrinterAdapter
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator

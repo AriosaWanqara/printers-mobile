@@ -69,4 +69,8 @@
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out" />
     </fragment>
+    <dialog
+        android:id="@+id/bluetoothDeviceDialog"
+        android:name="com.example.printermobile.ui.Views.advance.BluetoothDeviceDialog"
+        android:label="BluetoothDeviceDialog" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.printermobile.ui.Views.faq
+package com.example.printermobile.ui.adapters.faq
 
 import android.content.Intent
 import android.net.Uri
@@ -15,8 +15,6 @@ import com.robertlevonyan.views.expandable.Expandable
 
 
 class HelpPrinterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//    private val tv = view.findViewById<TextView>(R.id.tvQuestTitle)
-//    private val ib = view.findViewById<ImageButton>(R.id.ibExpand)
     private val expandable = view.findViewById<Expandable>(R.id.expandable);
     private val headerText = view.findViewById<TextView>(R.id.header_text);
     private val contentText = view.findViewById<TextView>(R.id.content_text);

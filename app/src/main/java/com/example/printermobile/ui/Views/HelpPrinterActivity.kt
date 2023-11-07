@@ -15,7 +15,7 @@ import com.example.printermobile.databinding.ActivityHelpPrinterBinding
 import com.example.printermobile.domain.models.FaQ
 import com.example.printermobile.ui.ViewModels.AddPrinterViewModel
 import com.example.printermobile.ui.ViewModels.HelpViewModel
-import com.example.printermobile.ui.Views.faq.HelpPrinterAdapter
+import com.example.printermobile.ui.adapters.faq.HelpPrinterAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,25 +1,37 @@
 package com.example.printermobile.ui.Views.advance
 
+
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.printermobile.R
 import com.example.printermobile.core.printType.PrinterType
 import com.example.printermobile.databinding.FragmentPrinterTypeBinding
+import com.example.printermobile.domain.models.BluetoothDomain
+import com.example.printermobile.ui.ViewModels.BluetoothViewModel
+import com.example.printermobile.ui.adapters.bluetooth.BluetoothAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PrinterTypeFragment : Fragment() {
 
     private var _binding: FragmentPrinterTypeBinding? = null
     private val advancePrinterViewModel by activityViewModels<AdvancePrinterViewModel>()
+    private val bluetoothViewModel: BluetoothViewModel by viewModels()
+    private var pairedDeviceList:List<BluetoothDomain> = listOf()
+    private var scannedDeviceList:List<BluetoothDomain> = listOf()
+    private var pairedDeviceAdapter = BluetoothAdapter(pairedDeviceList)
+    private var scannedDeviceAdapter = BluetoothAdapter(scannedDeviceList)
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -27,10 +39,18 @@ class PrinterTypeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPrinterTypeBinding.inflate(layoutInflater, container, false)
-
         initUI()
         initData()
         initListeners()
+        lifecycleScope.launch {
+            bluetoothViewModel.state.collect {
+                scannedDeviceList = it.scannedDevices
+                pairedDeviceList = it.pairedDevices
+                pairedDeviceAdapter.updateList(pairedDeviceList)
+                scannedDeviceAdapter.updateList(scannedDeviceList)
+            }
+        }
+
         return binding.root
     }
 
@@ -46,6 +66,10 @@ class PrinterTypeFragment : Fragment() {
         } else {
             setCardsSelectedState(advancePrinterViewModel.printerType.value!!)
         }
+        binding.rvPairedDevice.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPairedDevice.adapter = pairedDeviceAdapter
+        binding.rvScannedDevice.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvScannedDevice.adapter = scannedDeviceAdapter
     }
 
     override fun onDestroy() {
@@ -54,11 +78,25 @@ class PrinterTypeFragment : Fragment() {
     }
 
     private fun initListeners() {
+        binding.ibDialogClose.setOnClickListener {
+            val slideDown = AnimationUtils.loadAnimation(requireContext(),R.anim.slide_up)
+            binding.clBluetoothDeviceDialog.animation = slideDown
+            binding.clBluetoothDeviceDialog.visibility = View.INVISIBLE
+        }
+        binding.clBluetoothDeviceDialog.setOnClickListener {
+
+        }
         binding.cvWifi.setOnClickListener {
             setCardsSelectedState(PrinterType.WIFI.type)
         }
         binding.cvBluetooth.setOnClickListener {
             setCardsSelectedState(PrinterType.BLUETOOTH.type)
+            try {
+                bluetoothViewModel.startScan()
+                showDialog()
+            } catch (e: Exception) {
+                println(e)
+            }
         }
         binding.cvUSB.setOnClickListener {
             setCardsSelectedState(PrinterType.USB.type)
@@ -77,6 +115,11 @@ class PrinterTypeFragment : Fragment() {
         }
     }
 
+    private fun showDialog() {
+        val slideUp = AnimationUtils.loadAnimation(requireContext(),R.anim.slide_down)
+        binding.clBluetoothDeviceDialog.animation = slideUp
+        binding.clBluetoothDeviceDialog.visibility = View.VISIBLE
+    }
     private fun inputVisibilityChange(param: Boolean) {
         if (param) {
             val fadeIn =

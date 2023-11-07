@@ -1,4 +1,4 @@
-package com.example.printermobile.ui.Views.Printer
+package com.example.printermobile.ui.adapters.Printer
 
 import android.annotation.SuppressLint
 import android.content.Context

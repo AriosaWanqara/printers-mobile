@@ -1,4 +1,4 @@
-package com.example.printermobile.ui.Views.Printer
+package com.example.printermobile.ui.adapters.Printer
 
 import android.content.Context
 import android.view.LayoutInflater

@@ -91,8 +91,23 @@ class UpdatePrinterActivity : AppCompatActivity() {
                             .show()
                     }
                 } else if (printerType == PrinterType.BLUETOOTH.type) {
-                    if (!PrintBluetoothTest(this)()) {
-                        Toast.makeText(this, "Impresora no vinculada", Toast.LENGTH_SHORT).show()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        withContext(Dispatchers.Main) {
+                            binding.clLoadingContainer.visibility = View.VISIBLE
+                        }
+                        if (!PrintBluetoothTest(applicationContext)()) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Impresora no vinculada",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            binding.clLoadingContainer.visibility = View.INVISIBLE
+                        }
                     }
                 } else {
                     if (!PrintUSBTest(this)()) {
@@ -215,7 +230,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
 
     private fun inputVisibilityChange(param: Boolean) {
         if (param) {
-            val fadeIn = AnimationUtils.loadAnimation(this,R.anim.fade_in)
+            val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
             binding.etIPAddress.apply {
                 animation = fadeIn
                 visibility = View.VISIBLE
@@ -233,7 +248,7 @@ class UpdatePrinterActivity : AppCompatActivity() {
                 visibility = View.VISIBLE
             }
         } else {
-            val fadeOut = AnimationUtils.loadAnimation(this,R.anim.fade_out)
+            val fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out)
             binding.etPort.apply {
                 animation = fadeOut
                 visibility = View.INVISIBLE
