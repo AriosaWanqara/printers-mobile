@@ -1,7 +1,16 @@
 package com.example.printermobile.ui.Views.advance
 
 
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.hardware.usb.UsbManager
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +28,11 @@ import com.example.printermobile.databinding.FragmentPrinterTypeBinding
 import com.example.printermobile.domain.models.BluetoothDomain
 import com.example.printermobile.ui.ViewModels.BluetoothViewModel
 import com.example.printermobile.ui.adapters.bluetooth.BluetoothAdapter
+import com.mazenrashed.printooth.Printooth
+import com.mazenrashed.printooth.utilities.Bluetooth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -28,10 +41,35 @@ class PrinterTypeFragment : Fragment() {
     private var _binding: FragmentPrinterTypeBinding? = null
     private val advancePrinterViewModel by activityViewModels<AdvancePrinterViewModel>()
     private val bluetoothViewModel: BluetoothViewModel by viewModels()
-    private var pairedDeviceList:List<BluetoothDomain> = listOf()
-    private var scannedDeviceList:List<BluetoothDomain> = listOf()
-    private var pairedDeviceAdapter = BluetoothAdapter(pairedDeviceList)
-    private var scannedDeviceAdapter = BluetoothAdapter(scannedDeviceList)
+    private val bluetoothManager by lazy {
+        requireContext().getSystemService(BluetoothManager::class.java)
+    }
+    private val bluetoothAdapter by lazy {
+        bluetoothManager?.adapter
+    }
+
+    private val bluetoothConnectionReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            when (intent?.action) {
+                BluetoothDevice.ACTION_ACL_CONNECTED -> {
+                    val slideDown = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up)
+                    binding.clBluetoothDeviceDialog.animation = slideDown
+                    binding.clBluetoothDeviceDialog.visibility = View.INVISIBLE
+                }
+            }
+        }
+    }
+    private var pairedDeviceList: List<BluetoothDomain> = listOf()
+    private var scannedDeviceList: List<BluetoothDomain> = listOf()
+    private var pairedDeviceAdapter = BluetoothAdapter(pairedDeviceList) {}
+    private var scannedDeviceAdapter = BluetoothAdapter(scannedDeviceList) {
+        val x = Bluetooth(requireContext())
+        val y = bluetoothAdapter?.getRemoteDevice(it.getAddress())
+        y?.let {
+            x.onStart()
+            x.connectToDevice(it,false)
+        }
+    }
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -48,9 +86,23 @@ class PrinterTypeFragment : Fragment() {
                 pairedDeviceList = it.pairedDevices
                 pairedDeviceAdapter.updateList(pairedDeviceList)
                 scannedDeviceAdapter.updateList(scannedDeviceList)
+                val x = it.isConnecting
+                val y = it.errorMessage
+                val z = it.isConnected
+                println(y)
+                println(x)
+                println(z)
             }
         }
-
+        Printooth.init(requireContext());
+        requireContext().registerReceiver(
+            bluetoothConnectionReceiver,
+            IntentFilter().apply {
+                addAction(android.bluetooth.BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)
+                addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+                addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+            }
+        )
         return binding.root
     }
 
@@ -79,7 +131,7 @@ class PrinterTypeFragment : Fragment() {
 
     private fun initListeners() {
         binding.ibDialogClose.setOnClickListener {
-            val slideDown = AnimationUtils.loadAnimation(requireContext(),R.anim.slide_up)
+            val slideDown = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up)
             binding.clBluetoothDeviceDialog.animation = slideDown
             binding.clBluetoothDeviceDialog.visibility = View.INVISIBLE
         }
@@ -92,8 +144,10 @@ class PrinterTypeFragment : Fragment() {
         binding.cvBluetooth.setOnClickListener {
             setCardsSelectedState(PrinterType.BLUETOOTH.type)
             try {
-                bluetoothViewModel.startScan()
                 showDialog()
+                Handler().postDelayed({
+                    bluetoothViewModel.startScan()
+                }, 250)
             } catch (e: Exception) {
                 println(e)
             }
@@ -116,10 +170,11 @@ class PrinterTypeFragment : Fragment() {
     }
 
     private fun showDialog() {
-        val slideUp = AnimationUtils.loadAnimation(requireContext(),R.anim.slide_down)
+        val slideUp = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down)
         binding.clBluetoothDeviceDialog.animation = slideUp
         binding.clBluetoothDeviceDialog.visibility = View.VISIBLE
     }
+
     private fun inputVisibilityChange(param: Boolean) {
         if (param) {
             val fadeIn =

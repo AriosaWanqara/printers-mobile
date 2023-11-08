@@ -8,7 +8,8 @@ import com.example.printermobile.R
 import com.example.printermobile.domain.models.BluetoothDomain
 
 class BluetoothAdapter(
-    private var bluetoothDomainList: List<BluetoothDomain>
+    private var bluetoothDomainList: List<BluetoothDomain>,
+    private val onItemClick: (BluetoothDomain) -> Unit,
 ) : RecyclerView.Adapter<BluetoothViewHolder>() {
 
     fun updateList(newList: List<BluetoothDomain>){
@@ -27,5 +28,8 @@ class BluetoothAdapter(
 
     override fun onBindViewHolder(holder: BluetoothViewHolder, position: Int) {
         holder.render(bluetoothDomainList[position])
+        holder.itemView.setOnClickListener {
+            onItemClick(bluetoothDomainList[position])
+        }
     }
 }

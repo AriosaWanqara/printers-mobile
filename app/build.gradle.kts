@@ -117,6 +117,9 @@ dependencies {
 
     // Showcase View
     implementation ("com.github.erkutaras:ShowcaseView:1.5.0")
+
+    implementation ("com.github.mazenrashed:Printooth:1.3.1")
+    implementation ("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 }
 kapt {
     correctErrorTypes = true
