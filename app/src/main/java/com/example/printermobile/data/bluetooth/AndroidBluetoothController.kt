@@ -10,6 +10,8 @@ import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import com.example.printermobile.domain.models.BluetoothController
 import com.example.printermobile.domain.models.BluetoothDomain
 import com.example.printermobile.domain.models.ConnectionResult
@@ -27,6 +29,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import java.util.UUID
 
 @SuppressLint("MissingPermission")
@@ -62,16 +67,17 @@ class AndroidBluetoothController(
             if (newDevice in devices) devices else devices + newDevice
         }
     }
-
-    private val bluetoothConnectionReceiver = BluetoothConnectionReceiver { isConnected, bluetoothDevice ->
-        if(bluetoothAdapter?.bondedDevices?.contains(bluetoothDevice) == true) {
-            _isConnected.update { isConnected }
-        } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                _errors.emit("Can't connect to a non-paired device.")
+    private val bluetoothConnectionReceiver =
+        BluetoothConnectionReceiver { isConnected, bluetoothDevice ->
+            if (bluetoothAdapter?.bondedDevices?.contains(bluetoothDevice) == true) {
+                _isConnected.update { isConnected }
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    _errors.emit("Can't connect to a non-paired device.")
+                }
             }
         }
-    }
+
     init {
         updatePairedDevices()
         context.registerReceiver(
@@ -99,8 +105,7 @@ class AndroidBluetoothController(
 
         updatePairedDevices()
 
-        var x = bluetoothAdapter?.startDiscovery()
-        println(x)
+        bluetoothAdapter?.startDiscovery()
     }
 
     override fun stopDiscovery() {

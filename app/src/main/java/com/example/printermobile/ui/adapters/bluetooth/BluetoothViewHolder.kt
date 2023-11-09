@@ -8,6 +8,6 @@ import com.example.printermobile.domain.models.BluetoothDomain
 class BluetoothViewHolder(view:View) : RecyclerView.ViewHolder(view) {
     val binding = ItemBluetoothBinding.bind(view)
     fun render(bluetoothDomain: BluetoothDomain){
-        binding.tvBluetoothName.text = bluetoothDomain.getName() ?: "No name"
+        binding.tvBluetoothName.text = bluetoothDomain.getName() ?: "Sin nombre"
     }
 }
